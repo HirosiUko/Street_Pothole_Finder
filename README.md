@@ -1,8 +1,10 @@
 
 ![header](https://capsule-render.vercel.app/api?type=waving&color=257588&height=200&section=header&text=Street%20Fimder&fontSize=40&fontColor=fff)
-# Street Fimder 스트리트 파임더
+![sf_logo_color_400](https://user-images.githubusercontent.com/107041228/201812159-ac12d5c4-e427-4ee3-bc5d-8e679a9fa71c.png)
 ### 스마트폰 카메라를 이용한 실시간 노면 이슈 Detect&Report 서비스
+
 ---
+
 - 광주인공지능사관학교 3기 파이널프로젝트 최우수상 수상작
 - 개발기간 : 2022-11.14~12.14
 - 개발팀 : NEW CODING
