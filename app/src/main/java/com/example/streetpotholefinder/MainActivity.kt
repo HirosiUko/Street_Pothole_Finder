@@ -12,7 +12,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         val btn_startrecode = findViewById<ImageView>(R.id.btn_startrecode)
         btn_startrecode.setOnClickListener {
             val intent = Intent(this, CameraXAPP::class.java)
