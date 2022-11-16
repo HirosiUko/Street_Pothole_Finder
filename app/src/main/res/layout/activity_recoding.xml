@@ -206,46 +206,45 @@
         tools:ignore="MissingConstraints" />
 
     <LinearLayout
-        android:background="@drawable/btn_lyt_roundblack"
         android:layout_width="wrap_content"
         android:layout_height="36dp"
         android:layout_marginStart="28dp"
         android:layout_marginTop="36dp"
+        android:background="@drawable/btn_lyt_roundblack"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:paddingLeft="14dp"
         android:paddingRight="14dp"
-        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:gravity="center_vertical">
+        app:layout_constraintTop_toTopOf="parent">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/img_red_dot"
-            />
+            android:src="@drawable/img_red_dot" />
+
         <TextView
             android:id="@+id/textView9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:text="REC"
             android:textColor="@color/white"
-            android:layout_marginLeft="10dp"
+            tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="35dp"
-            tools:layout_editor_absoluteY="39dp"
-            tools:ignore="MissingConstraints" />
+            tools:layout_editor_absoluteY="39dp" />
 
         <TextView
             android:id="@+id/textView10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/white"
             android:layout_marginLeft="10dp"
-            android:text="00:02:58" />
+            android:layout_weight="1"
+            android:text="00:02:58"
+            android:textColor="@color/white" />
 
 
     </LinearLayout>
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
