@@ -4,17 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="@drawable/color_bg_darkgray">
+    android:background="@drawable/color_bg_darkgray"
+    android:outlineSpotShadowColor="#000000"
+    tools:context=".MainActivity">
 
 
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/img_main" />
 
     <!--메인요소 감싼 랩-->
@@ -29,55 +33,129 @@
         <!--로고-->
         <ImageView
             android:id="@+id/icoLogo"
-            android:layout_width="124dp"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:elevation="10dp"
+            android:src="@drawable/ico_logo_white_vector"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/ico_logo_white_vector"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!--기존 이미지버튼 -->
-        <ImageView
-            android:id="@+id/btnStartRecord"
-            android:layout_width="228dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:adjustViewBounds="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/icoLogo"
-            app:srcCompat="@drawable/img_main_btn_big" />
+<!--        <ImageView-->
+<!--            android:id="@+id/btnStartRecord"-->
+<!--            android:layout_width="228dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="40dp"-->
+<!--            android:adjustViewBounds="true"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/icoLogo"-->
+<!--            app:srcCompat="@drawable/img_main_btn_big" />-->
 
 
         <!--메인버튼 영역-->
         <LinearLayout
+            android:id="@+id/btnStartRecord"
             android:layout_width="228dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_marginTop="40dp"
             android:background="@drawable/btn_lyt_roundwhite"
             android:elevation="10dp"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/icoLogo"
-            >
-            <LinearLayout
+            app:layout_constraintTop_toBottomOf="@+id/icoLogo">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
+                android:layout_height="200dp"
                 android:background="@drawable/color_main_gradient_roundtop"
-                >
-                <androidx.appcompat.widget.AppCompatImageView
+                android:orientation="vertical"
+                android:elevation="10dp">
+                <!--배경웨이브이미지-->
+                <ImageView
+                    android:id="@+id/imageView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
-                    android:src="@drawable/img_wave_vector"
-                    />
-            </LinearLayout>
+                    android:alpha="0.5"
+                    android:src="@drawable/img_wave"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+                <!--카메라아이콘-->
+                <ImageView
+                    android:layout_width="78dp"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:elevation="10dp"
+                    android:src="@drawable/ico_camera_vector"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/white" />
+                <!--그림자 이미지-->
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/img_shadow"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginBottom="20dp"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@drawable/box_lyt_roundbottom_white">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+                    <!--start to recode-->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:background="@drawable/btn_lyt_roundlinebar_gray"
+                        android:elevation="10dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ico_reddot_vector"
+                            android:layout_marginRight="10dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="START TO RECODE"
+                            android:textSize="11dp"/>
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:text="버튼을 눌러 시작하세요"
+                        android:textColor="#304A5E"
+                        android:textSize="11sp"/>
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
+        <!--등록데이터확인 버튼-->
         <LinearLayout
             android:id="@+id/linearLayout7"
             android:layout_width="228dp"
@@ -98,7 +176,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/ico_rec_done" />
+                android:src="@drawable/ico_datalist_vector" />
 
             <TextView
                 android:id="@+id/textView20"
@@ -135,7 +213,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/ico_myinfo" />
+                android:src="@drawable/ico_myinfo_vector" />
 
             <TextView
                 android:layout_width="wrap_content"
