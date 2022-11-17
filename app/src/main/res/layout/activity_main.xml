@@ -7,6 +7,7 @@
     tools:context=".MainActivity"
     android:background="@drawable/color_bg_darkgray">
 
+
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="match_parent"
@@ -14,104 +15,142 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/img_main" />
 
-    <ImageView
-        android:id="@+id/icoLogo"
-        android:layout_width="109dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="52dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ico_logo_white"
-        tools:ignore="MissingConstraints" />
-
-    <ImageView
-        android:id="@+id/btnStartRecord"
-        android:layout_width="228dp"
+    <!--메인요소 감싼 랩-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:layout_marginTop="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/icoLogo"
-        app:srcCompat="@drawable/img_main_btn_big" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <LinearLayout
-        android:id="@+id/linearLayout7"
-        android:layout_width="228dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="36dp"
-        android:background="@drawable/btn_lyt_roundblackline"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnStartRecord"
-        tools:ignore="MissingConstraints">
-
+        <!--로고-->
         <ImageView
-            android:layout_width="wrap_content"
+            android:id="@+id/icoLogo"
+            android:layout_width="124dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/ico_rec_done" />
+            android:adjustViewBounds="true"
+            android:elevation="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ico_logo_white_vector"
+            />
 
-        <TextView
-            android:id="@+id/textView20"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="6"
-            android:gravity="center"
-            android:text="등록 데이터 확인"
-            android:textColor="@color/white"
-            android:textSize="14dp"
-            android:textStyle="bold"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="185dp"
-            tools:layout_editor_absoluteY="211dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="228dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/btn_lyt_roundblackline"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout7"
-        tools:ignore="MissingConstraints">
-
+        <!--기존 이미지버튼 -->
         <ImageView
-            android:layout_width="wrap_content"
+            android:id="@+id/btnStartRecord"
+            android:layout_width="228dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/ico_myinfo" />
+            android:layout_marginTop="40dp"
+            android:adjustViewBounds="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/icoLogo"
+            app:srcCompat="@drawable/img_main_btn_big" />
 
-        <TextView
-            android:layout_width="wrap_content"
+
+        <!--메인버튼 영역-->
+        <LinearLayout
+            android:layout_width="228dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="6"
-            android:gravity="center"
-            android:text="내 정보 확인"
-            android:textColor="@color/white"
-            android:textSize="14dp"
-            android:textStyle="bold"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="185dp"
-            tools:layout_editor_absoluteY="211dp" />
-    </LinearLayout>
+            android:orientation="vertical"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/btn_lyt_roundwhite"
+            android:elevation="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/icoLogo"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:background="@drawable/color_main_gradient_roundtop"
+                >
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/img_wave_vector"
+                    />
+            </LinearLayout>
+        </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/linearLayout7"
+            android:layout_width="228dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="36dp"
+            android:background="@drawable/btn_lyt_roundblackline"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnStartRecord"
+            tools:ignore="MissingConstraints">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/ico_rec_done" />
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="6"
+                android:gravity="center"
+                android:text="등록 데이터 확인"
+                android:textColor="@color/white"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                tools:ignore="MissingConstraints"
+                tools:layout_editor_absoluteX="185dp"
+                tools:layout_editor_absoluteY="211dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="228dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/btn_lyt_roundblackline"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout7"
+            tools:ignore="MissingConstraints">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/ico_myinfo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="6"
+                android:gravity="center"
+                android:text="내 정보 확인"
+                android:textColor="@color/white"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                tools:ignore="MissingConstraints"
+                tools:layout_editor_absoluteX="185dp"
+                tools:layout_editor_absoluteY="211dp" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
