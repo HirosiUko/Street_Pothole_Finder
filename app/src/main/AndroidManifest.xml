@@ -23,6 +23,13 @@
         android:theme="@style/Theme.StreetPotholeFinder"
         tools:targetApi="31">
         <activity
+            android:name=".CameraView"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".SignUpActivity"
             android:exported="false">
             <meta-data
@@ -32,8 +39,6 @@
         <activity
             android:name=".TestGPS"
             android:exported="false">
-
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -81,6 +86,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
