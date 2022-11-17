@@ -249,7 +249,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/btn_rec_result_back"
+        android:id="@+id/btnRecResultBack"
         android:layout_width="228dp"
         android:layout_height="40dp"
         android:layout_marginTop="42dp"
@@ -284,7 +284,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/btn_rec_result_end"
+        android:id="@+id/btnRecResultEnd"
         android:layout_width="228dp"
         android:layout_height="40dp"
         android:layout_marginTop="16dp"
@@ -296,7 +296,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_rec_result_back"
+        app:layout_constraintTop_toBottomOf="@+id/btnRecResultBack"
         tools:ignore="MissingConstraints">
         <ImageView
             android:layout_width="wrap_content"

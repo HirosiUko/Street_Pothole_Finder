@@ -18,7 +18,7 @@
         app:srcCompat="@drawable/img_main" />
 
     <ImageView
-        android:id="@+id/ico_logo"
+        android:id="@+id/icoLogo"
         android:layout_width="109dp"
         android:layout_height="60dp"
         android:layout_marginTop="52dp"
@@ -29,14 +29,14 @@
         tools:ignore="MissingConstraints" />
 
     <ImageView
-        android:id="@+id/btn_startrecode"
+        android:id="@+id/btnStartRecord"
         android:layout_width="228dp"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ico_logo"
+        app:layout_constraintTop_toBottomOf="@+id/icoLogo"
         app:srcCompat="@drawable/img_main_btn_big" />
 
     <LinearLayout
@@ -52,7 +52,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_startrecode"
+        app:layout_constraintTop_toBottomOf="@+id/btnStartRecord"
         tools:ignore="MissingConstraints">
 
         <ImageView

@@ -53,7 +53,7 @@
                 tools:layout_editor_absoluteY="481dp" />
 
             <ImageView
-                android:id="@+id/btn_rec_start"
+                android:id="@+id/btnRecStart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="80dp"
@@ -116,7 +116,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/cnt_pothole"
+                    android:id="@+id/cntPothole"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -169,7 +169,7 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/cnt_crack"
+                    android:id="@+id/cntCrack"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
