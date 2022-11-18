@@ -6,29 +6,48 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.core.app.ActivityCompat
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var auth : FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //val btnStartRecord = findViewById<ImageView>(R.id.btnStartRecord)
-        //-->지영수정. 버튼이 이미지뷰에서 리니어레이아웃으로 바뀌었음
+        // 회원 정보 Info
+        auth = FirebaseAuth.getInstance()
+        val email = intent.getStringExtra("email")
+        val name = intent.getStringExtra("name")
+        val photoUrl = intent.getStringExtra("photoUrl")
+        findViewById<TextView>(R.id.tvLoginInfo).text = email + "\n" + name
+
         val btnStartRecord = findViewById<LinearLayout>(R.id.btnStartRecord)
         btnStartRecord.setOnClickListener {
             val intent = Intent(this, CameraView::class.java)
             startActivity(intent)
             finishAfterTransition()
         }
+
+        val btnLogout = findViewById<ImageView>(R.id.ivLogout)
+        btnLogout.setOnClickListener{
+            auth.signOut()
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
     }
 
     override fun onBackPressed() {
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
-            // Workaround for Android Q memory leak issue in IRequestFinishCallback$Stub.
-            // (https://issuetracker.google.com/issues/139738913)
-            finishAfterTransition()
+        if (Build.VERSION.SDK_INT >= 21) {
+            finishAndRemoveTask();
         } else {
-            super.onBackPressed()
+            finish();
         }
+        // Activity 종료
+        ActivityCompat.finishAffinity(this)
+        // App종료
+        System.exit(0);
     }
 }
