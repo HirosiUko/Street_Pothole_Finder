@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -13,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 class MainActivity : AppCompatActivity() {
 
     private lateinit var auth : FirebaseAuth
+    private val TAG = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +25,11 @@ class MainActivity : AppCompatActivity() {
         val email = intent.getStringExtra("email")
         val name = intent.getStringExtra("name")
         val photoUrl = intent.getStringExtra("photoUrl")
-        findViewById<TextView>(R.id.tvLoginInfo).text = email + "\n" + name
+        findViewById<TextView>(R.id.tvLoginInfo).text = email + "\n" + name + "\n" + photoUrl
+
+        if (photoUrl != null) {
+            Log.d(TAG, photoUrl)
+        }
 
         val btnStartRecord = findViewById<LinearLayout>(R.id.btnStartRecord)
         btnStartRecord.setOnClickListener {

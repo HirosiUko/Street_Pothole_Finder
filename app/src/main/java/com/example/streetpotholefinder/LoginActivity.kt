@@ -44,7 +44,7 @@ class LoginActivity : AppCompatActivity() {
             val intent : Intent = Intent(this, MainActivity::class.java)
             intent.putExtra("email", auth.currentUser?.email)
             intent.putExtra("name", auth.currentUser?.displayName)
-            intent.putExtra("photoUrl",auth.currentUser?.photoUrl)
+            intent.putExtra("photoUrl",auth.currentUser?.photoUrl.toString())
             startActivity(intent)
         }
     }
