@@ -63,14 +63,14 @@
             android:layout_marginTop="40dp"
             android:background="@drawable/btn_lyt_roundwhite"
             android:elevation="10dp"
-            android:orientation="vertical"
+             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/icoLogo">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="220dp"
                 android:background="@drawable/color_main_gradient_roundtop"
                 android:orientation="vertical"
                 android:elevation="10dp">
