@@ -34,15 +34,76 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/GoogleLoginimageView"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="로그인"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:layout_marginLeft="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView22"
+        app:layout_constraintStart_toEndOf="@+id/textView22" />
+
+<!--    <ImageView-->
+<!--        android:id="@+id/GoogleLoginimageView"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:srcCompat="@drawable/googlelogin" />-->
+
+    <LinearLayout
+        android:id="@+id/GoogleLoginLinearlyt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/googlelogin" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView6"
+        android:layout_marginBottom="100dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ico_google_vector" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#304A5E"
+            android:textSize="16sp"
+            android:layout_marginTop="24dp"
+            android:text="Sign in with Google"/>
+        <LinearLayout
+            android:layout_width="248dp"
+            android:layout_height="52dp"
+            android:orientation="horizontal"
+            android:background="@drawable/btn_lyt_roundcolorbar"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="28dp"
+            android:paddingRight="28dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ico_google_vector"
+                android:tint="@color/white"
+                tools:ignore="UseAppTint" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:layout_marginLeft="20dp"
+                android:text="구글 아이디로 로그인"/>
+        </LinearLayout>
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

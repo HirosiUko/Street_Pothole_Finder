@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -33,9 +34,13 @@ class LoginActivity : AppCompatActivity() {
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        findViewById<ImageView>(R.id.GoogleLoginimageView).setOnClickListener{
+//        findViewById<ImageView>(R.id.GoogleLoginimageView).setOnClickListener{
+//            signInGoogle()
+//        }
+        findViewById<LinearLayout>(R.id.GoogleLoginLinearlyt).setOnClickListener{
             signInGoogle()
         }
+
 
         Toast.makeText(this, auth.uid.toString(), Toast.LENGTH_SHORT).show()
 
