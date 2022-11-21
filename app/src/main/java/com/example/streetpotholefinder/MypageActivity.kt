@@ -9,8 +9,5 @@ class MypageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mypage)
 
-
-        val profileimg = findViewById<ImageView>(R.id.profileimg)
-
     }
 }

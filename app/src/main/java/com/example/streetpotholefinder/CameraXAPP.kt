@@ -228,7 +228,7 @@ class CameraXAPP : AppCompatActivity() {
             val preview = Preview.Builder()
                 .build()
                 .also {
-                    it.setSurfaceProvider(viewBinding.viewFinder.surfaceProvider)
+//                    it.setSurfaceProvider(viewBinding.viewFinder.surfaceProvider)
                 }
             val recorder = Recorder.Builder()
                 .setQualitySelector(QualitySelector.from(Quality.HIGHEST,
