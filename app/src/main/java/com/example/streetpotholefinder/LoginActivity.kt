@@ -46,7 +46,7 @@ class LoginActivity : AppCompatActivity() {
         {
             val intent : Intent = Intent(this, MainActivity::class.java)
             intent.flags =
-                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP //액티비티 스택제거
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK //액티비티 스택제거
 
             intent.putExtra("email", auth.currentUser?.email)
             intent.putExtra("name", auth.currentUser?.displayName)
@@ -85,7 +85,7 @@ class LoginActivity : AppCompatActivity() {
             if(it.isSuccessful){
                 val intent : Intent = Intent(this, MainActivity::class.java)
                 intent.flags =
-                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP //액티비티 스택제거
+                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK//액티비티 스택제거
                 intent.putExtra("email",account.email)
                 intent.putExtra("name", account.displayName)
                 intent.putExtra("photoUrl",account.photoUrl)
