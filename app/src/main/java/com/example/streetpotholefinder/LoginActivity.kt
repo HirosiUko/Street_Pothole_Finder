@@ -2,13 +2,11 @@ package com.example.streetpotholefinder
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -47,6 +45,9 @@ class LoginActivity : AppCompatActivity() {
         if(auth.uid != null)
         {
             val intent : Intent = Intent(this, MainActivity::class.java)
+            intent.flags =
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP //액티비티 스택제거
+
             intent.putExtra("email", auth.currentUser?.email)
             intent.putExtra("name", auth.currentUser?.displayName)
             intent.putExtra("photoUrl",auth.currentUser?.photoUrl.toString())
@@ -83,6 +84,8 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithCredential(credential).addOnCompleteListener{
             if(it.isSuccessful){
                 val intent : Intent = Intent(this, MainActivity::class.java)
+                intent.flags =
+                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP //액티비티 스택제거
                 intent.putExtra("email",account.email)
                 intent.putExtra("name", account.displayName)
                 intent.putExtra("photoUrl",account.photoUrl)

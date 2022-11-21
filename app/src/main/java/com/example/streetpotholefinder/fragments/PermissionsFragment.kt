@@ -19,6 +19,7 @@ package com.example.streetpotholefinder.fragments
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.pm.PackageManager.*
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -49,12 +50,21 @@ class PermissionsFragment : Fragment() {
                 }
                 permissions.getOrDefault(Manifest.permission.CAMERA, false) -> {
                     // Only approximate location access granted.
-                    navigateToCamera()
                 }
                 else -> {
-                // No location access granted.
+                    Toast.makeText(context, "Permission request denied", Toast.LENGTH_LONG).show()
                 }
             }
+
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED )
+            {
+                navigateToCamera()
+            }else{
+                Toast.makeText(context, "Permission is not enough!", Toast.LENGTH_LONG).show()
+            }
+
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +73,7 @@ class PermissionsFragment : Fragment() {
             ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED -> {
+            ) == PERMISSION_GRANTED -> {
                 navigateToCamera()
             }
             else -> {
@@ -83,7 +93,7 @@ class PermissionsFragment : Fragment() {
 
         /** Convenience method used to check if all permissions required by this app are granted */
         fun hasPermissions(context: Context) = PERMISSIONS_REQUIRED.all {
-            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(context, it) == PERMISSION_GRANTED
         }
     }
 }
