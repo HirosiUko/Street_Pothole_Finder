@@ -32,13 +32,9 @@ class LoginActivity : AppCompatActivity() {
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-//        findViewById<ImageView>(R.id.GoogleLoginimageView).setOnClickListener{
-//            signInGoogle()
-//        }
         findViewById<LinearLayout>(R.id.GoogleLoginLinearlyt).setOnClickListener{
             signInGoogle()
         }
-
 
         Toast.makeText(this, auth.uid.toString(), Toast.LENGTH_SHORT).show()
 
