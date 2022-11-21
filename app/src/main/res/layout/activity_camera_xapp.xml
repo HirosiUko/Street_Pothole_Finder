@@ -20,7 +20,7 @@
 
     <!--위도경도영역-->
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/tvGpsInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"

@@ -25,6 +25,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.camera.core.AspectRatio
 import androidx.camera.core.Camera
@@ -119,7 +120,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location : Location? ->
                 // Got last known location. In some rare situations this can be null.
-                Log.d(TAG, "onViewCreated: hojune" + location.toString())
+                Log.d(TAG, "onViewCreated: Current GPS Info :" + location.toString())
             }
 
         locationCallback = object : LocationCallback() {
@@ -127,7 +128,11 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                 locationResult ?: return
                 for (location in locationResult.locations){
                     // Update UI with location data
-                    Log.d(TAG, "onViewCreated: GPS" + location.toString())
+//                    Log.d(TAG, "onViewCreated: GPS" + location.latitude + location.longitude)
+//                    TextView tvGPS =
+                    var tvGPS: TextView? = null
+                    tvGPS = requireActivity().findViewById(R.id.tvGpsInfo)
+                    tvGPS.text = "위도 "+location.latitude.toString()+" 경도 "+location.longitude.toString()
                 }
             }
         }
@@ -137,8 +142,8 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
     private fun startLocationUpdates() {
         val locationRequest = LocationRequest.create()?.apply {
-            interval = 10000
-            fastestInterval = 5000
+            interval = 1000
+            fastestInterval = 500
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 
