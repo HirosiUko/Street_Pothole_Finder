@@ -149,7 +149,7 @@ class CameraXAPP : AppCompatActivity() {
     private fun captureVideo() {
         val videoCapture = this.videoCapture ?: return
 
-        viewBinding.videoCaptureButton.isEnabled = false
+//        viewBinding.videoCaptureButton.isEnabled = false
 
         val curRecording = recording
         if (curRecording != null) {
@@ -188,10 +188,10 @@ class CameraXAPP : AppCompatActivity() {
             .start(ContextCompat.getMainExecutor(this)) { recordEvent ->
                 when(recordEvent) {
                     is VideoRecordEvent.Start -> {
-                        viewBinding.videoCaptureButton.apply {
-                            text = getString(R.string.stop_capture)
-                            isEnabled = true
-                        }
+//                        viewBinding.videoCaptureButton.apply {
+//                            text = getString(R.string.stop_capture)
+//                            isEnabled = true
+//                        }
                     }
                     is VideoRecordEvent.Finalize -> {
                         if (!recordEvent.hasError()) {
@@ -208,10 +208,10 @@ class CameraXAPP : AppCompatActivity() {
                             Log.e(TAG, "Video capture ends with error: " +
                                     "${recordEvent.error}")
                         }
-                        viewBinding.videoCaptureButton.apply {
-                            text = getString(R.string.start_capture)
-                            isEnabled = true
-                        }
+//                        viewBinding.videoCaptureButton.apply {
+//                            text = getString(R.string.start_capture)
+//                            isEnabled = true
+//                        }
                     }
                 }
             }

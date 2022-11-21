@@ -18,12 +18,13 @@ package com.example.streetpotholefinder.fragments
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.location.Location
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.Toast
 import androidx.camera.core.AspectRatio
 import androidx.camera.core.Camera
@@ -41,6 +42,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import com.example.streetpotholefinder.R
 import com.example.streetpotholefinder.databinding.FragmentCameraBinding
+import com.google.android.gms.location.*
 import org.tensorflow.lite.task.vision.detector.Detection
 
 class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
@@ -61,6 +63,9 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
     /** Blocking camera operations are performed using this executor */
     private lateinit var cameraExecutor: ExecutorService
+
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationCallback: LocationCallback
 
     override fun onResume() {
         super.onResume()
@@ -109,7 +114,43 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
         // Attach listeners to UI control widgets
 //        initBottomSheetControls()
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location : Location? ->
+                // Got last known location. In some rare situations this can be null.
+                Log.d(TAG, "onViewCreated: hojune" + location.toString())
+            }
+
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                locationResult ?: return
+                for (location in locationResult.locations){
+                    // Update UI with location data
+                    Log.d(TAG, "onViewCreated: GPS" + location.toString())
+                }
+            }
+        }
+
+        startLocationUpdates()
     }
+
+    private fun startLocationUpdates() {
+        val locationRequest = LocationRequest.create()?.apply {
+            interval = 10000
+            fastestInterval = 5000
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+
+        fusedLocationClient.requestLocationUpdates(locationRequest,
+            locationCallback,
+            Looper.getMainLooper())
+    }
+
+    private fun stopLocationUpdates() {
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+    }
+
 
 //    private fun initBottomSheetControls() {
 //        // When clicked, lower detection score threshold floor

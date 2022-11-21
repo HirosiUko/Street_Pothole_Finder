@@ -29,7 +29,7 @@ import androidx.navigation.Navigation
 import com.example.streetpotholefinder.R
 
 
-private val PERMISSIONS_REQUIRED = arrayOf(Manifest.permission.CAMERA)
+private val PERMISSIONS_REQUIRED = arrayOf(Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
 
 /**
  * The sole purpose of this fragment is to request permissions and, once granted, display the
@@ -37,14 +37,23 @@ private val PERMISSIONS_REQUIRED = arrayOf(Manifest.permission.CAMERA)
  */
 class PermissionsFragment : Fragment() {
 
-    private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-                Toast.makeText(context, "Permission request granted", Toast.LENGTH_LONG).show()
-                navigateToCamera()
-            } else {
-                Toast.makeText(context, "Permission request denied", Toast.LENGTH_LONG).show()
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            when {
+                permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+                    // Precise location access granted.
+                }
+                permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+                    // Only approximate location access granted.
+                }
+                permissions.getOrDefault(Manifest.permission.CAMERA, false) -> {
+                    // Only approximate location access granted.
+                    navigateToCamera()
+                }
+                else -> {
+                // No location access granted.
+                }
             }
         }
 
@@ -58,8 +67,7 @@ class PermissionsFragment : Fragment() {
                 navigateToCamera()
             }
             else -> {
-                requestPermissionLauncher.launch(
-                    Manifest.permission.CAMERA)
+                requestPermissionLauncher.launch(PERMISSIONS_REQUIRED)
             }
         }
     }
