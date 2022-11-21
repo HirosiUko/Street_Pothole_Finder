@@ -255,44 +255,15 @@
         app:srcCompat="@drawable/ic_baseline_logout_24"
         app:tint="@color/white" />
 
+
     <!--User님 안녕하세요!-->
-    <LinearLayout
+    <include
+        layout="@layout/user_hello_lyt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
-        android:paddingTop="4dp"
-        android:paddingLeft="8dp"
-        android:paddingBottom="4dp"
-        android:paddingRight="10dp"
-        android:background="@drawable/btn_lyt_roundblack"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="16dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/ico_google_vector" />
-
-        <TextView
-            android:id="@+id/txt_main_googlename"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="Gildong"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" 님, 안녕하세요!"
-            android:textSize="14sp"
-            android:textColor="@color/white" />
-    </LinearLayout> <!--//User님 안녕하세요! 끝-->
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

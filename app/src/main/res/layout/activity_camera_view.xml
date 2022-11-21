@@ -39,26 +39,29 @@
             android:layout_marginTop="?android:attr/actionBarSize"
             tools:context=".MainActivity"/>
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_alignParentTop="true"
-            android:background="@color/toolbar_background">
+<!--        <androidx.appcompat.widget.Toolbar-->
+<!--            android:id="@+id/toolbar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="?attr/actionBarSize"-->
+<!--            android:layout_alignParentTop="true"-->
+<!--            android:background="@color/toolbar_background">-->
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/common_google_signin_btn_icon_dark"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="hello world"
-                android:textSize="18sp"/>
+<!--            <ImageView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:src="@drawable/common_google_signin_btn_icon_dark"/>-->
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="hello world"-->
+<!--                android:textSize="18sp"/>-->
 
+<!--        </androidx.appcompat.widget.Toolbar>-->
 
-        </androidx.appcompat.widget.Toolbar>
+        <!--User님 안녕하세요!-->
+        <include layout="@layout/user_hello_lyt"/>
 
+        <!--촬영UI-->
         <include layout="@layout/activity_camera_xapp"
             android:background="@android:color/transparent"/>
 

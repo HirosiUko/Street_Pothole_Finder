@@ -9,14 +9,16 @@
     android:id="@+id/cc"
     tools:context=".CameraXAPP">
 
-    <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="42dp"
-        android:layout_marginEnd="20dp"
-        android:src="@drawable/ico_guide"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!--촬영가이드버튼 숨김-->
+<!--    <ImageView-->
+<!--        android:layout_width="30dp"-->
+<!--        android:layout_height="30dp"-->
+<!--        android:layout_marginTop="42dp"-->
+<!--        android:layout_marginEnd="20dp"-->
+<!--        android:src="@drawable/ico_guide"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
 
     <!--위도경도영역-->
     <TextView
@@ -36,48 +38,6 @@
         app:layout_constraintHorizontal_bias="0.517"
         app:layout_constraintStart_toStartOf="parent" />
     <!--//위도경도영역끝-->
-
-
-
-    <!--녹화시간영역-->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="36dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="36dp"
-        android:background="@drawable/btn_lyt_roundblack"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="14dp"
-        android:paddingRight="14dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/img_red_dot" />
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="REC"
-            android:textColor="@color/white"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="35dp"
-            tools:layout_editor_absoluteY="39dp" />
-        <TextView
-            android:id="@+id/textView10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:text="00:02:58"
-            android:textColor="@color/white" />
-    </LinearLayout>
-    <!--//녹화시간영역끝-->
-
-
 
     <!--하단영역-->
     <LinearLayout
@@ -109,9 +69,27 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/img_btn_rec"
+                app:srcCompat="@drawable/img_btn_rec_vector"
+                android:elevation="10dp"/>
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="REC"
+                android:textColor="@color/white"
                 tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteY="481dp" />
+                tools:layout_editor_absoluteX="35dp"
+                tools:layout_editor_absoluteY="39dp" />
+
+            <TextView
+                android:id="@+id/txt_rec_cnt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="00:02:58"
+                android:textColor="@color/white" />
 
         </LinearLayout>
         <!--   // 중지버튼영역 끝   -->
@@ -142,9 +120,10 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="wrap_content"
+                        android:layout_width="52dp"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ico_pothole" />
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ico_pothole_vector" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -194,11 +173,11 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="35dp"
+                        android:layout_width="46dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:adjustViewBounds="true"
-                        android:src="@drawable/ico_crack" />
+                        android:src="@drawable/ico_crack_vector" />
 
                     <TextView
                         android:layout_width="wrap_content"
