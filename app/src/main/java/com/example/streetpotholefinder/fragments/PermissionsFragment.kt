@@ -30,7 +30,9 @@ import androidx.navigation.Navigation
 import com.example.streetpotholefinder.R
 
 
-private val PERMISSIONS_REQUIRED = arrayOf(Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+private val PERMISSIONS_REQUIRED = arrayOf(Manifest.permission.CAMERA,
+                                            Manifest.permission.ACCESS_FINE_LOCATION,
+                                            Manifest.permission.ACCESS_COARSE_LOCATION)
 
 /**
  * The sole purpose of this fragment is to request permissions and, once granted, display the

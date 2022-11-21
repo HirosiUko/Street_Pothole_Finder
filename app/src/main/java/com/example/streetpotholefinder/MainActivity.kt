@@ -35,13 +35,13 @@ class MainActivity : AppCompatActivity() {
         btnStartRecord.setOnClickListener {
             val intent = Intent(this, CameraView::class.java)
             startActivity(intent)
-            finishAfterTransition()
         }
 
         val btnLogout = findViewById<ImageView>(R.id.ivLogout)
         btnLogout.setOnClickListener{
             auth.signOut()
-            startActivity(Intent(this, LoginActivity::class.java))
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
         }
 
         //상단 '환영합니다'에 띄울 유저 이름 가져오기
@@ -49,15 +49,15 @@ class MainActivity : AppCompatActivity() {
         txtGoogleName.text=name
     }
 
-    override fun onBackPressed() {
-        if (Build.VERSION.SDK_INT >= 21) {
-            finishAndRemoveTask();
-        } else {
-            finish();
-        }
-        // Activity 종료
-        ActivityCompat.finishAffinity(this)
-        // App종료
-        System.exit(0);
-    }
+//    override fun onBackPressed() {
+//        if (Build.VERSION.SDK_INT >= 21) {
+//            finishAndRemoveTask();
+//        } else {
+//            finish();
+//        }
+//        // Activity 종료
+//        ActivityCompat.finishAffinity(this)
+//        // App종료
+//        System.exit(0);
+//    }
 }

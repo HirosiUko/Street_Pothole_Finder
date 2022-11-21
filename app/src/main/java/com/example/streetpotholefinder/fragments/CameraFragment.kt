@@ -79,6 +79,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     }
 
     override fun onDestroyView() {
+        stopLocationUpdates()
         _fragmentCameraBinding = null
         super.onDestroyView()
 
