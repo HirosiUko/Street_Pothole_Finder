@@ -45,6 +45,7 @@ import com.example.streetpotholefinder.R
 import com.example.streetpotholefinder.databinding.FragmentCameraBinding
 import com.google.android.gms.location.*
 import org.tensorflow.lite.task.vision.detector.Detection
+import org.tensorflow.lite.task.vision.detector.ObjectDetector
 
 class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
@@ -79,12 +80,12 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     }
 
     override fun onDestroyView() {
-        stopLocationUpdates()
         _fragmentCameraBinding = null
         super.onDestroyView()
 
         // Shut down our background executor
         cameraExecutor.shutdown()
+        stopLocationUpdates()
     }
 
     override fun onCreateView(
@@ -353,14 +354,22 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 //                String.format("%d ms", inferenceTime)
 
             // Pass necessary information to OverlayView for drawing on the canvas
-            fragmentCameraBinding.overlay.setResults(
-                results ?: LinkedList<Detection>(),
-                imageHeight,
-                imageWidth
-            )
+            try {
+                if (fragmentCameraBinding != null)
+                {
+                    fragmentCameraBinding.overlay.setResults(
+                        results ?: LinkedList<Detection>(),
+                        imageHeight,
+                        imageWidth
+                    )
 
-            // Force a redraw
-            fragmentCameraBinding.overlay.invalidate()
+                    // Force a redraw
+                    fragmentCameraBinding.overlay.invalidate()
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, " error: " + e.message)
+            }
+
         }
     }
 
