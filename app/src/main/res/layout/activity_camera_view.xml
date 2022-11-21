@@ -36,8 +36,10 @@
             android:keepScreenOn="true"
             app:defaultNavHost="true"
             app:navGraph="@navigation/nav_graph"
-            android:layout_marginTop="?android:attr/actionBarSize"
             tools:context=".MainActivity"/>
+
+        <!--android:layout_marginTop="?android:attr/actionBarSize"-->
+
 
 <!--        <androidx.appcompat.widget.Toolbar-->
 <!--            android:id="@+id/toolbar"-->
@@ -58,8 +60,7 @@
 
 <!--        </androidx.appcompat.widget.Toolbar>-->
 
-        <!--User님 안녕하세요!-->
-        <include layout="@layout/user_hello_lyt"/>
+
 
         <!--촬영UI-->
         <include layout="@layout/activity_camera_xapp"
