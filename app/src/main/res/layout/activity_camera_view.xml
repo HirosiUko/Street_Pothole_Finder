@@ -55,6 +55,8 @@
                 android:layout_height="wrap_content"
                 android:text="hello world"
                 android:textSize="18sp"/>
+
+
         </androidx.appcompat.widget.Toolbar>
 
         <include layout="@layout/activity_camera_xapp"

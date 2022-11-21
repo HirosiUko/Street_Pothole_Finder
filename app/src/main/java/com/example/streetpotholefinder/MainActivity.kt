@@ -43,6 +43,10 @@ class MainActivity : AppCompatActivity() {
             auth.signOut()
             startActivity(Intent(this, LoginActivity::class.java))
         }
+
+        //상단 '환영합니다'에 띄울 유저 이름 가져오기
+        val txtGoogleName = findViewById<TextView>(R.id.txt_main_googlename)
+        txtGoogleName.text=name
     }
 
     override fun onBackPressed() {
