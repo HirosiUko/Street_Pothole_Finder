@@ -58,6 +58,8 @@ import org.tensorflow.lite.task.vision.detector.ObjectDetector
 class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
     private val TAG = "ObjectDetection"
+    private val OBJECT_POTHOLE = "person"
+    private val OBJECT_CRACK = "mouse"
 
     private var _fragmentCameraBinding: FragmentCameraBinding? = null
 
@@ -77,8 +79,9 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
 
-    //kakao map view.
-    private lateinit var mapView: MapView
+    private var cntCrack : Int = 0
+    private var cntPothole : Int = 0
+
 
     override fun onResume() {
         super.onResume()
@@ -97,7 +100,6 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         // Shut down our background executor
         cameraExecutor.shutdown()
         stopLocationUpdates()
-        stopTracking()
     }
 
     override fun onCreateView(
@@ -107,7 +109,6 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     ): View {
         _fragmentCameraBinding = FragmentCameraBinding.inflate(inflater, container, false)
 
-        mapView = requireActivity().findViewById(R.id.mapKakao)
         return fragmentCameraBinding.root
     }
 
@@ -151,7 +152,6 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
             }
         }
         startLocationUpdates()
-        startTracking()
     }
 
     @SuppressLint("MissingPermission")
@@ -170,33 +170,6 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     private fun stopLocationUpdates() {
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
-
-    @SuppressLint("MissingPermission")
-    private fun startTracking() {
-        mapView.currentLocationTrackingMode =
-            MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading  //이 부분
-
-        val lm: LocationManager = requireContext().getSystemService(LOCATION_SERVICE) as LocationManager
-        val userNowLocation: Location? = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-        //위도 , 경도
-        val uLatitude = userNowLocation?.latitude
-        val uLongitude = userNowLocation?.longitude
-        val uNowPosition = MapPoint.mapPointWithGeoCoord(uLatitude!!, uLongitude!!)
-
-        // 현 위치에 마커 찍기
-        val marker = MapPOIItem()
-//        marker.itemName = "현 위치"
-        marker.mapPoint =uNowPosition
-        marker.markerType = MapPOIItem.MarkerType.BluePin
-        marker.selectedMarkerType = MapPOIItem.MarkerType.RedPin
-        mapView.addPOIItem(marker)
-    }
-
-    // 위치추적 중지
-    private fun stopTracking() {
-        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
-    }
-
 
 //    private fun initBottomSheetControls() {
 //        // When clicked, lower detection score threshold floor
@@ -396,6 +369,19 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
             try {
                 if (fragmentCameraBinding != null)
                 {
+                    if(results?.get(0)?.categories?.get(0)?.label!! == OBJECT_POTHOLE)
+                    {
+                        cntPothole += 1
+                        requireActivity().findViewById<TextView>(R.id.cntPothole).text = cntPothole.toString()
+                    }
+
+                    if(results?.get(0)?.categories?.get(0)?.label!! == OBJECT_CRACK)
+                    {
+                        cntCrack += 1
+                        requireActivity().findViewById<TextView>(R.id.cntCrack).text = cntCrack.toString()
+                    }
+
+//                    Log.d(TAG, "DetectObject: "+results.toString())
                     fragmentCameraBinding.overlay.setResults(
                         results ?: LinkedList<Detection>(),
                         imageHeight,

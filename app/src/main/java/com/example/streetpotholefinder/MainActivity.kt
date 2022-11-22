@@ -1,5 +1,6 @@
 package com.example.streetpotholefinder
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,7 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import com.example.streetpotholefinder.user.User
 import com.google.firebase.auth.FirebaseAuth
@@ -26,10 +28,10 @@ class MainActivity : AppCompatActivity() {
 
         // 회원 정보 Info
         auth = FirebaseAuth.getInstance()
-        val email = auth.currentUser?.email
+//        val email = auth.currentUser?.email
         val name = auth.currentUser?.displayName
-        val photoUrl = auth.currentUser?.photoUrl
-//        findViewById<TextView>(R.id.tvLoginInfo).text = email + "\n" + name + "\n" + photoUrl.toString()
+//        val photoUrl = auth.currentUser?.photoUrl
+////        findViewById<TextView>(R.id.tvLoginInfo).text = email + "\n" + name + "\n" + photoUrl.toString()
 
         // 촬영 버튼
         val btnStartRecord = findViewById<LinearLayout>(R.id.btnStartRecord)
@@ -41,10 +43,19 @@ class MainActivity : AppCompatActivity() {
         // Logout 버튼
         val btnLogout = findViewById<ImageView>(R.id.ivLogout)
         btnLogout.setOnClickListener{
-            auth.signOut()
-            val intent = Intent(this, LoginActivity::class.java)
-//            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+            val dlg: AlertDialog.Builder = AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
+            dlg.setTitle("\uD83D\uDD06 경고") //제목
+            dlg.setMessage("계정을 로그아웃 합니다.") // 메시지
+            dlg.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->
+                auth.signOut()
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+            })
+            dlg.setNegativeButton("취소", DialogInterface.OnClickListener{
+                    dialog, which ->
+                // Do nothing
+            })
+            dlg.show()
         }
 
 
@@ -73,15 +84,23 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-//    override fun onBackPressed() {
-//        if (Build.VERSION.SDK_INT >= 21) {
-//            finishAndRemoveTask();
-//        } else {
-//            finish();
-//        }
-//        // Activity 종료
-//        ActivityCompat.finishAffinity(this)
-//        // App종료
-//        System.exit(0);
-//    }
+    override fun onBackPressed() {
+        val dlg: AlertDialog.Builder = AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
+        dlg.setTitle("\uD83D\uDD06 경고") //제목
+        dlg.setMessage("App을 종료합니다.") // 메시지
+        dlg.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->
+            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+                // Workaround for Android Q memory leak issue in IRequestFinishCallback$Stub.
+                // (https://issuetracker.google.com/issues/139738913)
+                finishAfterTransition()
+            } else {
+                super.onBackPressed()
+            }
+        })
+        dlg.setNegativeButton("취소", DialogInterface.OnClickListener{
+                dialog, which ->
+            // Do nothing
+        })
+        dlg.show()
+    }
 }

@@ -18,6 +18,22 @@
     <!--        app:layout_constraintEnd_toEndOf="parent"-->
     <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="100dp"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        android:layout_alignParentTop="true"-->
+<!--        >-->
+<!--        <net.daum.mf.map.api.MapView-->
+<!--            android:id="@+id/mapKakao"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            android:layout_alignParentTop="true"-->
+<!--            android:focusableInTouchMode="true"-->
+<!--            />-->
+<!--    </LinearLayout>-->
+
 
     <!--위도경도영역-->
     <TextView
@@ -200,14 +216,14 @@
     <!--//하단영역 끝-->
 
     <!--User님 안녕하세요!-->
-    <include
-        layout="@layout/user_hello_lyt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <include-->
+<!--        layout="@layout/user_hello_lyt"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:layout_marginLeft="20dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
