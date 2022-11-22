@@ -1,19 +1,18 @@
 package com.example.streetpotholefinder
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.os.Vibrator
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
+import androidx.appcompat.app.AppCompatActivity
 import com.example.streetpotholefinder.user.User
 import com.google.firebase.auth.FirebaseAuth
-
 
 
 class MainActivity : AppCompatActivity() {
@@ -38,6 +37,9 @@ class MainActivity : AppCompatActivity() {
         btnStartRecord.setOnClickListener {
             val intent = Intent(this, CameraView::class.java)
             startActivity(intent)
+            // Vibrate for 500 milliseconds
+            var v : Vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            v.vibrate(500)
         }
 
         // Logout 버튼
@@ -46,13 +48,13 @@ class MainActivity : AppCompatActivity() {
             val dlg: AlertDialog.Builder = AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
             dlg.setTitle("\uD83D\uDD06 경고") //제목
             dlg.setMessage("계정을 로그아웃 합니다.") // 메시지
-            dlg.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->
+            dlg.setPositiveButton("확인", DialogInterface.OnClickListener {_,_ ->
                 auth.signOut()
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
             })
             dlg.setNegativeButton("취소", DialogInterface.OnClickListener{
-                    dialog, which ->
+                    _,_ ->
                 // Do nothing
             })
             dlg.show()
@@ -71,11 +73,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 //        // 내 정보 확인 버튼
-//        val btnMainMypage = findViewById<LinearLayout>(R.id.btn_main_mypage)
-//        btnMainMypage.setOnClickListener{
-//            val intent = Intent(this, MypageActivity::class.java)
-//            startActivity(intent)
-//        }
         var btnMainMypage = findViewById<LinearLayout>(R.id.btn_main_mypage)
         btnMainMypage.setOnClickListener{
             val intent = Intent(this, MypageActivity::class.java)
@@ -85,10 +82,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        var v : Vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        v.vibrate(500)
+
         val dlg: AlertDialog.Builder = AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
         dlg.setTitle("\uD83D\uDD06 경고") //제목
         dlg.setMessage("App을 종료합니다.") // 메시지
-        dlg.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->
+        dlg.setPositiveButton("확인", DialogInterface.OnClickListener { _,_ ->
             if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
                 // Workaround for Android Q memory leak issue in IRequestFinishCallback$Stub.
                 // (https://issuetracker.google.com/issues/139738913)
@@ -97,8 +97,7 @@ class MainActivity : AppCompatActivity() {
                 super.onBackPressed()
             }
         })
-        dlg.setNegativeButton("취소", DialogInterface.OnClickListener{
-                dialog, which ->
+        dlg.setNegativeButton("취소", DialogInterface.OnClickListener{ _,_ ->
             // Do nothing
         })
         dlg.show()
