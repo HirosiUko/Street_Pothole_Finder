@@ -3,6 +3,7 @@ package com.example.streetpotholefinder
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -47,6 +48,19 @@ class LoginActivity : AppCompatActivity() {
             intent.putExtra("email", auth.currentUser?.email)
             intent.putExtra("name", auth.currentUser?.displayName)
             intent.putExtra("photoUrl",auth.currentUser?.photoUrl.toString())
+            startActivity(intent)
+        }
+
+
+        // debug develop mode button
+        val btnDev : Button = findViewById(R.id.btnDev)
+        btnDev.setOnClickListener {
+            val intent : Intent = Intent(this, MainActivity::class.java)
+            intent.flags =
+                Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK//액티비티 스택제거
+            intent.putExtra("email","DevMode")
+            intent.putExtra("name", "Developer")
+            intent.putExtra("photoUrl","DevMode")
             startActivity(intent)
         }
     }
