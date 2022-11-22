@@ -16,9 +16,12 @@
 package com.example.streetpotholefinder.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Context.LOCATION_SERVICE
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
@@ -36,6 +39,8 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import java.util.LinkedList
@@ -44,6 +49,9 @@ import java.util.concurrent.Executors
 import com.example.streetpotholefinder.R
 import com.example.streetpotholefinder.databinding.FragmentCameraBinding
 import com.google.android.gms.location.*
+import net.daum.mf.map.api.MapPOIItem
+import net.daum.mf.map.api.MapPoint
+import net.daum.mf.map.api.MapView
 import org.tensorflow.lite.task.vision.detector.Detection
 import org.tensorflow.lite.task.vision.detector.ObjectDetector
 
@@ -69,6 +77,9 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
 
+    //kakao map view.
+    private lateinit var mapView: MapView
+
     override fun onResume() {
         super.onResume()
         // Make sure that all permissions are still present, since the
@@ -86,6 +97,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         // Shut down our background executor
         cameraExecutor.shutdown()
         stopLocationUpdates()
+        stopTracking()
     }
 
     override fun onCreateView(
@@ -95,6 +107,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     ): View {
         _fragmentCameraBinding = FragmentCameraBinding.inflate(inflater, container, false)
 
+        mapView = requireActivity().findViewById(R.id.mapKakao)
         return fragmentCameraBinding.root
     }
 
@@ -133,13 +146,15 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                     var tvGPS: TextView? = null
                     tvGPS = requireActivity().findViewById(R.id.tvGpsInfo)
                     tvGPS.text = "위도 "+location.latitude.toString()+" 경도 "+location.longitude.toString()
+
                 }
             }
         }
-
         startLocationUpdates()
+        startTracking()
     }
 
+    @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
         val locationRequest = LocationRequest.create()?.apply {
             interval = 1000
@@ -154,6 +169,32 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
     private fun stopLocationUpdates() {
         fusedLocationClient.removeLocationUpdates(locationCallback)
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun startTracking() {
+        mapView.currentLocationTrackingMode =
+            MapView.CurrentLocationTrackingMode.TrackingModeOnWithoutHeading  //이 부분
+
+        val lm: LocationManager = requireContext().getSystemService(LOCATION_SERVICE) as LocationManager
+        val userNowLocation: Location? = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+        //위도 , 경도
+        val uLatitude = userNowLocation?.latitude
+        val uLongitude = userNowLocation?.longitude
+        val uNowPosition = MapPoint.mapPointWithGeoCoord(uLatitude!!, uLongitude!!)
+
+        // 현 위치에 마커 찍기
+        val marker = MapPOIItem()
+//        marker.itemName = "현 위치"
+        marker.mapPoint =uNowPosition
+        marker.markerType = MapPOIItem.MarkerType.BluePin
+        marker.selectedMarkerType = MapPOIItem.MarkerType.RedPin
+        mapView.addPOIItem(marker)
+    }
+
+    // 위치추적 중지
+    private fun stopTracking() {
+        mapView.currentLocationTrackingMode = MapView.CurrentLocationTrackingMode.TrackingModeOff
     }
 
 

@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         val email = auth.currentUser?.email
         val name = auth.currentUser?.displayName
         val photoUrl = auth.currentUser?.photoUrl
-        findViewById<TextView>(R.id.tvLoginInfo).text = email + "\n" + name + "\n" + photoUrl.toString()
+//        findViewById<TextView>(R.id.tvLoginInfo).text = email + "\n" + name + "\n" + photoUrl.toString()
 
         // 촬영 버튼
         val btnStartRecord = findViewById<LinearLayout>(R.id.btnStartRecord)

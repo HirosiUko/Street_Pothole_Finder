@@ -143,6 +143,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ivMypageBackBtn"
                 android:layout_width="248dp"
                 android:layout_height="52dp"
                 android:layout_marginTop="36dp"
@@ -161,9 +162,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="32dp"
                     android:text="돌아가기"
-                    android:textColor="@color/white"
-                    android:layout_marginLeft="32dp"/>
+                    android:textColor="@color/white" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
