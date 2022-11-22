@@ -130,8 +130,6 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                 locationResult ?: return
                 for (location in locationResult.locations){
                     // Update UI with location data
-//                    Log.d(TAG, "onViewCreated: GPS" + location.latitude + location.longitude)
-//                    TextView tvGPS =
                     var tvGPS: TextView? = null
                     tvGPS = requireActivity().findViewById(R.id.tvGpsInfo)
                     tvGPS.text = "위도 "+location.latitude.toString()+" 경도 "+location.longitude.toString()

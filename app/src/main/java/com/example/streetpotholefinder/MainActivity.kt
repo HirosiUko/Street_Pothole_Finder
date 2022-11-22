@@ -11,14 +11,17 @@ import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import com.google.firebase.auth.FirebaseAuth
 
+
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var auth : FirebaseAuth
     private val TAG = "MainActivity"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
 
         // 회원 정보 Info
         auth = FirebaseAuth.getInstance()
@@ -31,16 +34,19 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, photoUrl)
         }
 
+        // 촬영 버튼
         val btnStartRecord = findViewById<LinearLayout>(R.id.btnStartRecord)
         btnStartRecord.setOnClickListener {
             val intent = Intent(this, CameraView::class.java)
             startActivity(intent)
         }
 
+        // Logout 버튼
         val btnLogout = findViewById<ImageView>(R.id.ivLogout)
         btnLogout.setOnClickListener{
             auth.signOut()
             val intent = Intent(this, LoginActivity::class.java)
+//            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
 

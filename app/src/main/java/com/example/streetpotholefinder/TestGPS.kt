@@ -2,6 +2,7 @@ package com.example.streetpotholefinder
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
@@ -33,6 +34,7 @@ class TestGPS : AppCompatActivity() {
     lateinit var txtLat: TextView
     lateinit var txtLong: TextView
     lateinit var txtTime: TextView
+    lateinit var btn_back: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +74,9 @@ class TestGPS : AppCompatActivity() {
             btnStartupdate.isEnabled = true
             btnStopUpdates.isEnabled = false
         }
+
     }
+
 
     protected fun startLocationUpdates() {
         Log.d(TAG, "startLocationUpdates()")
