@@ -11,14 +11,17 @@ import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import com.google.firebase.auth.FirebaseAuth
 
+
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var auth : FirebaseAuth
     private val TAG = "MainActivity"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
 
         // 회원 정보 Info
         auth = FirebaseAuth.getInstance()
