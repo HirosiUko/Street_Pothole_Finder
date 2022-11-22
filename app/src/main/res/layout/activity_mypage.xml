@@ -99,6 +99,7 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/tvUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Hong Gil-dong"
@@ -132,6 +133,7 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:id="@+id/tvUserEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="street_fimder@gmail.com"

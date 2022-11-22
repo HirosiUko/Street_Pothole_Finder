@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
+import com.example.streetpotholefinder.user.User
 import com.google.firebase.auth.FirebaseAuth
 
 
@@ -16,21 +17,19 @@ import com.google.firebase.auth.FirebaseAuth
 class MainActivity : AppCompatActivity() {
 
     private lateinit var auth : FirebaseAuth
+    private lateinit var userInfo : User
     private val TAG = "MainActivity"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         // 회원 정보 Info
         auth = FirebaseAuth.getInstance()
-        val email = intent.getStringExtra("email")
-        val name = intent.getStringExtra("name")
-        val photoUrl = intent.getStringExtra("photoUrl")
-        findViewById<TextView>(R.id.tvLoginInfo).text = email + "\n" + name + "\n" + photoUrl
-
-        if (photoUrl != null) {
-            Log.d(TAG, photoUrl)
-        }
+        val email = auth.currentUser?.email
+        val name = auth.currentUser?.displayName
+        val photoUrl = auth.currentUser?.photoUrl
+        findViewById<TextView>(R.id.tvLoginInfo).text = email + "\n" + name + "\n" + photoUrl.toString()
 
         // 촬영 버튼
         val btnStartRecord = findViewById<LinearLayout>(R.id.btnStartRecord)
@@ -53,23 +52,26 @@ class MainActivity : AppCompatActivity() {
         val txtGoogleName = findViewById<TextView>(R.id.txt_main_googlename)
         txtGoogleName.text=name
 
-        // 등록 데이터 확인 버튼
-        val btnMainData = findViewById<LinearLayout>(R.id.btn_main_data)
-        btnMainData.setOnClickListener{
-            val intent = Intent(this, DataListActivity::class.java)
-            startActivity(intent)
-        }
-
-        // 내 정보 확인 버튼
-        val btnMainMypage = findViewById<LinearLayout>(R.id.btn_main_mypage)
+//        // 등록 데이터 확인 버튼
+//        val btnMainData = findViewById<LinearLayout>(R.id.btn_main_data)
+//        btnMainData.setOnClickListener{
+//            val intent = Intent(this, DataListActivity::class.java)
+//            startActivity(intent)
+//        }
+//
+//        // 내 정보 확인 버튼
+//        val btnMainMypage = findViewById<LinearLayout>(R.id.btn_main_mypage)
+//        btnMainMypage.setOnClickListener{
+//            val intent = Intent(this, MypageActivity::class.java)
+//            startActivity(intent)
+//        }
+        var btnMainMypage = findViewById<LinearLayout>(R.id.btn_main_mypage)
         btnMainMypage.setOnClickListener{
             val intent = Intent(this, MypageActivity::class.java)
             startActivity(intent)
         }
+
     }
-
-
-
 
 //    override fun onBackPressed() {
 //        if (Build.VERSION.SDK_INT >= 21) {
