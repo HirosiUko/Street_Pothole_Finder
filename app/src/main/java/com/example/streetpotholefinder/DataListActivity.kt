@@ -23,7 +23,7 @@ class DataListActivity : AppCompatActivity() {
         ContentList.add(DataListVO("2022년 9월 17일","오전 10시 33분", "00:16:45",4,19))
 
         //데이터목록 리스트 어댑터
-        val Adapter = DataListAdapter(this, R.layout.data_list_one_lyt, ContentList)
+        val Adapter = DataListAdapter(this,R.layout.data_list_one_lyt, ContentList)
 
         val datalistView = findViewById<ListView>(data_list_view)
         datalistView.adapter = Adapter

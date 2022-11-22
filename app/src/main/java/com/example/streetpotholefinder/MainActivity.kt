@@ -48,8 +48,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // 내정보 확인
-        val
 
         //상단 '환영합니다'에 띄울 유저 이름 가져오기
         val txtGoogleName = findViewById<TextView>(R.id.txt_main_googlename)
