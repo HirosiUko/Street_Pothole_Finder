@@ -63,7 +63,7 @@
 
 
         <!--촬영UI-->
-        <include layout="@layout/activity_camera_xapp"
+        <include layout="@layout/activity_recoding"
             android:background="@android:color/transparent"/>
 
     </RelativeLayout>

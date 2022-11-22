@@ -5,20 +5,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RecodingActivity"
-    android:background="@color/black">
+    android:background="@android:color/transparent"
+    >
 
-    <ImageView
-        android:id="@+id/imageView8"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <!--촬영가이드버튼 숨김-->
+    <!--    <ImageView-->
+    <!--        android:layout_width="30dp"-->
+    <!--        android:layout_height="30dp"-->
+    <!--        android:layout_marginTop="42dp"-->
+    <!--        android:layout_marginEnd="20dp"-->
+    <!--        android:src="@drawable/ico_guide"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+
+    <!--위도경도영역-->
+    <TextView
+        android:id="@+id/tvGpsInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/btn_lyt_roundblack"
+        android:paddingLeft="14dp"
+        android:paddingTop="5dp"
+        android:paddingRight="14dp"
+        android:paddingBottom="5dp"
+        android:text="위도  41.0338 / 경도  2.17403"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/img_recoding_bg" />
+        app:layout_constraintHorizontal_bias="0.517"
+        app:layout_constraintStart_toStartOf="parent" />
+    <!--//위도경도영역끝-->
 
-
-<!--하단영역-->
+    <!--하단영역-->
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -26,12 +46,11 @@
         android:background="@drawable/color_bg_blacktsp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView8"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-
-        <!--    정지시작중지버튼    -->
+        <!--    중지버튼영역    -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,39 +61,29 @@
             android:paddingBottom="14dp">
 
             <ImageView
-                android:id="@+id/btn_rec_pause"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.212"
-                app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/img_btn_pause"
-                tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteY="481dp" />
-
-            <ImageView
                 android:id="@+id/btnRecStart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="80dp"
-                android:layout_marginRight="80dp"
+                android:layout_marginLeft="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
                 app:srcCompat="@drawable/img_btn_rec_vector"
-                tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteY="481dp" />
+                android:elevation="10dp"/>
 
-            <ImageView
-                android:id="@+id/btn_rec_stop"
+            <TextView
+                android:id="@+id/textView13"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/img_btn_stop"
+                android:layout_marginLeft="10dp"
+                android:text="Stop"
+                android:textColor="@color/white"
                 tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteX="291dp"
-                tools:layout_editor_absoluteY="481dp" />
+                tools:layout_editor_absoluteX="35dp"
+                tools:layout_editor_absoluteY="39dp" />
+
         </LinearLayout>
-        <!--   // 정지시작중지버튼 끝   -->
+        <!--   // 중지버튼영역 끝   -->
 
         <LinearLayout
             android:layout_width="340dp"
@@ -102,9 +111,10 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="wrap_content"
+                        android:layout_width="52dp"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ico_pothole" />
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/ico_pothole_vector" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -154,11 +164,11 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="35dp"
+                        android:layout_width="46dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:adjustViewBounds="true"
-                        android:src="@drawable/ico_crack" />
+                        android:src="@drawable/ico_crack_vector" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -186,65 +196,15 @@
     </LinearLayout>
     <!--//하단영역 끝-->
 
-
-    <TextView
-        android:id="@+id/tvGpsInfo"
+    <!--User님 안녕하세요!-->
+    <include
+        layout="@layout/user_hello_lyt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/btn_lyt_roundblack"
-        android:paddingLeft="14dp"
-        android:paddingTop="5dp"
-        android:paddingRight="14dp"
-        android:paddingBottom="5dp"
-        android:text="위도  41.0338 / 경도  2.17403"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.517"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="36dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="36dp"
-        android:background="@drawable/btn_lyt_roundblack"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="14dp"
-        android:paddingRight="14dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-<!--        <ImageView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:src="@drawable/img_red_dot" />-->
-
-        <TextView
-            android:id="@+id/textView9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:text="REC"
-            android:textColor="@color/white"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="35dp"
-            tools:layout_editor_absoluteY="39dp" />
-
-        <TextView
-            android:id="@+id/textView10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:text="00:02:58"
-            android:textColor="@color/white" />
-
-
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

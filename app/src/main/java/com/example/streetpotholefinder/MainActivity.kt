@@ -21,8 +21,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-
         // 회원 정보 Info
         auth = FirebaseAuth.getInstance()
         val email = intent.getStringExtra("email")
@@ -49,6 +47,9 @@ class MainActivity : AppCompatActivity() {
 //            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
+
+        // 내정보 확인
+        val
 
         //상단 '환영합니다'에 띄울 유저 이름 가져오기
         val txtGoogleName = findViewById<TextView>(R.id.txt_main_googlename)
