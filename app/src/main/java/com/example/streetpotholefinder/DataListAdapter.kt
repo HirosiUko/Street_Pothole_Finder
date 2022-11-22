@@ -61,6 +61,7 @@ class DataListAdapter (val dataList : MutableList<DataListVO>) : RecyclerView.Ad
 
                  var curpos : Int = adapterPosition
                  var intent = Intent(context, RecResultActivity::class.java)
+                 intent.putExtra("number",curpos)
                  context.startActivity(intent)
 
 
