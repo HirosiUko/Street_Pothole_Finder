@@ -103,7 +103,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Hong Gil-dong"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textColor="@color/street_blue_txt"/>
             </LinearLayout>
             <!--회색구분선-->
             <LinearLayout
@@ -137,7 +138,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="street_fimder@gmail.com"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:textColor="@color/street_blue_txt"/>
             </LinearLayout>
 
             <LinearLayout
