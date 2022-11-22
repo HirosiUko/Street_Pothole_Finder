@@ -17,4 +17,6 @@
     <color name="icActive">#FFFFFFFF</color>
     <color name="icFocused">#DDFFFFFF</color>
     <color name="icPressed">#AAFFFFFF</color>
+    <color name="street_blue_txt">#304A5E</color>
+    <color name="street_green_txt">#18788D</color>
 </resources>

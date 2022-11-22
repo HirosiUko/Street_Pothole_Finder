@@ -47,7 +47,24 @@ class MainActivity : AppCompatActivity() {
         //상단 '환영합니다'에 띄울 유저 이름 가져오기
         val txtGoogleName = findViewById<TextView>(R.id.txt_main_googlename)
         txtGoogleName.text=name
+
+        // 등록 데이터 확인 버튼
+        val btnMainData = findViewById<LinearLayout>(R.id.btn_main_data)
+        btnMainData.setOnClickListener{
+            val intent = Intent(this, DataListActivity::class.java)
+            startActivity(intent)
+        }
+
+        // 내 정보 확인 버튼
+        val btnMainMypage = findViewById<LinearLayout>(R.id.btn_main_mypage)
+        btnMainMypage.setOnClickListener{
+            val intent = Intent(this, MypageActivity::class.java)
+            startActivity(intent)
+        }
     }
+
+
+
 
 //    override fun onBackPressed() {
 //        if (Build.VERSION.SDK_INT >= 21) {
