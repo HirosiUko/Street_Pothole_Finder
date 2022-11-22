@@ -52,13 +52,13 @@ class MainActivity : AppCompatActivity() {
         val txtGoogleName = findViewById<TextView>(R.id.txt_main_googlename)
         txtGoogleName.text=name
 
-//        // 등록 데이터 확인 버튼
-//        val btnMainData = findViewById<LinearLayout>(R.id.btn_main_data)
-//        btnMainData.setOnClickListener{
-//            val intent = Intent(this, DataListActivity::class.java)
-//            startActivity(intent)
-//        }
-//
+        // 등록 데이터 확인 버튼
+        val btnMainData = findViewById<LinearLayout>(R.id.btn_main_data)
+        btnMainData.setOnClickListener{
+            val intent = Intent(this, DataListActivity::class.java)
+            startActivity(intent)
+        }
+
 //        // 내 정보 확인 버튼
 //        val btnMainMypage = findViewById<LinearLayout>(R.id.btn_main_mypage)
 //        btnMainMypage.setOnClickListener{
