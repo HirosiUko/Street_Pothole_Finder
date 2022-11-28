@@ -16,12 +16,10 @@
 package com.example.streetpotholefinder.fragments
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Context.LOCATION_SERVICE
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.location.Location
-import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
@@ -39,26 +37,27 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import java.util.LinkedList
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import com.example.streetpotholefinder.R
+import com.example.streetpotholefinder.accident.Accident
+import com.example.streetpotholefinder.accident.Crack
+import com.example.streetpotholefinder.accident.Issues
+import com.example.streetpotholefinder.accident.Porthole
 import com.example.streetpotholefinder.databinding.FragmentCameraBinding
+import com.example.streetpotholefinder.issue.Event
 import com.google.android.gms.location.*
-import net.daum.mf.map.api.MapPOIItem
-import net.daum.mf.map.api.MapPoint
-import net.daum.mf.map.api.MapView
 import org.tensorflow.lite.task.vision.detector.Detection
-import org.tensorflow.lite.task.vision.detector.ObjectDetector
+import java.time.LocalDateTime
+import kotlin.math.log
 
 class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
     private val TAG = "ObjectDetection"
-    private val OBJECT_POTHOLE = "person"
+    private val OBJECT_POTHOLE = "bed"
     private val OBJECT_CRACK = "mouse"
 
     private var _fragmentCameraBinding: FragmentCameraBinding? = null
@@ -81,6 +80,11 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
     private var cntCrack : Int = 0
     private var cntPothole : Int = 0
+
+    // Store Info
+    private var issueEvent : Event = Event.getInstance()
+//    private lateinit var accident : Accident
+    private lateinit var current_location : Location
 
 
     override fun onResume() {
@@ -137,6 +141,9 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
             .addOnSuccessListener { location : Location? ->
                 // Got last known location. In some rare situations this can be null.
                 Log.d(TAG, "onViewCreated: Current GPS Info :" + location.toString())
+                if (location != null) {
+                    current_location = location
+                }
             }
 
         locationCallback = object : LocationCallback() {
@@ -147,11 +154,15 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                     var tvGPS: TextView? = null
                     tvGPS = requireActivity().findViewById(R.id.tvGpsInfo)
                     tvGPS.text = "위도 "+location.latitude.toString()+" 경도 "+location.longitude.toString()
-
+                    current_location = location
                 }
             }
         }
         startLocationUpdates()
+
+//        issueEvent.accident?.portholes?.clear() // clear data
+//        issueEvent.accident?.cracks?.clear() // clear data
+        issueEvent.accident?.recStartTime = LocalDateTime.now()
     }
 
     @SuppressLint("MissingPermission")
@@ -319,7 +330,6 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                                 Bitmap.Config.ARGB_8888
                             )
                         }
-
                         detectObjects(image)
                     }
                 }
@@ -369,18 +379,6 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
             try {
                 if (fragmentCameraBinding != null)
                 {
-                    if(results?.get(0)?.categories?.get(0)?.label!! == OBJECT_POTHOLE)
-                    {
-                        cntPothole += 1
-                        requireActivity().findViewById<TextView>(R.id.cntPothole).text = cntPothole.toString()
-                    }
-
-                    if(results?.get(0)?.categories?.get(0)?.label!! == OBJECT_CRACK)
-                    {
-                        cntCrack += 1
-                        requireActivity().findViewById<TextView>(R.id.cntCrack).text = cntCrack.toString()
-                    }
-
 //                    Log.d(TAG, "DetectObject: "+results.toString())
                     fragmentCameraBinding.overlay.setResults(
                         results ?: LinkedList<Detection>(),
@@ -390,6 +388,32 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
                     // Force a redraw
                     fragmentCameraBinding.overlay.invalidate()
+                    var curLocation = LocationServices.getFusedLocationProviderClient(requireContext())
+
+                    if(results?.get(0)?.categories?.get(0)?.label!! == OBJECT_POTHOLE)
+                    {
+                        cntPothole += 1
+                        requireActivity().findViewById<TextView>(R.id.cntPothole).text = cntPothole.toString()
+
+                        // Screen shot image
+                        var screenshot : Bitmap = viewToBitmap(fragmentCameraBinding.overlay)
+                        var issue = Porthole(screenshot, current_location, LocalDateTime.now())
+                        var result = issueEvent.accident?.portholes?.add(issue as Porthole)
+                        if(issueEvent.accident == null) Log.d(TAG, "onResults: accident is null")
+                        if(issueEvent.accident?.portholes == null) Log.d(TAG, "onResults: portholes is null")
+                        Log.d(TAG, "onResults porthole size: ${issueEvent.accident?.portholes?.size}, ${result}")
+
+                    }else if(results?.get(0)?.categories?.get(0)?.label!! == OBJECT_CRACK)
+                    {
+                        cntCrack += 1
+                        requireActivity().findViewById<TextView>(R.id.cntCrack).text = cntCrack.toString()
+
+                        // Screen shot image
+                        var screenshot : Bitmap = viewToBitmap(fragmentCameraBinding.overlay)
+                        var issue = Crack(screenshot, current_location, LocalDateTime.now())
+                        issueEvent.accident?.cracks?.add(issue as Crack)
+//                        issueEvent.accident?.issueTime = LocalDateTime.now()
+                    }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, " error: " + e.message)

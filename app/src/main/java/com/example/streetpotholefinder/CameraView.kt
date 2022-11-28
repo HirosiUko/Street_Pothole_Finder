@@ -7,9 +7,13 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Vibrator
+import android.util.Log
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import com.example.streetpotholefinder.databinding.ActivityCameraViewBinding
+import com.example.streetpotholefinder.issue.Event
+import java.time.LocalDateTime
+import java.util.EventListener
 
 class CameraView : AppCompatActivity() {
 
@@ -25,12 +29,15 @@ class CameraView : AppCompatActivity() {
         activityCameraView = ActivityCameraViewBinding.inflate(layoutInflater)
         setContentView(activityCameraView.root)
 
-        val btnRecStart : ImageView = findViewById(R.id.btnRecStart)
-        btnRecStart.setOnClickListener{
+        val btnRecEnd : ImageView = findViewById(R.id.btnRecStart)
+        btnRecEnd.setOnClickListener{
+            val _event : Event = Event.getInstance()
+            _event.accident?.recEndTime = LocalDateTime.now()
+            Log.d(TAG, "onCreate: ${_event.accident?.recStartTime}, ${_event.accident?.portholes?.size}")
             val intent = Intent(this, RecResultActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            intent.putExtra("previousActivityInfo", "CameraView")
             startActivity(intent)
-
             finish()
         }
     }

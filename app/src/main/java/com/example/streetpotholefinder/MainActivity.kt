@@ -11,14 +11,12 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.example.streetpotholefinder.user.User
 import com.google.firebase.auth.FirebaseAuth
 
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var auth : FirebaseAuth
-    private lateinit var userInfo : User
     private val TAG = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {

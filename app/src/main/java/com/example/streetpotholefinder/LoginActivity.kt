@@ -2,14 +2,12 @@ package com.example.streetpotholefinder
 
 import android.app.Activity
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.example.streetpotholefinder.user.User
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -23,8 +21,6 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth : FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
-
-    private lateinit var userInfo : User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,17 +41,12 @@ class LoginActivity : AppCompatActivity() {
         // Debug log
         // Toast.makeText(this, auth.uid.toString(), Toast.LENGTH_SHORT).show()
 
-        userInfo = User.getInstance()
 
         if(auth.uid != null)
         {
             val intent : Intent = Intent(this, MainActivity::class.java)
             intent.flags =
                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK //액티비티 스택제거
-
-            userInfo.userName = auth.currentUser?.displayName
-            userInfo.userEmail = auth.currentUser?.email
-            userInfo.userPhotoUrl = auth.currentUser?.photoUrl
 
             startActivity(intent)
         }
@@ -67,9 +58,6 @@ class LoginActivity : AppCompatActivity() {
             val intent : Intent = Intent(this, MainActivity::class.java)
             intent.flags =
                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK//액티비티 스택제거
-            userInfo.userName = "DevMode"
-            userInfo.userEmail = "DevMode"
-            userInfo.userPhotoUrl = Uri.EMPTY
             startActivity(intent)
         }
     }
@@ -102,9 +90,6 @@ class LoginActivity : AppCompatActivity() {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         auth.signInWithCredential(credential).addOnCompleteListener{
             if(it.isSuccessful){
-                userInfo.userName = account.displayName
-                userInfo.userEmail = account.email
-                userInfo.userPhotoUrl = account.photoUrl
                 toMainActivity(auth.currentUser)
             }else{
                 Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
