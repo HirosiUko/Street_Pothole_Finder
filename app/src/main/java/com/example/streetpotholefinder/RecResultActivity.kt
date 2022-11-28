@@ -7,13 +7,20 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Vibrator
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.example.streetpotholefinder.accident.Accident
 import com.example.streetpotholefinder.issue.Event
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class RecResultActivity : AppCompatActivity() {
+
+    var mDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rec_result)
@@ -26,27 +33,39 @@ class RecResultActivity : AppCompatActivity() {
 
         val intent = intent
         val prevAcivityInfo = intent.getStringExtra("previousActivityInfo")
-        when(prevAcivityInfo){
+        when (prevAcivityInfo) {
             "CameraView" -> {
-                var currentEvent : Event = Event.getInstance()
-                var recStartTime : LocalDateTime? = currentEvent.accident?.recStartTime
-                var recEndTime : LocalDateTime? = currentEvent.accident?.recEndTime
+                var currentEvent: Event = Event.getInstance()
+                var recStartTime: LocalDateTime? = currentEvent.accident?.recStartTime
+                var recEndTime: LocalDateTime? = currentEvent.accident?.recEndTime
                 var recTime = Duration.between(recStartTime, recEndTime)
                 ResultDate.setText(recEndTime?.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                 ResultTime.setText(recEndTime?.format(DateTimeFormatter.ofPattern("HH:mm:ss")))
-                ResultLength.setText(recTime?.seconds.toString()+" sec")
+                ResultLength.setText(recTime?.seconds.toString() + " sec")
                 currentEvent.accident?.portholes?.let { it -> ResultPotholeCnt.setText(it.size.toString()) }
                 currentEvent.accident?.cracks?.let { ResultCrackCnt.setText(it.size.toString()) }
+
+//                mDatabase.setValue(currentEvent.accident)
+//                    .addOnSuccessListener {
+//                        // 저장 성공 시
+//                        Toast.makeText(this, "성공", Toast.LENGTH_SHORT).show()
+//                    }
+//                    .addOnFailureListener { e ->
+//                        // 저장 실패 시
+//                        Toast.makeText(this, "실패", Toast.LENGTH_SHORT).show()
+//                    }
+//
+
             }
-            "DataListAdapter" ->{
-                val a = intent.getIntExtra("number",5)
+            "DataListAdapter" -> {
+                val a = intent.getIntExtra("number", 5)
                 var ContentList = mutableListOf<DataListVO>()
 
-                ContentList.add(DataListVO("2022년 11월 15일","오후 2시 40분", "00:29:23","30","14"))
-                ContentList.add(DataListVO("2022년 10월 25일","오전 8시 18분", "00:05:22","5","3"))
+                ContentList.add(DataListVO("2022년 11월 15일", "오후 2시 40분", "00:29:23", "30", "14"))
+                ContentList.add(DataListVO("2022년 10월 25일", "오전 8시 18분", "00:05:22", "5", "3"))
 
-                ContentList.add(DataListVO("2022년 10월 23일","오후 3시 22분", "00:04:03","13","27"))
-                ContentList.add(DataListVO("2022년 9월 17일","오전 10시 33분", "00:16:45","4","19"))
+                ContentList.add(DataListVO("2022년 10월 23일", "오후 3시 22분", "00:04:03", "13", "27"))
+                ContentList.add(DataListVO("2022년 9월 17일", "오전 10시 33분", "00:16:45", "4", "19"))
                 ResultDate.setText(ContentList[a].StreetDate)
                 ResultTime.setText(ContentList[a].StreetTime)
                 ResultLength.setText(ContentList[a].RecordLength)
@@ -58,17 +77,19 @@ class RecResultActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         // Vibrate for 500 milliseconds
-        var v : Vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        var v: Vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         v.vibrate(500)
 
-        val dlg: AlertDialog.Builder = AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
+        val dlg: AlertDialog.Builder = AlertDialog.Builder(
+            this,
+            android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth
+        )
         dlg.setTitle("⚠️ 경고") //제목
         dlg.setMessage("메뉴판으로 돌아갑니다.") // 메시지
         dlg.setPositiveButton("확인", DialogInterface.OnClickListener { _, _ ->
 
         })
-        dlg.setNegativeButton("취소", DialogInterface.OnClickListener{
-                dialog, which ->
+        dlg.setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->
             // Do nothing
         })
         dlg.show()

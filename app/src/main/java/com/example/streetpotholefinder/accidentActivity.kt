@@ -16,8 +16,8 @@ class accidentActivity : AppCompatActivity() {
         var ContentList = mutableListOf<accidentVO>()
 
         ContentList.add(accidentVO(R.drawable.cute_pepe,"134.541", "00:29:23"))
-        ContentList.add(accidentVO(R.drawable.shock_pepe,"18.14512", "00:29:23"))
-        ContentList.add(accidentVO(R.drawable.smile_pepe,"19.5556541", "00:29:23"))
+        ContentList.add(accidentVO(R.drawable.cute_pepe,"18.14512", "00:29:23"))
+        ContentList.add(accidentVO(R.drawable.cute_pepe,"19.5556541", "00:29:23"))
         rvv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rvv.setHasFixedSize(true)
 
