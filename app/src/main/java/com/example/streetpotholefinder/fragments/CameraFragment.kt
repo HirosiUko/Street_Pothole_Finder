@@ -394,7 +394,6 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
             } catch (e: Exception) {
                 Log.e(TAG, " error: " + e.message)
             }
-
         }
     }
 
@@ -403,4 +402,14 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
             Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show()
         }
     }
+
+    // 뷰를 비트맵으로 변환
+    fun viewToBitmap(view: View): Bitmap {
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        view.draw(canvas)
+
+        return bitmap
+    }
+//    viewToBitmap(frameLayout)
 }

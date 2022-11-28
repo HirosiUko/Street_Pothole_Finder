@@ -2,18 +2,13 @@ package com.example.streetpotholefinder.accident
 
 import android.media.Image
 import android.telephony.CarrierConfigManager.Gps
+import java.io.Serializable
 import java.sql.Time
 
-class Accident {
-    val portholes : Array<Porthole>
-        get() {
-            TODO()
-        }
-    val cracks : Array<Issues>
-        get() {
-            TODO()
-        }
-}
+data class Accident (
+    val portholes : Array<Porthole>,
+    val cracks : Array<Crack>
+) : Serializable
 
 interface Issues {
     val image : Image

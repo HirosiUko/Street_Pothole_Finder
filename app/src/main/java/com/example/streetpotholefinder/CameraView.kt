@@ -27,7 +27,7 @@ class CameraView : AppCompatActivity() {
 
         val btnRecStart : ImageView = findViewById(R.id.btnRecStart)
         btnRecStart.setOnClickListener{
-            val intent = Intent(this, CameraXAPP_result::class.java)
+            val intent = Intent(this, RecResultActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
 
