@@ -16,43 +16,40 @@
 package com.example.streetpotholefinder.fragments
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.os.Looper
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.camera.core.AspectRatio
-import androidx.camera.core.Camera
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.*
 import androidx.camera.core.ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888
-import androidx.camera.core.ImageProxy
-import androidx.camera.core.Preview
+import androidx.camera.core.ImageCapture.OnImageCapturedCallback
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
-import java.util.LinkedList
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import com.example.streetpotholefinder.R
-import com.example.streetpotholefinder.accident.Accident
 import com.example.streetpotholefinder.accident.Crack
-import com.example.streetpotholefinder.accident.Issues
 import com.example.streetpotholefinder.accident.Porthole
 import com.example.streetpotholefinder.databinding.FragmentCameraBinding
 import com.example.streetpotholefinder.issue.Event
 import com.google.android.gms.location.*
 import org.tensorflow.lite.task.vision.detector.Detection
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
-import kotlin.math.log
+import java.util.*
 
 class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
@@ -67,6 +64,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
     private lateinit var objectDetectorHelper: ObjectDetectorHelper
     private lateinit var bitmapBuffer: Bitmap
+    private lateinit var bitmapCaptured : Bitmap
     private var preview: Preview? = null
     private var imageAnalyzer: ImageAnalysis? = null
     private var camera: Camera? = null
@@ -85,6 +83,8 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     private var issueEvent : Event = Event.getInstance()
 //    private lateinit var accident : Accident
     private lateinit var current_location : Location
+
+    private var imageCapture: ImageCapture? = null
 
 
     override fun onResume() {
@@ -160,8 +160,6 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         }
         startLocationUpdates()
 
-//        issueEvent.accident?.portholes?.clear() // clear data
-//        issueEvent.accident?.cracks?.clear() // clear data
         issueEvent.accident?.recStartTime = LocalDateTime.now()
     }
 
@@ -310,6 +308,10 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                 .setTargetRotation(fragmentCameraBinding.viewFinder.display.rotation)
                 .build()
 
+        imageCapture = ImageCapture.Builder()
+            .setTargetRotation(fragmentCameraBinding.viewFinder.display.rotation)
+            .build()
+
         // ImageAnalysis. Using RGBA 8888 to match how our models work
         imageAnalyzer =
             ImageAnalysis.Builder()
@@ -330,6 +332,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                                 Bitmap.Config.ARGB_8888
                             )
                         }
+
                         detectObjects(image)
                     }
                 }
@@ -340,13 +343,43 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         try {
             // A variable number of use-cases can be passed here -
             // camera provides access to CameraControl & CameraInfo
-            camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalyzer)
+            camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalyzer, imageCapture)
 
             // Attach the viewfinder's surface provider to preview use case
             preview?.setSurfaceProvider(fragmentCameraBinding.viewFinder.surfaceProvider)
         } catch (exc: Exception) {
             Log.e(TAG, "Use case binding failed", exc)
         }
+    }
+
+    private fun takePhoto() {
+        // Get a stable reference of the modifiable image capture use case
+        Log.d(TAG, "onCaptureSuccess: start")
+        val imageCapture = imageCapture ?: return
+        Log.d(TAG, "onCaptureSuccess: alive")
+
+        imageCapture.takePicture(
+            cameraExecutor,
+            object : OnImageCapturedCallback() {
+                override fun onCaptureSuccess(image: ImageProxy) {
+//                    super.onCaptureSuccess(image)
+//                    if (!::bitmapCaptured.isInitialized){
+//                        bitmapCaptured = Bitmap.createBitmap(
+//                            image.width,
+//                            image.height,
+//                            Bitmap.Config.ARGB_8888
+//                        )
+//                    }
+//                    image.use { bitmapCaptured.copyPixelsFromBuffer(image.planes[0].buffer) }
+                    Log.d(TAG, "onCaptureSuccess: ${image.imageInfo.toString()}")
+                }
+
+                override fun onError(exception: ImageCaptureException) {
+//                    super.onError(exception)
+                    Log.d(TAG, "onCaptureSuccess: error ${exception.toString()}")
+                }
+            }
+        )
     }
 
     private fun detectObjects(image: ImageProxy) {
@@ -388,15 +421,16 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
                     // Force a redraw
                     fragmentCameraBinding.overlay.invalidate()
-                    var curLocation = LocationServices.getFusedLocationProviderClient(requireContext())
 
+                    // draw Image
+                    var curLocation = LocationServices.getFusedLocationProviderClient(requireContext())
                     if(results?.get(0)?.categories?.get(0)?.label!! == OBJECT_POTHOLE)
                     {
                         cntPothole += 1
                         requireActivity().findViewById<TextView>(R.id.cntPothole).text = cntPothole.toString()
 
-                        // Screen shot image
-                        var screenshot : Bitmap = viewToBitmap(fragmentCameraBinding.overlay)
+                        takePhoto()
+                        var screenshot : Bitmap = bitmapCaptured
                         var issue = Porthole(screenshot, current_location, LocalDateTime.now())
                         var result = issueEvent.accident?.portholes?.add(issue as Porthole)
                         if(issueEvent.accident == null) Log.d(TAG, "onResults: accident is null")
@@ -409,10 +443,15 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                         requireActivity().findViewById<TextView>(R.id.cntCrack).text = cntCrack.toString()
 
                         // Screen shot image
-                        var screenshot : Bitmap = viewToBitmap(fragmentCameraBinding.overlay)
+                        takePhoto()
+                        var screenshot : Bitmap = bitmapCaptured
                         var issue = Crack(screenshot, current_location, LocalDateTime.now())
                         issueEvent.accident?.cracks?.add(issue as Crack)
 //                        issueEvent.accident?.issueTime = LocalDateTime.now()
+                        var result = issueEvent.accident?.cracks?.add(issue)
+                        if(issueEvent.accident == null) Log.d(TAG, "onResults: accident is null")
+                        if(issueEvent.accident?.cracks == null) Log.d(TAG, "onResults: portholes is null")
+                        Log.d(TAG, "onResults porthole size: ${issueEvent.accident?.portholes?.size}, ${result}")
                     }
                 }
             } catch (e: Exception) {

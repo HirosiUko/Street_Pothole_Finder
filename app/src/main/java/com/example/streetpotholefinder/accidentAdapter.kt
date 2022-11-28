@@ -1,17 +1,12 @@
 package com.example.streetpotholefinder
 
 import android.content.Context
-import android.content.Intent
-import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.example.accidentVO
 
 class accidentAdapter (val dataList : MutableList<accidentVO>) : RecyclerView.Adapter<accidentAdapter.CustomViewHolder>()
 {  private lateinit var context: Context
@@ -37,7 +32,7 @@ class accidentAdapter (val dataList : MutableList<accidentVO>) : RecyclerView.Ad
     override fun onBindViewHolder(holder: accidentAdapter.CustomViewHolder, position: Int) {
 
 
-        holder.imgpot.setImageResource(R.drawable.cute_pepe)
+        holder.imgpot.setImageBitmap(dataList.get(position).potimg)
         holder.tvGps.text = dataList.get(position).gps
         holder.tvtime.text = dataList.get(position).time
 

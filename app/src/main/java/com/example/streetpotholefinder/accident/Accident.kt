@@ -5,7 +5,7 @@ import android.location.Location
 import java.io.Serializable
 import java.time.LocalDateTime
 
-class Accident: Serializable
+class Accident
 {
     val portholes =  ArrayList<Porthole>()
     val cracks = ArrayList<Crack>()
@@ -13,7 +13,7 @@ class Accident: Serializable
     var recEndTime =  LocalDateTime.now()
 }
 
-open class Issues(_image: Bitmap, _gpsInfo: Location, _issueTime: LocalDateTime ) {
+open class Issues(_image: Bitmap, _gpsInfo: Location, _issueTime: LocalDateTime ) : Serializable{
     val image: Bitmap = _image
     val gpsInfo: Location = _gpsInfo
     val issueTime: LocalDateTime  = _issueTime
@@ -22,11 +22,16 @@ open class Issues(_image: Bitmap, _gpsInfo: Location, _issueTime: LocalDateTime 
 //val accident : Accident = null
 //accident.portholes.lenght
 
-class Porthole(_image: Bitmap, _gpsInfo: Location, _issueTime: LocalDateTime ) :
-    Issues(_image, _gpsInfo, _issueTime) {
+class Porthole(_image: Bitmap, _gpsInfo: Location, _issueTime: LocalDateTime ) : Serializable
+{
+    val image: Bitmap = _image
+    val gpsInfo: Location = _gpsInfo
+    val issueTime: LocalDateTime  = _issueTime
 }
 
-class Crack(_image: Bitmap, _gpsInfo: Location, _issueTime: LocalDateTime ) :
-    Issues(_image, _gpsInfo, _issueTime) {
-
+class Crack(_image: Bitmap, _gpsInfo: Location, _issueTime: LocalDateTime ) : Serializable
+{
+    val image: Bitmap = _image
+    val gpsInfo: Location = _gpsInfo
+    val issueTime: LocalDateTime  = _issueTime
 }

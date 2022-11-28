@@ -2,19 +2,22 @@ package com.example.streetpotholefinder
 
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Vibrator
-import android.util.Log
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.streetpotholefinder.accident.Accident
 import com.example.streetpotholefinder.issue.Event
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import java.time.Duration
 import java.time.LocalDateTime
@@ -22,7 +25,7 @@ import java.time.format.DateTimeFormatter
 
 class RecResultActivity : AppCompatActivity() {
 
-    // var mDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference
+    private lateinit var database: DatabaseReference
     lateinit var data: String
 
     val db = Firebase.database
@@ -51,14 +54,39 @@ class RecResultActivity : AppCompatActivity() {
                 ResultLength.setText(recTime?.seconds.toString() + " sec")
                 currentEvent.accident?.portholes?.let { it -> ResultPotholeCnt.setText(it.size.toString()) }
                 currentEvent.accident?.cracks?.let { ResultCrackCnt.setText(it.size.toString()) }
-                Toast.makeText(this, currentEvent.accident.portholes.toString(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, currentEvent.accident.portholes.toString(), Toast.LENGTH_SHORT)
+                    .show()
                 // currentEvent.accident.portholes에 아무것도 없음...
                 // var myRef: DatabaseReference = mDatabase
-                myRef.setValue(currentEvent.accident.recEndTime)
 
+                val fbAuth = FirebaseAuth.getInstance()
+                val fbFirestore = FirebaseFirestore.getInstance()
+
+                var userInfo = currentEvent.accident
+
+                fbFirestore?.collection(
+                    fbAuth?.uid.toString()
+                )?.document(
+                    recEndTime!!.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"))
+                )?.set(currentEvent.accident.portholes)
+
+                database = Firebase.database.reference
+
+
+//                myRef.setValue(currentEvent.accident.cracks)
+
+//                mDatabase.setValue(currentEvent.accident)
+//                    .addOnSuccessListener {
+//                        // 저장 성공 시
+//                        Toast.makeText(this, "성공", Toast.LENGTH_SHORT).show()
+//                    }
+//                    .addOnFailureListener { e ->
+//                        // 저장 실패 시
+//                        Toast.makeText(this, "실패", Toast.LENGTH_SHORT).show()
+//                    }
+//
 
             }
-
             "DataListAdapter" -> {
                 val a = intent.getIntExtra("number", 5)
                 var ContentList = mutableListOf<DataListVO>()
@@ -74,8 +102,20 @@ class RecResultActivity : AppCompatActivity() {
                 ResultPotholeCnt.setText(ContentList[a].PotholeCnt)
                 ResultCrackCnt.setText(ContentList[a].CrackCnt)
             }
+        }
 
+        val portholeBtn = findViewById<LinearLayout>(R.id.linearLayoutPortHole)
+        portholeBtn.setOnClickListener {
+            val intent = Intent(this, accidentActivity::class.java)
+            intent.putExtra("Category", "POTHOLE")
+            startActivity(intent)
+        }
 
+        val crackBtn = findViewById<LinearLayout>(R.id.linearLayoutCrack)
+        crackBtn.setOnClickListener {
+            val intent = Intent(this, accidentActivity::class.java)
+            intent.putExtra("Category", "CRACK")
+            startActivity(intent)
         }
     }
 

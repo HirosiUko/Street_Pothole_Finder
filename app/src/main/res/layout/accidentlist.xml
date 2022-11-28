@@ -7,7 +7,7 @@
     android:orientation="vertical"
     >
     <LinearLayout
-        android:layout_width="260dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
         android:layout_margin="20dp"
@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/imgpot"
-            android:layout_width="100dp"
-            android:layout_height="200dp"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
             app:srcCompat="@drawable/cute_pepe" />
         <LinearLayout
             android:layout_width="wrap_content"
