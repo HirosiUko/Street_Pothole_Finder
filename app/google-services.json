@@ -1,33 +1,34 @@
 {
   "project_info": {
-    "project_number": "250805036573",
-    "project_id": "jebal-c0d58",
-    "storage_bucket": "jebal-c0d58.appspot.com"
+    "project_number": "994073790481",
+    "firebase_url": "https://streetpotholefinder-default-rtdb.firebaseio.com",
+    "project_id": "streetpotholefinder",
+    "storage_bucket": "streetpotholefinder.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:250805036573:android:a99d3f161c9c5f5bd748f4",
+        "mobilesdk_app_id": "1:994073790481:android:afc35a850a76c950f809b0",
         "android_client_info": {
           "package_name": "com.example.streetpotholefinder"
         }
       },
       "oauth_client": [
         {
-          "client_id": "250805036573-eip6g5rl1ab5204rq0ocgm9vd9nog8i3.apps.googleusercontent.com",
+          "client_id": "994073790481-ce1i6psh3l1aqnlp09kkc3mk7skqkci8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBa-hFu4SQ1Rb1nRGqsah6TyEzbpC3EOIk"
+          "current_key": "AIzaSyCzrz_pvtMkxz7bKa5NbmASGHuegA_CLwA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "250805036573-eip6g5rl1ab5204rq0ocgm9vd9nog8i3.apps.googleusercontent.com",
+              "client_id": "994073790481-ce1i6psh3l1aqnlp09kkc3mk7skqkci8.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -6,6 +6,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Vibrator
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -13,13 +14,19 @@ import com.example.streetpotholefinder.accident.Accident
 import com.example.streetpotholefinder.issue.Event
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class RecResultActivity : AppCompatActivity() {
 
-    var mDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference
+    // var mDatabase: DatabaseReference = FirebaseDatabase.getInstance().reference
+    lateinit var data: String
+
+    val db = Firebase.database
+    val myRef = db.getReference("currentEvent")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,19 +51,14 @@ class RecResultActivity : AppCompatActivity() {
                 ResultLength.setText(recTime?.seconds.toString() + " sec")
                 currentEvent.accident?.portholes?.let { it -> ResultPotholeCnt.setText(it.size.toString()) }
                 currentEvent.accident?.cracks?.let { ResultCrackCnt.setText(it.size.toString()) }
+                Toast.makeText(this, currentEvent.accident.portholes.toString(), Toast.LENGTH_SHORT).show()
+                // currentEvent.accident.portholes에 아무것도 없음...
+                // var myRef: DatabaseReference = mDatabase
+                myRef.setValue(currentEvent.accident.recEndTime)
 
-//                mDatabase.setValue(currentEvent.accident)
-//                    .addOnSuccessListener {
-//                        // 저장 성공 시
-//                        Toast.makeText(this, "성공", Toast.LENGTH_SHORT).show()
-//                    }
-//                    .addOnFailureListener { e ->
-//                        // 저장 실패 시
-//                        Toast.makeText(this, "실패", Toast.LENGTH_SHORT).show()
-//                    }
-//
 
             }
+
             "DataListAdapter" -> {
                 val a = intent.getIntExtra("number", 5)
                 var ContentList = mutableListOf<DataListVO>()
@@ -72,6 +74,8 @@ class RecResultActivity : AppCompatActivity() {
                 ResultPotholeCnt.setText(ContentList[a].PotholeCnt)
                 ResultCrackCnt.setText(ContentList[a].CrackCnt)
             }
+
+
         }
     }
 
