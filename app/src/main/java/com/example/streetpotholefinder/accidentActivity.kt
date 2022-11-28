@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.DataListVO
 import com.example.accidentVO
 
 class accidentActivity : AppCompatActivity() {

@@ -11,7 +11,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.example.DataListVO
 import com.example.accidentVO
 
 class accidentAdapter (val dataList : MutableList<accidentVO>) : RecyclerView.Adapter<accidentAdapter.CustomViewHolder>()
