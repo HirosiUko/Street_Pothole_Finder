@@ -1,10 +1,12 @@
 package com.example.streetpotholefinder
 
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Vibrator
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import com.example.streetpotholefinder.databinding.ActivityCameraViewBinding
@@ -34,6 +36,10 @@ class CameraView : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        // Vibrate for 500 milliseconds
+        var v : Vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        v.vibrate(500)
+
         val dlg: AlertDialog.Builder = AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
         dlg.setTitle("⚠️ 경고") //제목
         dlg.setMessage("촬영이 취소 됩니다. 진행하시겠습니까?") // 메시지
