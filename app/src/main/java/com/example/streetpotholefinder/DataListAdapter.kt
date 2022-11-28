@@ -37,16 +37,11 @@ package com.example.streetpotholefinder
 
 import android.content.Context
 import android.content.Intent
-import android.text.Layout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.example.DataListVO
 
 class DataListAdapter (val dataList : MutableList<DataListVO>) : RecyclerView.Adapter<DataListAdapter.CustomViewHolder>()
 {  private lateinit var context: Context

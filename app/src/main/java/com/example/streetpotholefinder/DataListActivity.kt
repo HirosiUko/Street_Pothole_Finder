@@ -1,15 +1,10 @@
 package com.example.streetpotholefinder
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.AdapterView
-import android.widget.ListView
-import android.widget.Toast
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.DataListVO
 import com.example.streetpotholefinder.R.id.data_list_view
 import com.example.streetpotholefinder.databinding.ActivityDataListBinding
 

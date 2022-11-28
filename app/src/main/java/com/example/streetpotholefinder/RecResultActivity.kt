@@ -1,9 +1,13 @@
 package com.example.streetpotholefinder
 
+import android.content.Context
+import android.content.DialogInterface
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Vibrator
 import android.widget.TextView
-import com.example.DataListVO
+import androidx.appcompat.app.AlertDialog
 import com.example.streetpotholefinder.issue.Event
 import java.time.Duration
 import java.time.LocalDateTime
@@ -13,7 +17,6 @@ class RecResultActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rec_result)
-
 
         val ResultDate = findViewById<TextView>(R.id.ResultDate)
         val ResultTime = findViewById<TextView>(R.id.ResultTime)
@@ -30,7 +33,7 @@ class RecResultActivity : AppCompatActivity() {
                 var recEndTime : LocalDateTime? = currentEvent.accident?.recEndTime
                 var recTime = Duration.between(recStartTime, recEndTime)
                 ResultDate.setText(recEndTime?.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
-                ResultTime.setText(recEndTime?.format(DateTimeFormatter.ofPattern("HH:mm:ss.SSS")))
+                ResultTime.setText(recEndTime?.format(DateTimeFormatter.ofPattern("HH:mm:ss")))
                 ResultLength.setText(recTime?.seconds.toString()+" sec")
                 currentEvent.accident?.portholes?.let { it -> ResultPotholeCnt.setText(it.size.toString()) }
                 currentEvent.accident?.cracks?.let { ResultCrackCnt.setText(it.size.toString()) }
@@ -51,5 +54,23 @@ class RecResultActivity : AppCompatActivity() {
                 ResultCrackCnt.setText(ContentList[a].CrackCnt)
             }
         }
+    }
+
+    override fun onBackPressed() {
+        // Vibrate for 500 milliseconds
+        var v : Vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        v.vibrate(500)
+
+        val dlg: AlertDialog.Builder = AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
+        dlg.setTitle("⚠️ 경고") //제목
+        dlg.setMessage("메뉴판으로 돌아갑니다.") // 메시지
+        dlg.setPositiveButton("확인", DialogInterface.OnClickListener { _, _ ->
+
+        })
+        dlg.setNegativeButton("취소", DialogInterface.OnClickListener{
+                dialog, which ->
+            // Do nothing
+        })
+        dlg.show()
     }
 }
