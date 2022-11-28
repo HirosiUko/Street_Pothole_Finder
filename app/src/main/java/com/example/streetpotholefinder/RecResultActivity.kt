@@ -68,7 +68,7 @@ class RecResultActivity : AppCompatActivity() {
                     fbAuth?.uid.toString()
                 )?.document(
                     recEndTime!!.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"))
-                )?.set(currentEvent.accident.portholes)
+                )?.set(currentEvent.accident)
 
                 database = Firebase.database.reference
 
