@@ -1,7 +1,6 @@
 package com.example.streetpotholefinder
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -122,7 +121,9 @@ class RecResultActivity : AppCompatActivity() {
         dlg.setMessage("메뉴판으로 돌아갑니다.") // 메시지
         dlg.setPositiveButton("확인") { _, _ ->
             val intent = Intent(this, MainActivity::class.java)
+            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK//액티비티 스택제거
             startActivity(intent)
+            finish()
         }
         dlg.setNegativeButton("취소") { _, _ ->
             // nothing

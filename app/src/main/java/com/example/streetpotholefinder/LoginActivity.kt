@@ -19,7 +19,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var auth : FirebaseAuth
+    private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +34,7 @@ class LoginActivity : AppCompatActivity() {
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        findViewById<LinearLayout>(R.id.GoogleLoginLinearlyt).setOnClickListener{
+        findViewById<LinearLayout>(R.id.GoogleLoginLinearlyt).setOnClickListener {
             signInGoogle()
         }
 
@@ -42,9 +42,8 @@ class LoginActivity : AppCompatActivity() {
         // Toast.makeText(this, auth.uid.toString(), Toast.LENGTH_SHORT).show()
 
 
-        if(auth.uid != null)
-        {
-            val intent : Intent = Intent(this, MainActivity::class.java)
+        if (auth.uid != null) {
+            val intent: Intent = Intent(this, MainActivity::class.java)
             intent.flags =
                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK //액티비티 스택제거
 
@@ -53,9 +52,9 @@ class LoginActivity : AppCompatActivity() {
 
 
         // debug develop mode button
-        val btnDev : Button = findViewById(R.id.btnDev)
+        val btnDev: Button = findViewById(R.id.btnDev)
         btnDev.setOnClickListener {
-            val intent : Intent = Intent(this, MainActivity::class.java)
+            val intent: Intent = Intent(this, MainActivity::class.java)
             intent.flags =
                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK//액티비티 스택제거
             startActivity(intent)
@@ -66,32 +65,32 @@ class LoginActivity : AppCompatActivity() {
         val signInIntent = googleSignInClient.signInIntent
         launcher.launch(signInIntent)
     }
-    private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-            result ->
-        if(result.resultCode == Activity.RESULT_OK){
-            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-            handleResults(task)
+
+    private val launcher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                handleResults(task)
+            }
         }
-    }
 
     private fun handleResults(task: Task<GoogleSignInAccount>) {
-        if (task.isSuccessful){
-            val account : GoogleSignInAccount? = task.result
-            if (account != null)
-            {
+        if (task.isSuccessful) {
+            val account: GoogleSignInAccount? = task.result
+            if (account != null) {
                 updateUI(account)
             }
-        }else{
+        } else {
             Toast.makeText(this, task.exception.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun updateUI(account: GoogleSignInAccount) {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-        auth.signInWithCredential(credential).addOnCompleteListener{
-            if(it.isSuccessful){
+        auth.signInWithCredential(credential).addOnCompleteListener {
+            if (it.isSuccessful) {
                 toMainActivity(auth.currentUser)
-            }else{
+            } else {
                 Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
                 false
             }
@@ -100,7 +99,7 @@ class LoginActivity : AppCompatActivity() {
 
     // toMainActivity
     fun toMainActivity(user: FirebaseUser?) {
-        if(user !=null) { // MainActivity 로 이동
+        if (user != null) { // MainActivity 로 이동
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
