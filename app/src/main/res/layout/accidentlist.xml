@@ -72,6 +72,7 @@
                     android:text="00:00:00"
                     android:textSize="14sp"
                     android:textStyle="bold"
+                    android:textColor="@color/street_blue_txt"
                     />
             </LinearLayout>
         </LinearLayout>
