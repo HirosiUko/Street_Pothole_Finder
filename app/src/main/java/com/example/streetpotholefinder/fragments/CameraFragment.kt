@@ -24,6 +24,7 @@ import android.graphics.Paint
 import android.location.Location
 import android.os.Bundle
 import android.os.Looper
+import android.os.SystemClock.sleep
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -36,12 +37,16 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import com.airbnb.lottie.LottieAnimationView
 import com.example.streetpotholefinder.R
 import com.example.streetpotholefinder.accident.Crack
 import com.example.streetpotholefinder.accident.Porthole
 import com.example.streetpotholefinder.databinding.FragmentCameraBinding
 import com.example.streetpotholefinder.issue.Event
 import com.google.android.gms.location.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.tensorflow.lite.task.vision.detector.Detection
 import java.time.LocalDateTime
 import java.util.*

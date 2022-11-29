@@ -1,17 +1,29 @@
 package com.example.streetpotholefinder
 
+import android.animation.Animator
+import android.animation.Animator.AnimatorListener
+import android.animation.AnimatorListenerAdapter
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.media.Image
+import android.opengl.Visibility
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.SystemClock
 import android.os.Vibrator
 import android.util.Log
+import android.view.View
+import android.view.animation.Animation.AnimationListener
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
+import com.airbnb.lottie.LottieAnimationView
 import com.example.streetpotholefinder.databinding.ActivityCameraViewBinding
 import com.example.streetpotholefinder.issue.Event
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.util.EventListener
 
@@ -19,6 +31,7 @@ class CameraView : AppCompatActivity() {
 
     private val TAG = "CameraView"
     private lateinit var activityCameraView: ActivityCameraViewBinding
+    private lateinit var aniView : LottieAnimationView
 
     //kakao map view.
 //    private lateinit var mapView: MapView
@@ -40,7 +53,28 @@ class CameraView : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+        aniView = findViewById<LottieAnimationView>(R.id.animationView)
+        aniView.addAnimatorListener(object : AnimatorListener{
+            override fun onAnimationStart(p0: Animator) {
+//                TODO("Not yet implemented")
+            }
+
+            override fun onAnimationEnd(p0: Animator) {
+                aniView.visibility = View.GONE
+            }
+
+            override fun onAnimationCancel(p0: Animator) {
+//                TODO("Not yet implemented")
+            }
+
+            override fun onAnimationRepeat(p0: Animator) {
+//                TODO("Not yet implemented")
+            }
+        })
     }
+
+
 
     override fun onBackPressed() {
         // Vibrate for 500 milliseconds
