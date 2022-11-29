@@ -24,6 +24,9 @@ import com.example.streetpotholefinder.issue.Event
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import java.time.LocalDateTime
 import java.util.EventListener
 
@@ -45,7 +48,7 @@ class CameraView : AppCompatActivity() {
         val btnRecEnd: ImageView = findViewById(R.id.btnRecStart)
         btnRecEnd.setOnClickListener {
             val _event: Event = Event.getInstance()
-            _event.accident?.recEndTime = LocalDateTime.now()
+            _event.accident?.recEndTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
             Log.d(
                 TAG,
                 "onCreate: ${_event.accident?.recStartTime}, ${_event.accident?.portholes?.size}"

@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id "androidx.navigation.safeargs.kotlin"
     id 'com.google.gms.google-services'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.20'
 }
 
 apply plugin: 'com.google.gms.google-services'
@@ -128,4 +129,10 @@ dependencies {
     // lottie animation
     def lottieVersion = "5.2.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
+
+    // Json lib
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+
+    // kotlin lib
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
 }

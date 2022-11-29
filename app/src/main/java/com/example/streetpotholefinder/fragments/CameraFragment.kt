@@ -24,7 +24,6 @@ import android.graphics.Paint
 import android.location.Location
 import android.os.Bundle
 import android.os.Looper
-import android.os.SystemClock.sleep
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -37,18 +36,16 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
-import com.airbnb.lottie.LottieAnimationView
 import com.example.streetpotholefinder.R
-import com.example.streetpotholefinder.accident.Crack
-import com.example.streetpotholefinder.accident.Porthole
+import com.example.streetpotholefinder.accident.Issues
 import com.example.streetpotholefinder.databinding.FragmentCameraBinding
 import com.example.streetpotholefinder.issue.Event
 import com.google.android.gms.location.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.tensorflow.lite.task.vision.detector.Detection
-import java.time.LocalDateTime
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -155,8 +152,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                 locationResult ?: return
                 for (location in locationResult.locations) {
                     // Update UI with location data
-                    var tvGPS: TextView? = null
-                    tvGPS = requireActivity().findViewById(R.id.tvGpsInfo)
+                    var tvGPS = requireActivity().findViewById<TextView>(R.id.tvGpsInfo)
                     tvGPS.text =
                         "위도 " + location.latitude.toString() + " 경도 " + location.longitude.toString()
                     current_location = location
@@ -165,7 +161,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         }
         startLocationUpdates()
 
-        issueEvent.accident?.recStartTime = LocalDateTime.now()
+        issueEvent.accident?.recStartTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
     }
 
     @SuppressLint("MissingPermission")
@@ -426,8 +422,8 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                         requireActivity().findViewById<TextView>(R.id.cntPothole).text =
                             cntPothole.toString()
 
-                        var issue = Porthole(screenshot, current_location, LocalDateTime.now())
-                        var result = issueEvent.accident?.portholes?.add(issue as Porthole)
+                        var issue = Issues(screenshot, current_location, Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
+                        var result = issueEvent.accident?.portholes?.add(issue)
 
                         Log.d(
                             TAG,
@@ -439,7 +435,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                         requireActivity().findViewById<TextView>(R.id.cntCrack).text =
                             cntCrack.toString()
 
-                        var issue = Crack(screenshot, current_location, LocalDateTime.now())
+                        var issue = Issues(screenshot, current_location, Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
                         var result = issueEvent.accident?.cracks?.add(issue)
 
                         Log.d(

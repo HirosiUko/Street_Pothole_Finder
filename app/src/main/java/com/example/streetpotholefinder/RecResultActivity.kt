@@ -10,15 +10,19 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.example.streetpotholefinder.accident.SerializedAccident
 import com.example.streetpotholefinder.accidentsList.AccidentsActivity
 import com.example.streetpotholefinder.dataList.DataListVO
 import com.example.streetpotholefinder.issue.Event
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import java.time.Duration
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlin.time.Duration
 
 class RecResultActivity : AppCompatActivity() {
 
@@ -28,6 +32,7 @@ class RecResultActivity : AppCompatActivity() {
     private lateinit var tvResultLength: TextView
     private lateinit var tvResultPotholeCnt: TextView
     private lateinit var tvResultCrackCnt: TextView
+    private lateinit var btnRecResultUpload : LinearLayout
     ///////////////////////
 
     private lateinit var database: DatabaseReference
@@ -46,6 +51,7 @@ class RecResultActivity : AppCompatActivity() {
         tvResultLength = findViewById(R.id.ResultLength)
         tvResultPotholeCnt = findViewById(R.id.ResultPotholeCnt)
         tvResultCrackCnt = findViewById(R.id.ResultCrackCnt)
+        btnRecResultUpload = findViewById(R.id.btnRecResultUpload)
 
         prevActivityInfo = intent.getStringExtra("previousActivityInfo").toString()
         when (prevActivityInfo) {
@@ -66,6 +72,16 @@ class RecResultActivity : AppCompatActivity() {
             intent.putExtra("Category", "CRACK")
             startActivity(intent)
         }
+
+        btnRecResultUpload.setOnClickListener{
+            uploadResult()
+        }
+    }
+
+    fun uploadResult(){
+        var serializedAccident : SerializedAccident = SerializedAccident()
+        serializedAccident.copyPortholes(Event.getInstance().accident)
+        Log.d("RecResultActivity", "uploadResult: "+ Json.encodeToString(serializedAccident))
     }
 
     @Deprecated("Deprecated in Java")
@@ -80,10 +96,10 @@ class RecResultActivity : AppCompatActivity() {
         var currentEvent: Event = Event.getInstance()
         var recStartTime: LocalDateTime? = currentEvent.accident.recStartTime
         var recEndTime: LocalDateTime? = currentEvent.accident.recEndTime
-        var recTime = Duration.between(recStartTime, recEndTime)
-        tvResultDate.text = recEndTime?.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-        tvResultTime.text = recEndTime?.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
-        tvResultLength.text = recTime?.seconds.toString() + " sec"
+        var recTime : Duration = recEndTime!!.toInstant(TimeZone.currentSystemDefault()) - recStartTime!!.toInstant(TimeZone.currentSystemDefault())
+        tvResultDate.text = recEndTime.toString()
+        tvResultTime.text = recEndTime.toString()
+        tvResultLength.text = recTime.toString()
         tvResultPotholeCnt.text = currentEvent.accident.portholes.size.toString()
         tvResultCrackCnt.text = currentEvent.accident.cracks.size.toString()
         Toast.makeText(this, currentEvent.accident.portholes.toString(), Toast.LENGTH_SHORT)

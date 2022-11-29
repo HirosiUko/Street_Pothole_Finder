@@ -1,6 +1,10 @@
 package com.example.streetpotholefinder.issue
 
 import com.example.streetpotholefinder.accident.Accident
+import com.example.streetpotholefinder.accident.Issues
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 class Event private constructor() {
 
@@ -17,5 +21,10 @@ class Event private constructor() {
         }
     }
 
-    public var accident : Accident = Accident()
+    public var accident : Accident = Accident(
+        portholes = ArrayList<Issues>(),
+        cracks = ArrayList<Issues>(),
+        recStartTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+        recEndTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+    )
 }

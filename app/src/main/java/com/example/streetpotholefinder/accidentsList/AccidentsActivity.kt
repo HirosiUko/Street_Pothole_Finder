@@ -36,7 +36,7 @@ class AccidentsActivity : AppCompatActivity() {
                     accidentVO(
                         data.image,
                         "위도:${data.gpsInfo.latitude}, 경도:${data.gpsInfo.longitude}",
-                        data.issueTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                        data.issueTime.toString()
                     )
                 )
             }
