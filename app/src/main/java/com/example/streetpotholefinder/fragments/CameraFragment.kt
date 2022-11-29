@@ -20,6 +20,8 @@ import android.content.ContentValues
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Matrix
+import android.graphics.Paint
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
@@ -33,13 +35,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.core.ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888
-import androidx.camera.core.ImageCapture.OnImageCapturedCallback
+import androidx.camera.core.ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import com.example.streetpotholefinder.R
 import com.example.streetpotholefinder.accident.Crack
 import com.example.streetpotholefinder.accident.Porthole
@@ -50,6 +50,8 @@ import org.tensorflow.lite.task.vision.detector.Detection
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
@@ -64,7 +66,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
     private lateinit var objectDetectorHelper: ObjectDetectorHelper
     private lateinit var bitmapBuffer: Bitmap
-    private lateinit var bitmapCaptured : Bitmap
+    private lateinit var bitmapCaptured: Bitmap
     private var preview: Preview? = null
     private var imageAnalyzer: ImageAnalysis? = null
     private var camera: Camera? = null
@@ -76,13 +78,14 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationCallback: LocationCallback
 
-    private var cntCrack : Int = 0
-    private var cntPothole : Int = 0
+    private var cntCrack: Int = 0
+    private var cntPothole: Int = 0
 
     // Store Info
-    private var issueEvent : Event = Event.getInstance()
-//    private lateinit var accident : Accident
-    private lateinit var current_location : Location
+    private var issueEvent: Event = Event.getInstance()
+
+    //    private lateinit var accident : Accident
+    private lateinit var current_location: Location
 
     private var imageCapture: ImageCapture? = null
 
@@ -122,7 +125,8 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
         objectDetectorHelper = ObjectDetectorHelper(
             context = requireContext(),
-            objectDetectorListener = this)
+            objectDetectorListener = this
+        )
 
         // Initialize our background executor
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -138,7 +142,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
         fusedLocationClient.lastLocation
-            .addOnSuccessListener { location : Location? ->
+            .addOnSuccessListener { location: Location? ->
                 // Got last known location. In some rare situations this can be null.
                 Log.d(TAG, "onViewCreated: Current GPS Info :" + location.toString())
                 if (location != null) {
@@ -149,11 +153,12 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
                 locationResult ?: return
-                for (location in locationResult.locations){
+                for (location in locationResult.locations) {
                     // Update UI with location data
                     var tvGPS: TextView? = null
                     tvGPS = requireActivity().findViewById(R.id.tvGpsInfo)
-                    tvGPS.text = "위도 "+location.latitude.toString()+" 경도 "+location.longitude.toString()
+                    tvGPS.text =
+                        "위도 " + location.latitude.toString() + " 경도 " + location.longitude.toString()
                     current_location = location
                 }
             }
@@ -171,9 +176,11 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 
-        fusedLocationClient.requestLocationUpdates(locationRequest,
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest,
             locationCallback,
-            Looper.getMainLooper())
+            Looper.getMainLooper()
+        )
     }
 
     private fun stopLocationUpdates() {
@@ -309,7 +316,9 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                 .build()
 
         imageCapture = ImageCapture.Builder()
+            .setTargetAspectRatio(AspectRatio.RATIO_4_3)
             .setTargetRotation(fragmentCameraBinding.viewFinder.display.rotation)
+            .setCaptureMode(CAPTURE_MODE_MINIMIZE_LATENCY)
             .build()
 
         // ImageAnalysis. Using RGBA 8888 to match how our models work
@@ -343,7 +352,13 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         try {
             // A variable number of use-cases can be passed here -
             // camera provides access to CameraControl & CameraInfo
-            camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageAnalyzer, imageCapture)
+            camera = cameraProvider.bindToLifecycle(
+                this,
+                cameraSelector,
+                imageCapture,
+                preview,
+                imageAnalyzer,
+            )
 
             // Attach the viewfinder's surface provider to preview use case
             preview?.setSurfaceProvider(fragmentCameraBinding.viewFinder.surfaceProvider)
@@ -354,29 +369,41 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
     private fun takePhoto() {
         // Get a stable reference of the modifiable image capture use case
-        Log.d(TAG, "onCaptureSuccess: start")
         val imageCapture = imageCapture ?: return
-        Log.d(TAG, "onCaptureSuccess: alive")
 
+        // Create time stamped name and MediaStore entry.
+        val name = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US)
+            .format(System.currentTimeMillis())
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
+            }
+        }
+
+        // Create output options object which contains file + metadata
+        val outputOptions = ImageCapture.OutputFileOptions
+            .Builder(requireActivity().contentResolver,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                contentValues)
+            .build()
+
+        // Set up image capture listener, which is triggered after photo has
+        // been taken
         imageCapture.takePicture(
-            cameraExecutor,
-            object : OnImageCapturedCallback() {
-                override fun onCaptureSuccess(image: ImageProxy) {
-//                    super.onCaptureSuccess(image)
-//                    if (!::bitmapCaptured.isInitialized){
-//                        bitmapCaptured = Bitmap.createBitmap(
-//                            image.width,
-//                            image.height,
-//                            Bitmap.Config.ARGB_8888
-//                        )
-//                    }
-//                    image.use { bitmapCaptured.copyPixelsFromBuffer(image.planes[0].buffer) }
-                    Log.d(TAG, "onCaptureSuccess: ${image.imageInfo.toString()}")
+            outputOptions,
+            ContextCompat.getMainExecutor(requireContext()),
+            object : ImageCapture.OnImageSavedCallback {
+                override fun onError(exc: ImageCaptureException) {
+                    Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
                 }
 
-                override fun onError(exception: ImageCaptureException) {
-//                    super.onError(exception)
-                    Log.d(TAG, "onCaptureSuccess: error ${exception.toString()}")
+                override fun
+                        onImageSaved(output: ImageCapture.OutputFileResults){
+                    val msg = "Photo capture succeeded: ${output.savedUri}"
+                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+                    Log.d(TAG, msg)
                 }
             }
         )
@@ -410,9 +437,10 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
             // Pass necessary information to OverlayView for drawing on the canvas
             try {
-                if (fragmentCameraBinding != null)
-                {
-//                    Log.d(TAG, "DetectObject: "+results.toString())
+                if ((fragmentCameraBinding != null) &&(
+                    (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_CRACK) ||
+                    (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_POTHOLE))) {
+
                     fragmentCameraBinding.overlay.setResults(
                         results ?: LinkedList<Detection>(),
                         imageHeight,
@@ -422,36 +450,44 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                     // Force a redraw
                     fragmentCameraBinding.overlay.invalidate()
 
-                    // draw Image
-                    var curLocation = LocationServices.getFusedLocationProviderClient(requireContext())
-                    if(results?.get(0)?.categories?.get(0)?.label!! == OBJECT_POTHOLE)
-                    {
-                        cntPothole += 1
-                        requireActivity().findViewById<TextView>(R.id.cntPothole).text = cntPothole.toString()
+                    // Camera capture image.
+                    var rotateMatrix = Matrix()
+                    rotateMatrix.postRotate(90.0f)
+                    var screenshot1 = Bitmap.createBitmap(bitmapBuffer, 0, 0,
+                        bitmapBuffer.getWidth(), bitmapBuffer.getHeight(), rotateMatrix, false)
 
-                        takePhoto()
-                        var screenshot : Bitmap = viewToBitmap(fragmentCameraBinding.overlay)
+                    // boundary box capture image
+                    val screenshot2 =
+                        Bitmap.createScaledBitmap(viewToBitmap(fragmentCameraBinding.overlay), screenshot1.getWidth(), screenshot1.getHeight(), false)
+
+                    // Mix image
+                    val screenshot =  mixBitmap(screenshot1, screenshot2)
+
+                    if (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_POTHOLE) {
+                        cntPothole += 1
+                        requireActivity().findViewById<TextView>(R.id.cntPothole).text =
+                            cntPothole.toString()
+
                         var issue = Porthole(screenshot, current_location, LocalDateTime.now())
                         var result = issueEvent.accident?.portholes?.add(issue as Porthole)
-                        if(issueEvent.accident == null) Log.d(TAG, "onResults: accident is null")
-                        if(issueEvent.accident?.portholes == null) Log.d(TAG, "onResults: portholes is null")
-                        Log.d(TAG, "onResults porthole size: ${issueEvent.accident?.portholes?.size}, ${result}")
 
-                    }else if(results?.get(0)?.categories?.get(0)?.label!! == OBJECT_CRACK)
-                    {
+                        Log.d(
+                            TAG,
+                            "onResults porthole size: ${issueEvent.accident?.portholes?.size}, ${result}"
+                        )
+
+                    } else if (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_CRACK) {
                         cntCrack += 1
-                        requireActivity().findViewById<TextView>(R.id.cntCrack).text = cntCrack.toString()
+                        requireActivity().findViewById<TextView>(R.id.cntCrack).text =
+                            cntCrack.toString()
 
-                        // Screen shot image
-                        takePhoto()
-                        var screenshot : Bitmap = bitmapCaptured
                         var issue = Crack(screenshot, current_location, LocalDateTime.now())
-                        issueEvent.accident?.cracks?.add(issue as Crack)
-//                        issueEvent.accident?.issueTime = LocalDateTime.now()
                         var result = issueEvent.accident?.cracks?.add(issue)
-                        if(issueEvent.accident == null) Log.d(TAG, "onResults: accident is null")
-                        if(issueEvent.accident?.cracks == null) Log.d(TAG, "onResults: portholes is null")
-                        Log.d(TAG, "onResults porthole size: ${issueEvent.accident?.portholes?.size}, ${result}")
+
+                        Log.d(
+                            TAG,
+                            "onResults crack size: ${issueEvent.accident?.cracks?.size}, ${result}"
+                        )
                     }
                 }
             } catch (e: Exception) {
@@ -473,6 +509,36 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         view.draw(canvas)
 
         return bitmap
+    }
+
+    fun mixBitmap(bitmap1 : Bitmap, bitmap2 : Bitmap):Bitmap{
+
+        //결과값 저장을 위한 Bitmap
+        val resultOverlayBmp = Bitmap.createBitmap(
+            bitmap1.getWidth(),
+            bitmap1.getHeight(),
+            bitmap1.getConfig()
+        )
+
+        //상단 비트맵에 알파값을 적용하기 위한 Paint
+        val alphaPaint = Paint()
+        alphaPaint.setAlpha(125)
+
+        //캔버스를 통해 비트맵을 겹치기한다.
+        val canvas = Canvas(resultOverlayBmp)
+        canvas.drawBitmap(bitmap1, Matrix(), null)
+        canvas.drawBitmap(bitmap2, Matrix(), alphaPaint)
+
+//        if (bitmap1 !== original) {
+//            original.recycle()
+//        }
+        if (bitmap1 !== resultOverlayBmp) {
+            bitmap1.recycle()
+        }
+        if (bitmap2 !== resultOverlayBmp) {
+            bitmap2.recycle()
+        }
+        return resultOverlayBmp
     }
 //    viewToBitmap(frameLayout)
 }
