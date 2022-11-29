@@ -1,15 +1,15 @@
-package com.example.streetpotholefinder
+package com.example.streetpotholefinder.accidentsList
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.core.graphics.drawable.toDrawable
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.streetpotholefinder.R
 import com.example.streetpotholefinder.issue.Event
 import java.time.format.DateTimeFormatter
 
-class accidentActivity : AppCompatActivity() {
+class AccidentsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_accident)
@@ -46,7 +46,7 @@ class accidentActivity : AppCompatActivity() {
         rvv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rvv.setHasFixedSize(true)
 
-        rvv.adapter = accidentAdapter(ContentList)
+        rvv.adapter = AccidentsAdapter(ContentList)
 
         rvv.addItemDecoration(
             DividerItemDecoration(this, DividerItemDecoration.VERTICAL)

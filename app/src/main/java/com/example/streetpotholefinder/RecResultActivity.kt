@@ -10,6 +10,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.example.streetpotholefinder.accidentsList.AccidentsActivity
+import com.example.streetpotholefinder.dataList.DataListVO
 import com.example.streetpotholefinder.issue.Event
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
@@ -53,14 +55,14 @@ class RecResultActivity : AppCompatActivity() {
 
         val portholeBtn = findViewById<LinearLayout>(R.id.linearLayoutPortHole)
         portholeBtn.setOnClickListener {
-            val intent = Intent(this, accidentActivity::class.java)
+            val intent = Intent(this, AccidentsActivity::class.java)
             intent.putExtra("Category", "POTHOLE")
             startActivity(intent)
         }
 
         val crackBtn = findViewById<LinearLayout>(R.id.linearLayoutCrack)
         crackBtn.setOnClickListener {
-            val intent = Intent(this, accidentActivity::class.java)
+            val intent = Intent(this, AccidentsActivity::class.java)
             intent.putExtra("Category", "CRACK")
             startActivity(intent)
         }

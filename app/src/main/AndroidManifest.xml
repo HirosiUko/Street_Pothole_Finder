@@ -104,7 +104,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".DataListActivity"
+            android:name=".dataList.DataListActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -118,7 +118,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".accidentActivity"
+            android:name=".accidentsList.AccidentsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

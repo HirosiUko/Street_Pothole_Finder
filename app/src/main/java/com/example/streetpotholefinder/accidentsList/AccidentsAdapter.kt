@@ -1,4 +1,4 @@
-package com.example.streetpotholefinder
+package com.example.streetpotholefinder.accidentsList
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,13 +7,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.streetpotholefinder.R
 
-class accidentAdapter (val dataList : MutableList<accidentVO>) : RecyclerView.Adapter<accidentAdapter.CustomViewHolder>()
+class AccidentsAdapter (val dataList : MutableList<accidentVO>) : RecyclerView.Adapter<AccidentsAdapter.CustomViewHolder>()
 {  private lateinit var context: Context
 
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): accidentAdapter.CustomViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
         context = parent.context
         val view = LayoutInflater.from(parent.context).inflate(R.layout.accidentlist, parent, false)
         return CustomViewHolder(view).apply {
@@ -29,7 +30,7 @@ class accidentAdapter (val dataList : MutableList<accidentVO>) : RecyclerView.Ad
 
 
 
-    override fun onBindViewHolder(holder: accidentAdapter.CustomViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
 
 
         holder.imgpot.setImageBitmap(dataList.get(position).potimg)

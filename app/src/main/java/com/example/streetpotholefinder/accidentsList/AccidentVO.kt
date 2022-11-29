@@ -1,9 +1,7 @@
-package com.example.streetpotholefinder
+package com.example.streetpotholefinder.accidentsList
 
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-
-// R.drawable.img이름 ---> int
 
 class accidentVO(
     val potimg: Bitmap, val gps: String, val time: String
