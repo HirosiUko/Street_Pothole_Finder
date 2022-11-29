@@ -30,5 +30,4 @@ class Porthole(_image: Bitmap, _gpsInfo: Location, _issueTime: LocalDateTime ) :
 class Crack(_image: Bitmap, _gpsInfo: Location, _issueTime: LocalDateTime ) :
     Issues(_image, _gpsInfo, _issueTime)
 {
-
 }

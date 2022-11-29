@@ -16,17 +16,14 @@
 package com.example.streetpotholefinder.fragments
 
 import android.annotation.SuppressLint
-import android.content.ContentValues
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.location.Location
-import android.os.Build
 import android.os.Bundle
 import android.os.Looper
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -35,7 +32,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.core.ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888
-import androidx.camera.core.ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -47,7 +43,6 @@ import com.example.streetpotholefinder.databinding.FragmentCameraBinding
 import com.example.streetpotholefinder.issue.Event
 import com.google.android.gms.location.*
 import org.tensorflow.lite.task.vision.detector.Detection
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.*
 import java.util.concurrent.ExecutorService
@@ -315,12 +310,6 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                 .setTargetRotation(fragmentCameraBinding.viewFinder.display.rotation)
                 .build()
 
-        imageCapture = ImageCapture.Builder()
-            .setTargetAspectRatio(AspectRatio.RATIO_4_3)
-            .setTargetRotation(fragmentCameraBinding.viewFinder.display.rotation)
-            .setCaptureMode(CAPTURE_MODE_MINIMIZE_LATENCY)
-            .build()
-
         // ImageAnalysis. Using RGBA 8888 to match how our models work
         imageAnalyzer =
             ImageAnalysis.Builder()
@@ -341,7 +330,6 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                                 Bitmap.Config.ARGB_8888
                             )
                         }
-
                         detectObjects(image)
                     }
                 }
@@ -355,7 +343,6 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
             camera = cameraProvider.bindToLifecycle(
                 this,
                 cameraSelector,
-                imageCapture,
                 preview,
                 imageAnalyzer,
             )
@@ -365,48 +352,6 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         } catch (exc: Exception) {
             Log.e(TAG, "Use case binding failed", exc)
         }
-    }
-
-    private fun takePhoto() {
-        // Get a stable reference of the modifiable image capture use case
-        val imageCapture = imageCapture ?: return
-
-        // Create time stamped name and MediaStore entry.
-        val name = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US)
-            .format(System.currentTimeMillis())
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/CameraX-Image")
-            }
-        }
-
-        // Create output options object which contains file + metadata
-        val outputOptions = ImageCapture.OutputFileOptions
-            .Builder(requireActivity().contentResolver,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                contentValues)
-            .build()
-
-        // Set up image capture listener, which is triggered after photo has
-        // been taken
-        imageCapture.takePicture(
-            outputOptions,
-            ContextCompat.getMainExecutor(requireContext()),
-            object : ImageCapture.OnImageSavedCallback {
-                override fun onError(exc: ImageCaptureException) {
-                    Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
-                }
-
-                override fun
-                        onImageSaved(output: ImageCapture.OutputFileResults){
-                    val msg = "Photo capture succeeded: ${output.savedUri}"
-                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, msg)
-                }
-            }
-        )
     }
 
     private fun detectObjects(image: ImageProxy) {
@@ -437,9 +382,10 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
             // Pass necessary information to OverlayView for drawing on the canvas
             try {
-                if ((fragmentCameraBinding != null) &&(
-                    (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_CRACK) ||
-                    (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_POTHOLE))) {
+                if ((fragmentCameraBinding != null) && (
+                            (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_CRACK) ||
+                                    (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_POTHOLE))
+                ) {
 
                     fragmentCameraBinding.overlay.setResults(
                         results ?: LinkedList<Detection>(),
@@ -453,15 +399,22 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                     // Camera capture image.
                     var rotateMatrix = Matrix()
                     rotateMatrix.postRotate(90.0f)
-                    var screenshot1 = Bitmap.createBitmap(bitmapBuffer, 0, 0,
-                        bitmapBuffer.getWidth(), bitmapBuffer.getHeight(), rotateMatrix, false)
+                    var screenshot1 = Bitmap.createBitmap(
+                        bitmapBuffer, 0, 0,
+                        bitmapBuffer.getWidth(), bitmapBuffer.getHeight(), rotateMatrix, true
+                    )
 
                     // boundary box capture image
                     val screenshot2 =
-                        Bitmap.createScaledBitmap(viewToBitmap(fragmentCameraBinding.overlay), screenshot1.getWidth(), screenshot1.getHeight(), false)
+                        Bitmap.createScaledBitmap(
+                            viewToBitmap(fragmentCameraBinding.overlay),
+                            screenshot1.getWidth(),
+                            screenshot1.getHeight(),
+                            true
+                        )
 
                     // Mix image
-                    val screenshot =  mixBitmap(screenshot1, screenshot2)
+                    val screenshot = mixBitmap(screenshot1, screenshot2)
 
                     if (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_POTHOLE) {
                         cntPothole += 1
@@ -511,7 +464,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         return bitmap
     }
 
-    fun mixBitmap(bitmap1 : Bitmap, bitmap2 : Bitmap):Bitmap{
+    fun mixBitmap(bitmap1: Bitmap, bitmap2: Bitmap): Bitmap {
 
         //결과값 저장을 위한 Bitmap
         val resultOverlayBmp = Bitmap.createBitmap(
@@ -529,9 +482,6 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         canvas.drawBitmap(bitmap1, Matrix(), null)
         canvas.drawBitmap(bitmap2, Matrix(), alphaPaint)
 
-//        if (bitmap1 !== original) {
-//            original.recycle()
-//        }
         if (bitmap1 !== resultOverlayBmp) {
             bitmap1.recycle()
         }
@@ -540,5 +490,4 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         }
         return resultOverlayBmp
     }
-//    viewToBitmap(frameLayout)
 }
