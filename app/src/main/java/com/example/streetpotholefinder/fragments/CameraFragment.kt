@@ -430,7 +430,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                         requireActivity().findViewById<TextView>(R.id.cntPothole).text = cntPothole.toString()
 
                         takePhoto()
-                        var screenshot : Bitmap = bitmapCaptured
+                        var screenshot : Bitmap = viewToBitmap(fragmentCameraBinding.overlay)
                         var issue = Porthole(screenshot, current_location, LocalDateTime.now())
                         var result = issueEvent.accident?.portholes?.add(issue as Porthole)
                         if(issueEvent.accident == null) Log.d(TAG, "onResults: accident is null")
