@@ -7,6 +7,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Vibrator
+import android.util.Log
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -52,25 +53,27 @@ class RecResultActivity : AppCompatActivity() {
                 ResultDate.setText(recEndTime?.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                 ResultTime.setText(recEndTime?.format(DateTimeFormatter.ofPattern("HH:mm:ss")))
                 ResultLength.setText(recTime?.seconds.toString() + " sec")
-                currentEvent.accident?.portholes?.let { it -> ResultPotholeCnt.setText(it.size.toString()) }
-                currentEvent.accident?.cracks?.let { ResultCrackCnt.setText(it.size.toString()) }
-                Toast.makeText(this, currentEvent.accident.portholes.toString(), Toast.LENGTH_SHORT)
-                    .show()
+                ResultPotholeCnt.setText(currentEvent.accident!!.portholes.size.toString())
+                ResultCrackCnt.setText(currentEvent.accident!!.cracks.size.toString())
+                Toast.makeText(this, currentEvent.accident.portholes.toString(), Toast.LENGTH_SHORT).show()
+                Log.d("RecResultActivity", "onCreate: CameraView cntofporthole:"+currentEvent.accident!!.portholes.size.toString())
+
+                // Firebase Code.!!
                 // currentEvent.accident.portholes에 아무것도 없음...
                 // var myRef: DatabaseReference = mDatabase
 
-                val fbAuth = FirebaseAuth.getInstance()
-                val fbFirestore = FirebaseFirestore.getInstance()
-
-                var userInfo = currentEvent.accident
-
-                fbFirestore?.collection(
-                    fbAuth?.uid.toString()
-                )?.document(
-                    recEndTime!!.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"))
-                )?.set(currentEvent.accident)
-
-                database = Firebase.database.reference
+//                val fbAuth = FirebaseAuth.getInstance()
+//                val fbFirestore = FirebaseFirestore.getInstance()
+//
+//                var userInfo = currentEvent.accident
+//
+//                fbFirestore?.collection(
+//                    fbAuth?.uid.toString()
+//                )?.document(
+//                    recEndTime!!.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss"))
+//                )?.set(currentEvent.accident)
+//
+//                database = Firebase.database.reference
 
 
 //                myRef.setValue(currentEvent.accident.cracks)

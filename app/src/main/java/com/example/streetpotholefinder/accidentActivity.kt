@@ -30,16 +30,16 @@ class accidentActivity : AppCompatActivity() {
         }
 
         if (dataArray != null) {
-//            for( data in dataArray)
-//            {
-//                ContentList.add(
-//                    accidentVO(
-//                        data.image,
-//                        "위도:${data.gpsInfo.latitude}, 경도:${data.gpsInfo.longitude}",
-//                        data.issueTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-//                    )
-//                )
-//            }
+            for( data in dataArray)
+            {
+                ContentList.add(
+                    accidentVO(
+                        data.image,
+                        "위도:${data.gpsInfo.latitude}, 경도:${data.gpsInfo.longitude}",
+                        data.issueTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                    )
+                )
+            }
         }
 
 
