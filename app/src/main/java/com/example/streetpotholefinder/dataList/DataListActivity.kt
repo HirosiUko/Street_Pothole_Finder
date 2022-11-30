@@ -5,8 +5,6 @@ import android.content.Intent
 import android.graphics.Canvas
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Gravity.LEFT
-import android.view.Gravity.RIGHT
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +17,8 @@ import com.example.streetpotholefinder.R
 import com.example.streetpotholefinder.R.id.data_list_view
 import com.example.streetpotholefinder.RecResultActivity
 import com.example.streetpotholefinder.databinding.ActivityDataListBinding
-import com.google.android.material.snackbar.Snackbar
+import java.lang.Float.max
+import java.lang.Float.min
 
 class DataListActivity : AppCompatActivity() {
     private val TAG = this.javaClass.simpleName
@@ -55,9 +54,14 @@ class DataListActivity : AppCompatActivity() {
             DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         )
 
-        val swipeHelperCallback = SwipeHelperCallback()
+        val swipeHelperCallback = SwipeHelperCallback().apply { setClamp(250f) }
         val itemTouchHelper = ItemTouchHelper(swipeHelperCallback)
         itemTouchHelper.attachToRecyclerView(rv)
+
+        rv.setOnTouchListener { _, _ ->
+            swipeHelperCallback.removePreviousClamp(rv)
+            false
+        }
 
         //데이터목록 각 리스트 클릭 시 이벤트
 //        rv.onItemClickListener = AdapterView.OnItemClickListener{
@@ -128,6 +132,11 @@ class DataListVO(
 
 class SwipeHelperCallback : ItemTouchHelper.Callback() {
 
+    private var currentPosition: Int? = null
+    private var previousPosition: Int? = null
+    private var currentDx = 0f
+    private var clamp = 0f
+
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
@@ -139,18 +148,35 @@ class SwipeHelperCallback : ItemTouchHelper.Callback() {
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
-    ) = false
+    ): Boolean {
+        return false
+    }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        currentDx = 0f
         getDefaultUIUtil().clearView(getView(viewHolder))
+        previousPosition = viewHolder.adapterPosition
     }
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         viewHolder?.let {
+            currentPosition = viewHolder.adapterPosition
             getDefaultUIUtil().onSelected(getView(it))
         }
+    }
+
+    // view밖으로 escape되는 것 막기
+    override fun getSwipeEscapeVelocity(defaultValue: Float): Float {
+        return defaultValue * 10
+    }
+    // view밖으로 escape되는 것 막기
+    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
+        val isClamped = getTag(viewHolder)
+        // 현재 View가 고정되어있지 않고 사용자가 -clamp 이상 swipe시 isClamped true로 변경 아닐시 false로 변경
+        setTag(viewHolder, !isClamped && currentDx <= -clamp)
+        return 2f
     }
 
     override fun onChildDraw(
@@ -164,7 +190,16 @@ class SwipeHelperCallback : ItemTouchHelper.Callback() {
     ) {
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             val view = getView(viewHolder)
+            val isClamped = getTag(viewHolder)  //고정할지 말지 결정, true : 고정함  false:고정안함
+            val x =  clampViewPositionHorizontal(view, dX, isClamped, isCurrentlyActive)    //x만큼 이동(고정 해제 시 이동위치 결정)
 
+            // 고정시킬 시 애니메이션 추가
+            if (x == -clamp){
+                getView(viewHolder).animate().translationX(-clamp).setDuration(100L).start()
+                return
+            }
+
+            currentDx = x
             getDefaultUIUtil().onDraw(
                 c,
                 recyclerView,
@@ -177,10 +212,58 @@ class SwipeHelperCallback : ItemTouchHelper.Callback() {
         }
     }
 
-    private fun getView(viewHolder: RecyclerView.ViewHolder): View {
-        return (viewHolder as DataListAdapter.CustomViewHolder).itemView
-        //return (viewHolder as DataListAdapter.CustomViewHolder).itemView.llyt_swipe_view
-        //llyt_swipe_view 얘를 못찾겠음
+
+
+    private fun clampViewPositionHorizontal(
+        view: View,
+        dX: Float,
+        isClamped: Boolean,
+        isCurrentlyActive: Boolean
+    ) : Float {
+
+        // RIGHT 방향으로 swipe 막기
+        val max: Float = 0f
+
+        //고정할 수 있으면
+        val x = if (isClamped) {
+            // View가 고정되었을 때 swipe되는 영역 제한
+            if (isCurrentlyActive) dX - clamp else -clamp
+        } else {
+            // 고정할 수 없으면 x는 스와이프한 만큼
+            dX /2
+        }
+        //return min(max(min,x),max)
+        return min(x,max)
     }
+    private fun setTag(viewHolder: RecyclerView.ViewHolder, isClamped: Boolean) {
+        // isClamped를 view의 tag로 관리
+        viewHolder.itemView.tag = isClamped
+    }
+    private fun getTag(viewHolder: RecyclerView.ViewHolder) : Boolean {
+        // isClamped를 view의 tag로 관리
+        return viewHolder.itemView.tag as? Boolean ?: false
+    }
+
+    private fun getView(viewHolder: RecyclerView.ViewHolder): View {
+        return (viewHolder as DataListAdapter.CustomViewHolder).itemView.findViewById(R.id.llyt_swipe_view)
+    }
+
+    fun setClamp(clamp: Float) {
+        this.clamp = clamp
+    }
+    // 다른 View가 swipe 되거나 터치되면 고정 해제
+    fun removePreviousClamp(recyclerView: RecyclerView) {
+        if (currentPosition == previousPosition)
+            return
+        previousPosition?.let {
+            val viewHolder = recyclerView.findViewHolderForAdapterPosition(it) ?: return
+            getView(viewHolder).translationX = 0f
+            setTag(viewHolder, false)
+            previousPosition = null
+        }
+    }
+
+
+
 
 }
