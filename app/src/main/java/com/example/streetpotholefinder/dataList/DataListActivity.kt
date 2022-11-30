@@ -2,19 +2,24 @@ package com.example.streetpotholefinder.dataList
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Canvas
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Gravity.LEFT
+import android.view.Gravity.RIGHT
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.streetpotholefinder.R
 import com.example.streetpotholefinder.R.id.data_list_view
 import com.example.streetpotholefinder.RecResultActivity
 import com.example.streetpotholefinder.databinding.ActivityDataListBinding
+import com.google.android.material.snackbar.Snackbar
 
 class DataListActivity : AppCompatActivity() {
     private val TAG = this.javaClass.simpleName
@@ -49,6 +54,10 @@ class DataListActivity : AppCompatActivity() {
         rv.addItemDecoration(
             DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         )
+
+        val swipeHelperCallback = SwipeHelperCallback()
+        val itemTouchHelper = ItemTouchHelper(swipeHelperCallback)
+        itemTouchHelper.attachToRecyclerView(rv)
 
         //데이터목록 각 리스트 클릭 시 이벤트
 //        rv.onItemClickListener = AdapterView.OnItemClickListener{
@@ -105,10 +114,7 @@ class DataListAdapter(val dataList: MutableList<DataListVO>) :
         val RecordLength = itemView.findViewById<TextView>(R.id.RecordLength)
         val PotholeCnt = itemView.findViewById<TextView>(R.id.PotholeCnt)
         val CrackCnt = itemView.findViewById<TextView>(R.id.CrackCnt)
-
-
     }
-
 }
 
 class DataListVO(
@@ -117,6 +123,64 @@ class DataListVO(
     val RecordLength: String,
     val PotholeCnt: String,
     val CrackCnt: String
-) {
+)
+
+
+class SwipeHelperCallback : ItemTouchHelper.Callback() {
+
+    override fun getMovementFlags(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder
+    ): Int {
+        return makeMovementFlags(0, ItemTouchHelper.LEFT)
+    }
+
+    override fun onMove(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
+    ) = false
+
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
+
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        getDefaultUIUtil().clearView(getView(viewHolder))
+    }
+
+    override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+        viewHolder?.let {
+            getDefaultUIUtil().onSelected(getView(it))
+        }
+    }
+
+    override fun onChildDraw(
+        c: Canvas,
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        dX: Float,
+        dY: Float,
+        actionState: Int,
+        isCurrentlyActive: Boolean
+    ) {
+        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+            val view = getView(viewHolder)
+
+            getDefaultUIUtil().onDraw(
+                c,
+                recyclerView,
+                view,
+                dX,
+                dY,
+                actionState,
+                isCurrentlyActive
+            )
+        }
+    }
+
+    private fun getView(viewHolder: RecyclerView.ViewHolder): View {
+        return (viewHolder as DataListAdapter.CustomViewHolder).itemView
+        //return (viewHolder as DataListAdapter.CustomViewHolder).itemView.llyt_swipe_view
+        //llyt_swipe_view 얘를 못찾겠음
+    }
 
 }
