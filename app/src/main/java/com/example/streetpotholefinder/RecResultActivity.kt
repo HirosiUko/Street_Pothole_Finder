@@ -2,7 +2,6 @@ package com.example.streetpotholefinder
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Vibrator
 import android.util.Log
@@ -10,19 +9,27 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import com.example.streetpotholefinder.accident.FirebaseAccident
 import com.example.streetpotholefinder.accident.SerializedAccident
+import com.example.streetpotholefinder.accident.SerializedIssues
 import com.example.streetpotholefinder.accidentsList.AccidentsActivity
 import com.example.streetpotholefinder.dataList.DataListVO
 import com.example.streetpotholefinder.issue.Event
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageMetadata
+import com.google.firebase.storage.StorageReference
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import kotlin.time.Duration
+
 
 class RecResultActivity : AppCompatActivity() {
 
@@ -32,15 +39,19 @@ class RecResultActivity : AppCompatActivity() {
     private lateinit var tvResultLength: TextView
     private lateinit var tvResultPotholeCnt: TextView
     private lateinit var tvResultCrackCnt: TextView
-    private lateinit var btnRecResultUpload : LinearLayout
+    private lateinit var btnRecResultUpload: LinearLayout
     ///////////////////////
 
     private lateinit var database: DatabaseReference
     lateinit var data: String
     private lateinit var prevActivityInfo: String
+    private lateinit var userid: String
+    private lateinit var auth: FirebaseAuth
 
     val db = Firebase.database
     val myRef = db.getReference("currentEvent")
+
+    private lateinit var firebaseStorage: FirebaseStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,15 +84,84 @@ class RecResultActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        btnRecResultUpload.setOnClickListener{
+        btnRecResultUpload.setOnClickListener {
             uploadResult()
         }
+
+        // firebase setting
+        firebaseStorage = FirebaseStorage.getInstance()
+        auth = FirebaseAuth.getInstance()
+        userid = auth.currentUser?.displayName ?: "devmode"
     }
 
-    fun uploadResult(){
-        var serializedAccident : SerializedAccident = SerializedAccident()
+    fun uploadResult() {
+        // Convert Accident data.
+        var serializedAccident = SerializedAccident()
         serializedAccident.importAccident(Event.getInstance().accident)
-        Log.d("RecResultActivity", "uploadResult: "+ Json.encodeToString(serializedAccident))
+
+
+        var fireStore = Firebase.firestore.collection(userid)
+        var issueDocument = fireStore.document("Issue_${userid}_${serializedAccident.recEndTime}")
+
+        // porthole
+        issueDocument.collection("porthole")
+        uploadFirebase("porthole", serializedAccident.portholes, issueDocument)
+
+        // crack
+        issueDocument.collection("crack")
+        uploadFirebase("crack", serializedAccident.cracks, issueDocument)
+
+        issueDocument.set(
+            hashMapOf(
+                "recStartTime" to serializedAccident.recStartTime.toString(),
+                "recEndTime" to serializedAccident.recEndTime.toString(),
+                "cntPothole" to serializedAccident.portholes.size,
+                "cntCrack" to serializedAccident.cracks.size
+            )
+        )
+
+        val dlg: AlertDialog.Builder = AlertDialog.Builder(
+            this,
+            android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth
+        ).setTitle("Notify")
+            .setMessage("Upload완료")
+            .setPositiveButton("확인") { _, _ ->
+            }
+    }
+
+    private fun uploadFirebase(
+        name: String,
+        dataList: ArrayList<SerializedIssues>,
+        fbCollection: DocumentReference
+    ) {
+        for ((idx, issue) in dataList.withIndex()) {
+
+            var image = issue.image
+            var image_name = "$userid/images/${issue.issueTime}.jpg"
+            val storageMetadata = StorageMetadata.Builder()
+                .setContentType("image/WEBP")
+                .setCustomMetadata("GPS", issue.gpsInfo)
+                .setCustomMetadata("Time", issue.issueTime.toString())
+                .build()
+
+            val storageReference: StorageReference =
+                firebaseStorage.getReference(image_name)
+
+            storageReference.putBytes(image, storageMetadata).addOnSuccessListener {
+                Log.d("RecResultActivity", "uploadResult: success : image : ${image_name}")
+
+                var event = FirebaseAccident(issue.issueTime.toString(), issue.gpsInfo, image_name)
+
+                fbCollection.collection(name)
+                    .document("issue${idx}")
+                    .set(hashMapOf("$name$idx" to event))
+
+                Log.d("RecResultActivity", "uploadResult: issue : ${event}")
+
+            }.addOnFailureListener {
+                Log.d("RecResultActivity", "uploadResult: failure : ${it}")
+            }
+        }
     }
 
     @Deprecated("Deprecated in Java")
@@ -96,7 +176,10 @@ class RecResultActivity : AppCompatActivity() {
         var currentEvent: Event = Event.getInstance()
         var recStartTime: LocalDateTime? = currentEvent.accident.recStartTime
         var recEndTime: LocalDateTime? = currentEvent.accident.recEndTime
-        var recTime : Duration = recEndTime!!.toInstant(TimeZone.currentSystemDefault()) - recStartTime!!.toInstant(TimeZone.currentSystemDefault())
+        var recTime: Duration =
+            recEndTime!!.toInstant(TimeZone.currentSystemDefault()) - recStartTime!!.toInstant(
+                TimeZone.currentSystemDefault()
+            )
         tvResultDate.text = recEndTime.toString()
         tvResultTime.text = recEndTime.toString()
         tvResultLength.text = recTime.toString()
@@ -110,7 +193,7 @@ class RecResultActivity : AppCompatActivity() {
         )
     }
 
-    private fun displayFromDataList(){
+    private fun displayFromDataList() {
         val a = intent.getIntExtra("number", 5)
         var contentList = mutableListOf<DataListVO>()
 

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Canvas
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.streetpotholefinder.R
 import com.example.streetpotholefinder.R.id.data_list_view
 import com.example.streetpotholefinder.RecResultActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import kotlinx.datetime.LocalDateTime
 import java.lang.Float.min
 
 class DataListActivity : AppCompatActivity() {
@@ -29,29 +35,57 @@ class DataListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_data_list)
 
-
         val rv = findViewById<RecyclerView>(data_list_view)
 
-        ContentList.add(DataListVO("2022년 11월 15일", "오후 2시 40분", "00:29:23", "30", "14"))
-        ContentList.add(DataListVO("2022년 10월 25일", "오전 8시 18분", "00:05:22", "5", "3"))
+        var auth = FirebaseAuth.getInstance()
+        var fireStore = Firebase.firestore.collection(auth.currentUser?.displayName ?: "devmode")
+        fireStore.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    for (tmp_doc in document.documents) {
+//                        fireStore.document(tmp_doc.id).collection("porthole").get().addOnSuccessListener {
+//                            Log.d(TAG, "document: " + it.documents.size)
+//                        }
+                        Log.d(TAG, "onCreate: " + tmp_doc.data)
 
-        ContentList.add(DataListVO("2022년 10월 23일", "오후 3시 22분", "00:04:03", "13", "27"))
-        ContentList.add(DataListVO("2022년 9월 17일", "오전 10시 33분", "00:16:45", "4", "19"))
+                        var _date : String = ""
+                        var _time : String = ""
+                        var _durate : String = ""
+                        var _cntPothole : Long = 0
+                        var _cntCrack : Long = 0
+
+                        tmp_doc.data!!.forEach{ (key, value) ->
+                            when(key){
+                                "recStartTime" -> {
+                                    _date = LocalDateTime.parse(value as String).date.toString()
+                                    _time = LocalDateTime.parse(value as String).time.toString()
+                                }
+                                "cntCrack" -> {
+                                    _cntCrack = value as Long
+                                }
+                                "cntPothole" -> {
+                                    _cntPothole = value as Long
+                                }
+                            }
+                        }
+                        ContentList.add(DataListVO(_date,_time,"0",_cntPothole.toString(),_cntCrack.toString()))
+                        Log.d(TAG, "onCreate: "+_date+_time+"0"+_cntPothole.toString()+_cntCrack.toString())
+                        adapter.notifyDataSetChanged()
+                    }
+                } else {
+                    Log.d(TAG, "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
+            }
+
         adapter = DataListAdapter(ContentList)
-
-
-        //데이터목록 리스트 어댑터
-//        val Adapter = DataListAdapter(this,R.layout.data_list_one_lyt, ContentList)
-//
-//        val datalistView = findViewById<ListView>(data_list_view)
-//        datalistView.adapter = Adapter
 
         rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rv.setHasFixedSize(true)
 
         adapter = DataListAdapter(ContentList)
-
-
 
         rv.addItemDecoration(
             DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
@@ -63,7 +97,6 @@ class DataListActivity : AppCompatActivity() {
 
         rv.setOnTouchListener { _, _ ->
             swipeHelperCallback.removePreviousClamp(rv)
-
             false
         }
 
@@ -86,77 +119,45 @@ class DataListAdapter(val dataList: MutableList<DataListVO>) :
     RecyclerView.Adapter<DataListAdapter.CustomViewHolder>() {
     private lateinit var context: Context
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
 
         context = parent.context
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.data_list_one_lyt, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.data_list_one_lyt, parent, false)
         return CustomViewHolder(view).apply {
             llyt_swipe_view.setOnClickListener {
-
 
                 var curpos: Int = adapterPosition
                 var intent = Intent(context, RecResultActivity::class.java)
 
-
-
                 intent.putExtra("previousActivityInfo", "DataListAdapter")
                 intent.putExtra("number", curpos)
                 context.startActivity(intent)
-
-
             }
-
         }
     }
 
-
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
-
         holder.RecordLength.text = dataList.get(position).RecordLength
         holder.StreetDate.text = dataList.get(position).StreetDate
         holder.StreetTime.text = dataList.get(position).StreetTime
         holder.PotholeCnt.text = dataList.get(position).PotholeCnt
         holder.CrackCnt.text = dataList.get(position).CrackCnt
-//        holder.btndel.setOnClickListener {
-//            onDeleteClick.let {
-//                onDeleteClick -> onDeleteClick(this)
-//            }
-//        }
 
-//        holder.btndel.setOnClickListener {
-//            dataList.removeAt(position)
-//        }
         holder.onDeleteClick = {
             removeItem(it)
         }
-
-
     }
-
 
     fun removeItem(viewHolder: RecyclerView.ViewHolder) {
         var position = viewHolder.adapterPosition
-        dataList.drop(position)
+        dataList.removeAt(position)
         notifyItemRemoved(position)
-
     }
-
-//    interface OnItemClickListener {
-//        fun OnItemClick(v: View, position: Int)
-//    }
-//    private lateinit var itemClickListener : OnItemClickListener
-//
-//    fun setItemClickListener(itemClickListener: () -> Unit) {
-//         this.itemClickListener = itemClickListener
-//
-//    }
 
     override fun getItemCount(): Int {
         return dataList.size
     }
-
 
     class CustomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val StreetDate = itemView.findViewById<TextView>(R.id.StreetDate)
@@ -176,13 +177,8 @@ class DataListAdapter(val dataList: MutableList<DataListVO>) :
                 }
             }
         }
-
-
     }
-
-
 }
-
 
 class DataListVO(
     val StreetDate: String,
@@ -190,8 +186,12 @@ class DataListVO(
     val RecordLength: String,
     val PotholeCnt: String,
     val CrackCnt: String
-)
 
+) {
+    override fun toString(): String {
+        return "DataListVO(StreetDate='$StreetDate', StreetTime='$StreetTime', RecordLength='$RecordLength', PotholeCnt='$PotholeCnt', CrackCnt='$CrackCnt')"
+    }
+}
 
 class SwipeHelperCallback : ItemTouchHelper.Callback() {
 
@@ -200,10 +200,8 @@ class SwipeHelperCallback : ItemTouchHelper.Callback() {
     private var currentDx = 0f
     private var clamp = 0f
 
-
     override fun getMovementFlags(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder
+        recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder
     ): Int {
         return makeMovementFlags(0, ItemTouchHelper.LEFT)
     }
@@ -257,10 +255,7 @@ class SwipeHelperCallback : ItemTouchHelper.Callback() {
             val view = getView(viewHolder)
             val isClamped = getTag(viewHolder)  //고정할지 말지 결정, true : 고정함  false:고정안함
             val x = clampViewPositionHorizontal(
-                view,
-                dX,
-                isClamped,
-                isCurrentlyActive
+                view, dX, isClamped, isCurrentlyActive
             )    //x만큼 이동(고정 해제 시 이동위치 결정)
 
             // 고정시킬 시 애니메이션 추가
@@ -271,23 +266,14 @@ class SwipeHelperCallback : ItemTouchHelper.Callback() {
 
             currentDx = x
             getDefaultUIUtil().onDraw(
-                c,
-                recyclerView,
-                view,
-                dX,
-                dY,
-                actionState,
-                isCurrentlyActive
+                c, recyclerView, view, dX, dY, actionState, isCurrentlyActive
             )
         }
     }
 
 
     private fun clampViewPositionHorizontal(
-        view: View,
-        dX: Float,
-        isClamped: Boolean,
-        isCurrentlyActive: Boolean
+        view: View, dX: Float, isClamped: Boolean, isCurrentlyActive: Boolean
     ): Float {
 
         // RIGHT 방향으로 swipe 막기
@@ -325,8 +311,7 @@ class SwipeHelperCallback : ItemTouchHelper.Callback() {
 
     // 다른 View가 swipe 되거나 터치되면 고정 해제
     fun removePreviousClamp(recyclerView: RecyclerView) {
-        if (currentPosition == previousPosition)
-            return
+        if (currentPosition == previousPosition) return
         previousPosition?.let {
             val viewHolder = recyclerView.findViewHolderForAdapterPosition(it) ?: return
             getView(viewHolder).translationX = 0f

@@ -36,7 +36,7 @@ class SerializedAccident(){
 
     private fun convBitmapToByteArry(bitmap: Bitmap) : ByteArray{
         val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream)
+        bitmap.compress(Bitmap.CompressFormat.WEBP_LOSSY, 100, stream)
         return stream.toByteArray()
     }
 
@@ -69,6 +69,7 @@ open class SerializedIssues() {
     lateinit var image: ByteArray
     lateinit var gpsInfo: String
     lateinit var issueTime: LocalDateTime
+    var image_uri: String = ""
 
     constructor(_image: ByteArray, _gpsInfo: String, _issueTime: LocalDateTime) : this() {
         image = _image
@@ -76,3 +77,9 @@ open class SerializedIssues() {
         issueTime = _issueTime
     }
 }
+
+data class FirebaseAccident(
+    val issueTime : String? = null,
+    val gpsInfo: String? = null,
+    var ImgUri: String? = null
+)
