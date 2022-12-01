@@ -8,15 +8,50 @@
     tools:context=".dataList.DataListActivity"
     android:background="@drawable/color_bg_whitegray"
     android:layout_gravity="center_horizontal">
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginTop="92dp"
         android:paddingLeft="48dp"
         android:paddingRight="48dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingTop="30dp"
+            android:paddingBottom="16dp">
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ico_datalist_vector"
+                app:tint="@color/street_green_txt" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DATA LIST"
+                    android:textSize="12sp"
+                    android:textColor="@color/street_green_txt"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="등록 데이터 확인"
+                    android:textSize="16sp"
+                    android:textColor="@color/street_green_txt"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/street_green_txt"
+            />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/data_list_view"
             android:layout_width="match_parent"
