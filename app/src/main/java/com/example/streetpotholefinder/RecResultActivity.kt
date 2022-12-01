@@ -5,16 +5,19 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Vibrator
 import android.util.Log
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
 import com.example.streetpotholefinder.accident.FirebaseAccident
 import com.example.streetpotholefinder.accident.SerializedAccident
 import com.example.streetpotholefinder.accident.SerializedIssues
 import com.example.streetpotholefinder.accidentsList.AccidentsActivity
 import com.example.streetpotholefinder.dataList.DataListVO
+import com.example.streetpotholefinder.databinding.ActivityRecResultBinding
 import com.example.streetpotholefinder.issue.Event
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -52,11 +55,67 @@ class RecResultActivity : AppCompatActivity() {
     val myRef = db.getReference("currentEvent")
 
     private lateinit var firebaseStorage: FirebaseStorage
+    private lateinit var binding: ActivityRecResultBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_rec_result)
+        binding = ActivityRecResultBinding.inflate(layoutInflater)
 
+        setContentView(binding.root)
+        /** Download Button Click Listener */
+        binding.apply {
+            textView20.setOnClickListener {
+                textView20.isClickable = false
+                textView20.text = "다운로드중"
+                downloadLayout.visibility = View.VISIBLE
+
+                var progress = 0
+                Thread(Runnable {
+                    while (progress < 100) {
+                        progress += 1
+
+                        /** Update UI */
+                        runOnUiThread {
+                            progressDownload.progress = progress
+                            textViewDownload.text = progress.toString()
+                        }
+                        Thread.sleep(50)
+                    }
+
+                    /** Done Download */
+                    textView20.isClickable = true
+
+                    downloadLayout.visibility = View.INVISIBLE
+                }).start()
+            }
+        }
+
+        /** Upload Button Click Listener */
+        binding.apply {
+            textView20.setOnClickListener {
+                textView20.isClickable = false
+                uploadLayout.visibility = View.VISIBLE
+
+                var progress = 0
+                Thread(Runnable {
+                    while (progress < 100) {
+                        progress += 1
+
+                        /** Update UI */
+                        runOnUiThread {
+                            progressUpload.progress = progress
+                            textViewUpload.text = progress.toString()
+                        }
+                        Thread.sleep(50)
+                    }
+
+                    /** Done Uploading */
+                    textView20.isClickable = true
+
+                    uploadLayout.visibility = View.INVISIBLE
+                }).start()
+            }
+        }
         tvResultDate = findViewById(R.id.ResultDate)
         tvResultTime = findViewById(R.id.ResultTime)
         tvResultLength = findViewById(R.id.ResultLength)
