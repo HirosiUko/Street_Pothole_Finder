@@ -44,7 +44,7 @@ class SerializedAccident(){
         return "${gpsInfo.latitude},${gpsInfo.longitude}"
     }
 
-    fun copyPortholes(accident: Accident) {
+    fun importAccident(accident: Accident) {
         for(porthole in accident.portholes)
         {
             var img = convBitmapToByteArry(porthole.image)

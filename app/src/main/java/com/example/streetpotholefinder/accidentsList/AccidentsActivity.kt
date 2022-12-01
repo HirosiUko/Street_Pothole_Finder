@@ -15,11 +15,10 @@ class AccidentsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_accident)
 
         val rvv = findViewById<RecyclerView>(R.id.accident_list_view)
-        var ContentList = mutableListOf<accidentVO>()
+        var contentList = mutableListOf<accidentVO>()
 
         val curEvent : Event = Event.getInstance()
-        val _category = intent.getStringExtra("Category")
-        val dataArray = when(_category){
+        val dataArray = when(intent.getStringExtra("Category")){
             "POTHOLE" ->{
                 curEvent.accident.portholes
             }
@@ -32,10 +31,10 @@ class AccidentsActivity : AppCompatActivity() {
         if (dataArray != null) {
             for( data in dataArray)
             {
-                ContentList.add(
+                contentList.add(
                     accidentVO(
                         data.image,
-                        "위도:${data.gpsInfo.latitude}, 경도:${data.gpsInfo.longitude}",
+                        "${data.gpsInfo.latitude},${data.gpsInfo.longitude}",
                         data.issueTime.toString()
                     )
                 )
@@ -46,7 +45,7 @@ class AccidentsActivity : AppCompatActivity() {
         rvv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rvv.setHasFixedSize(true)
 
-        rvv.adapter = AccidentsAdapter(ContentList)
+        rvv.adapter = AccidentsAdapter(contentList)
 
         rvv.addItemDecoration(
             DividerItemDecoration(this, DividerItemDecoration.VERTICAL)

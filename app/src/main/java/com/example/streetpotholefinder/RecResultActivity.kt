@@ -80,7 +80,7 @@ class RecResultActivity : AppCompatActivity() {
 
     fun uploadResult(){
         var serializedAccident : SerializedAccident = SerializedAccident()
-        serializedAccident.copyPortholes(Event.getInstance().accident)
+        serializedAccident.importAccident(Event.getInstance().accident)
         Log.d("RecResultActivity", "uploadResult: "+ Json.encodeToString(serializedAccident))
     }
 

@@ -39,7 +39,6 @@ class CameraView : AppCompatActivity() {
     //kakao map view.
 //    private lateinit var mapView: MapView
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityCameraView = ActivityCameraViewBinding.inflate(layoutInflater)
@@ -48,10 +47,10 @@ class CameraView : AppCompatActivity() {
         val btnRecEnd: ImageView = findViewById(R.id.btnRecStart)
         btnRecEnd.setOnClickListener {
             val _event: Event = Event.getInstance()
-            _event.accident?.recEndTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+            _event.accident.recEndTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
             Log.d(
                 TAG,
-                "onCreate: ${_event.accident?.recStartTime}, ${_event.accident?.portholes?.size}"
+                "onCreate: ${_event.accident.recStartTime}, ${_event.accident.portholes.size}"
             )
             val intent = Intent(this, RecResultActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -93,9 +92,9 @@ class CameraView : AppCompatActivity() {
                 super.onBackPressed()
             }
         }
-        dlg.setNegativeButton("취소", DialogInterface.OnClickListener { dialog, which ->
+        dlg.setNegativeButton("취소") { _, _ ->
             // Do nothing
-        })
+        }
         dlg.show()
     }
 }
