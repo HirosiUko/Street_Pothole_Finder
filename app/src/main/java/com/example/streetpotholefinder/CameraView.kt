@@ -2,33 +2,22 @@ package com.example.streetpotholefinder
 
 import android.animation.Animator
 import android.animation.Animator.AnimatorListener
-import android.animation.AnimatorListenerAdapter
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.media.Image
-import android.opengl.Visibility
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.SystemClock
 import android.os.Vibrator
 import android.util.Log
 import android.view.View
-import android.view.animation.Animation.AnimationListener
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import com.airbnb.lottie.LottieAnimationView
 import com.example.streetpotholefinder.databinding.ActivityCameraViewBinding
 import com.example.streetpotholefinder.issue.Event
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import java.time.LocalDateTime
-import java.util.EventListener
 
 class CameraView : AppCompatActivity() {
 
@@ -50,7 +39,7 @@ class CameraView : AppCompatActivity() {
             _event.accident.recEndTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
             Log.d(
                 TAG,
-                "onCreate: ${_event.accident.recStartTime}, ${_event.accident.portholes.size}"
+                "onCreate: ${_event.accident.recStartTime}, ${_event.accident.potholes.size}"
             )
             val intent = Intent(this, RecResultActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

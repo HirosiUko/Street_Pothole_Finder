@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
@@ -50,6 +49,7 @@ class RecResultActivity : AppCompatActivity() {
     private lateinit var prevActivityInfo: String
     private lateinit var userid: String
     private lateinit var auth: FirebaseAuth
+    private lateinit var fbRef : String
 
     val db = Firebase.database
     val myRef = db.getReference("currentEvent")
@@ -129,17 +129,21 @@ class RecResultActivity : AppCompatActivity() {
             "DataListAdapter" -> displayFromDataList()
         }
 
-        val portholeBtn = findViewById<LinearLayout>(R.id.linearLayoutPortHole)
-        portholeBtn.setOnClickListener {
+        val potholeBtn = findViewById<LinearLayout>(R.id.linearLayoutPortHole)
+        potholeBtn.setOnClickListener {
             val intent = Intent(this, AccidentsActivity::class.java)
-            intent.putExtra("Category", "POTHOLE")
+            intent.putExtra("Category", "pothole")
+            intent.putExtra("previousActivityInfo",prevActivityInfo)
+            intent.putExtra("dataRef", fbRef)
             startActivity(intent)
         }
 
         val crackBtn = findViewById<LinearLayout>(R.id.linearLayoutCrack)
         crackBtn.setOnClickListener {
             val intent = Intent(this, AccidentsActivity::class.java)
-            intent.putExtra("Category", "CRACK")
+            intent.putExtra("Category", "crack")
+            intent.putExtra("previousActivityInfo",prevActivityInfo)
+            intent.putExtra("dataRef", fbRef)
             startActivity(intent)
         }
 
@@ -163,8 +167,8 @@ class RecResultActivity : AppCompatActivity() {
         var issueDocument = fireStore.document("Issue_${userid}_${serializedAccident.recEndTime}")
 
         // porthole
-        issueDocument.collection("porthole")
-        uploadFirebase("porthole", serializedAccident.portholes, issueDocument)
+        issueDocument.collection("pothole")
+        uploadFirebase("pothole", serializedAccident.potholes, issueDocument)
 
         // crack
         issueDocument.collection("crack")
@@ -174,7 +178,7 @@ class RecResultActivity : AppCompatActivity() {
             hashMapOf(
                 "recStartTime" to serializedAccident.recStartTime.toString(),
                 "recEndTime" to serializedAccident.recEndTime.toString(),
-                "cntPothole" to serializedAccident.portholes.size,
+                "cntPothole" to serializedAccident.potholes.size,
                 "cntCrack" to serializedAccident.cracks.size
             )
         )
@@ -242,30 +246,25 @@ class RecResultActivity : AppCompatActivity() {
         tvResultDate.text = recEndTime.toString()
         tvResultTime.text = recEndTime.toString()
         tvResultLength.text = recTime.toString()
-        tvResultPotholeCnt.text = currentEvent.accident.portholes.size.toString()
+        tvResultPotholeCnt.text = currentEvent.accident.potholes.size.toString()
         tvResultCrackCnt.text = currentEvent.accident.cracks.size.toString()
-        Toast.makeText(this, currentEvent.accident.portholes.toString(), Toast.LENGTH_SHORT)
-            .show()
-        Log.d(
-            "RecResultActivity",
-            "onCreate: CameraView cntofporthole:" + currentEvent.accident.portholes.size.toString()
-        )
+//        Toast.makeText(this, currentEvent.accident.portholes.toString(), Toast.LENGTH_SHORT)
+//            .show()
+//        Log.d(
+//            "RecResultActivity",
+//            "onCreate: CameraView cntofporthole:" + currentEvent.accident.portholes.size.toString()
+//        )
     }
 
     private fun displayFromDataList() {
-        val a = intent.getIntExtra("number", 5)
-        var contentList = mutableListOf<DataListVO>()
+        val eventRef = intent.getSerializableExtra("ref") as DataListVO
 
-        contentList.add(DataListVO("2022년 11월 15일", "오후 2시 40분", "00:29:23", "30", "14"))
-        contentList.add(DataListVO("2022년 10월 25일", "오전 8시 18분", "00:05:22", "5", "3"))
-
-        contentList.add(DataListVO("2022년 10월 23일", "오후 3시 22분", "00:04:03", "13", "27"))
-        contentList.add(DataListVO("2022년 9월 17일", "오전 10시 33분", "00:16:45", "4", "19"))
-        tvResultDate.text = contentList[a].StreetDate
-        tvResultTime.text = contentList[a].StreetTime
-        tvResultLength.text = contentList[a].RecordLength
-        tvResultPotholeCnt.text = contentList[a].PotholeCnt
-        tvResultCrackCnt.text = contentList[a].CrackCnt
+        tvResultDate.text = eventRef.StreetDate
+        tvResultTime.text = eventRef.StreetTime
+        tvResultLength.text = eventRef.RecordLength
+        tvResultPotholeCnt.text = eventRef.PotholeCnt
+        tvResultCrackCnt.text = eventRef.CrackCnt
+        fbRef = eventRef.eventRef
     }
 
     private fun gotoMain() {

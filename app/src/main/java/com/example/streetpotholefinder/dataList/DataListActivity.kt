@@ -24,6 +24,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.datetime.LocalDateTime
+import java.io.Serializable
 import java.lang.Float.min
 
 class DataListActivity : AppCompatActivity() {
@@ -58,7 +59,9 @@ class DataListActivity : AppCompatActivity() {
                             when(key){
                                 "recStartTime" -> {
                                     _date = LocalDateTime.parse(value as String).date.toString()
-                                    _time = LocalDateTime.parse(value as String).time.toString()
+                                    _time = LocalDateTime.parse(value).hour.toString()+"시"+
+                                            LocalDateTime.parse(value).minute.toString()+"분"+
+                                            LocalDateTime.parse(value).second.toString()+"초"
                                 }
                                 "cntCrack" -> {
                                     _cntCrack = value as Long
@@ -68,7 +71,8 @@ class DataListActivity : AppCompatActivity() {
                                 }
                             }
                         }
-                        ContentList.add(DataListVO(_date,_time,"0",_cntPothole.toString(),_cntCrack.toString()))
+                        ContentList.add(DataListVO(_date,_time,"0",_cntPothole.toString(),_cntCrack.toString(),
+                            tmp_doc.id,))
                         Log.d(TAG, "onCreate: "+_date+_time+"0"+_cntPothole.toString()+_cntCrack.toString())
                         adapter.notifyDataSetChanged()
                     }
@@ -114,13 +118,11 @@ class DataListActivity : AppCompatActivity() {
 
 }
 
-
 class DataListAdapter(val dataList: MutableList<DataListVO>) :
     RecyclerView.Adapter<DataListAdapter.CustomViewHolder>() {
     private lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
-
         context = parent.context
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.data_list_one_lyt, parent, false)
@@ -131,7 +133,8 @@ class DataListAdapter(val dataList: MutableList<DataListVO>) :
                 var intent = Intent(context, RecResultActivity::class.java)
 
                 intent.putExtra("previousActivityInfo", "DataListAdapter")
-                intent.putExtra("number", curpos)
+                intent.putExtra("ref", dataList[curpos])
+
                 context.startActivity(intent)
             }
         }
@@ -180,18 +183,14 @@ class DataListAdapter(val dataList: MutableList<DataListVO>) :
     }
 }
 
-class DataListVO(
+class DataListVO (
     val StreetDate: String,
     val StreetTime: String,
     val RecordLength: String,
     val PotholeCnt: String,
-    val CrackCnt: String
-
-) {
-    override fun toString(): String {
-        return "DataListVO(StreetDate='$StreetDate', StreetTime='$StreetTime', RecordLength='$RecordLength', PotholeCnt='$PotholeCnt', CrackCnt='$CrackCnt')"
-    }
-}
+    val CrackCnt: String,
+    val eventRef : String,
+) : Serializable
 
 class SwipeHelperCallback : ItemTouchHelper.Callback() {
 
