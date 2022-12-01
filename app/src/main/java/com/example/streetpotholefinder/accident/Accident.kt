@@ -36,7 +36,7 @@ class SerializedAccident(){
 
     private fun convBitmapToByteArry(bitmap: Bitmap) : ByteArray{
         val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.WEBP_LOSSY, 100, stream)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
         return stream.toByteArray()
     }
 
