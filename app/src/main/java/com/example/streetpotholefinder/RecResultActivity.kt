@@ -1,7 +1,11 @@
 package com.example.streetpotholefinder
 
+import android.app.ActionBar
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
 import android.util.Log
@@ -16,6 +20,7 @@ import com.example.streetpotholefinder.accident.FirebaseAccident
 import com.example.streetpotholefinder.accident.SerializedAccident
 import com.example.streetpotholefinder.accident.SerializedIssues
 import com.example.streetpotholefinder.accidentsList.AccidentsActivity
+import com.example.streetpotholefinder.dataList.DataListActivity
 import com.example.streetpotholefinder.dataList.DataListVO
 import com.example.streetpotholefinder.databinding.ActivityRecResultBinding
 import com.example.streetpotholefinder.issue.Event
@@ -151,6 +156,35 @@ class RecResultActivity : AppCompatActivity() {
         firebaseStorage = FirebaseStorage.getInstance()
         auth = FirebaseAuth.getInstance()
         userid = auth.currentUser?.displayName ?: "devmode"
+
+        val reRecordBtn = findViewById<LinearLayout>(R.id.btnRecResultBack)
+        reRecordBtn.setOnClickListener{
+            val cuDialogLyt = layoutInflater.inflate(R.layout.dialog_default_lyt, null)
+            val build = AlertDialog.Builder(this).apply { setView(cuDialogLyt) }
+            val dialog=build.create()
+
+            dialog.apply {
+                show()
+                window?.setLayout(750, ActionBar.LayoutParams.WRAP_CONTENT)
+                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            }
+
+            cuDialogLyt.findViewById<TextView>(R.id.dialog_title).text="재촬영하시겠습니까?"
+            cuDialogLyt.findViewById<TextView>(R.id.dialog_sub).text="재촬영시 지금 데이터는 저장되지 않습니다"
+            cuDialogLyt.findViewById<TextView>(R.id.dialog_btn_y).apply {
+                text = "예"
+                setOnClickListener{
+                    val intent = Intent(it.context, CameraView::class.java)
+                    startActivity(intent)
+                }
+            }
+            cuDialogLyt.findViewById<TextView>(R.id.dialog_btn_n).apply {
+                text = "아니오"
+                setOnClickListener{
+                    dialog.dismiss()
+                }
+            }
+        }
     }
 
     fun uploadResult() {

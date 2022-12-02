@@ -3,9 +3,12 @@ package com.example.streetpotholefinder
 import android.animation.Animator
 import android.animation.Animator.AnimatorListener
 import android.animation.AnimatorListenerAdapter
+import android.app.ActionBar
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.media.Image
 import android.opengl.Visibility
 import android.os.Build
@@ -17,6 +20,7 @@ import android.util.Log
 import android.view.View
 import android.view.animation.Animation.AnimationListener
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.airbnb.lottie.LottieAnimationView
 import com.example.streetpotholefinder.databinding.ActivityCameraViewBinding
@@ -77,24 +81,54 @@ class CameraView : AppCompatActivity() {
         var v: Vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         v.vibrate(500)
 
-        val dlg: AlertDialog.Builder = AlertDialog.Builder(
-            this,
-            android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth
-        )
-        dlg.setTitle("⚠️ 경고") //제목
-        dlg.setMessage("촬영이 취소 됩니다. 진행하시겠습니까?") // 메시지
-        dlg.setPositiveButton("확인") { _, _ ->
-            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
-                // Workaround for Android Q memory leak issue in IRequestFinishCallback$Stub.
-                // (https://issuetracker.google.com/issues/139738913)
-                finishAfterTransition()
-            } else {
-                super.onBackPressed()
+//        val dlg: AlertDialog.Builder = AlertDialog.Builder(
+//            this,
+//            android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth
+//        )
+//        dlg.setTitle("⚠️ 경고") //제목
+//        dlg.setMessage("촬영이 취소 됩니다. 진행하시겠습니까?") // 메시지
+//        dlg.setPositiveButton("확인") { _, _ ->
+//            if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+//                // Workaround for Android Q memory leak issue in IRequestFinishCallback$Stub.
+//                // (https://issuetracker.google.com/issues/139738913)
+//                finishAfterTransition()
+//            } else {
+//                super.onBackPressed()
+//            }
+//        }
+//        dlg.setNegativeButton("취소") { _, _ ->
+//            // Do nothing
+//        }
+//        dlg.show()
+
+
+        val cuDialogLyt = layoutInflater.inflate(R.layout.dialog_default_lyt, null)
+        val build = AlertDialog.Builder(this).apply { setView(cuDialogLyt) }
+        val dialog=build.create()
+
+        dialog.apply {
+            show()
+            window?.setLayout(750, ActionBar.LayoutParams.WRAP_CONTENT)
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
+
+        cuDialogLyt.findViewById<TextView>(R.id.dialog_title).text="촬영이 취소됩니다. 진행하시겠습니까?"
+        cuDialogLyt.findViewById<TextView>(R.id.dialog_sub).text="촬영이 취소됩니다. 데이터가 저장되지 않습니다"
+        cuDialogLyt.findViewById<TextView>(R.id.dialog_btn_y).apply {
+            text = "예"
+            setOnClickListener{
+                if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+                    finishAfterTransition()
+                } else {
+                    super.onBackPressed()
+                }
             }
         }
-        dlg.setNegativeButton("취소") { _, _ ->
-            // Do nothing
+        cuDialogLyt.findViewById<TextView>(R.id.dialog_btn_n).apply {
+            text = "아니오"
+            setOnClickListener{
+                dialog.dismiss()
+            }
         }
-        dlg.show()
     }
 }
