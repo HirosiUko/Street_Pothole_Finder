@@ -22,7 +22,7 @@ class Event private constructor() {
     }
 
     public var accident : Accident = Accident(
-        portholes = ArrayList<Issues>(),
+        potholes = ArrayList<Issues>(),
         cracks = ArrayList<Issues>(),
         recStartTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
         recEndTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())

@@ -9,7 +9,7 @@ import kotlinx.datetime.toLocalDateTime
 import java.io.ByteArrayOutputStream
 
 data class Accident(
-    var portholes: ArrayList<Issues>,
+    var potholes: ArrayList<Issues>,
     var cracks: ArrayList<Issues>,
     var recStartTime: LocalDateTime,
     var recEndTime: LocalDateTime
@@ -29,7 +29,7 @@ open class Issues() {
 
 @kotlinx.serialization.Serializable
 class SerializedAccident(){
-    var portholes: ArrayList<SerializedIssues> = ArrayList<SerializedIssues>()
+    var potholes: ArrayList<SerializedIssues> = ArrayList<SerializedIssues>()
     var cracks: ArrayList<SerializedIssues> = ArrayList<SerializedIssues>()
     var recStartTime: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
     var recEndTime: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
@@ -45,11 +45,11 @@ class SerializedAccident(){
     }
 
     fun importAccident(accident: Accident) {
-        for(porthole in accident.portholes)
+        for(pothole in accident.potholes)
         {
-            var img = convBitmapToByteArry(porthole.image)
-            var gps = convLocationtoString(porthole.gpsInfo)
-            this.portholes.add(SerializedIssues(img,gps,porthole.issueTime))
+            var img = convBitmapToByteArry(pothole.image)
+            var gps = convLocationtoString(pothole.gpsInfo)
+            this.potholes.add(SerializedIssues(img,gps,pothole.issueTime))
         }
 
         for(crack in accident.cracks)

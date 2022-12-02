@@ -42,7 +42,6 @@ import com.example.streetpotholefinder.databinding.FragmentCameraBinding
 import com.example.streetpotholefinder.issue.Event
 import com.google.android.gms.location.*
 import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import org.tensorflow.lite.task.vision.detector.Detection
@@ -423,11 +422,11 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                             cntPothole.toString()
 
                         var issue = Issues(screenshot, current_location, Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
-                        var result = issueEvent.accident?.portholes?.add(issue)
+                        var result = issueEvent.accident?.potholes?.add(issue)
 
                         Log.d(
                             TAG,
-                            "onResults porthole size: ${issueEvent.accident?.portholes?.size}, ${result}"
+                            "onResults porthole size: ${issueEvent.accident?.potholes?.size}, ${result}"
                         )
 
                     } else if (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_CRACK) {
