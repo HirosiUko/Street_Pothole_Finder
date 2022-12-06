@@ -1,8 +1,7 @@
 package com.example.streetpotholefinder.accidentsList
 
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 
 class accidentVO(
-    val potimg: Bitmap, val gps: String, val time: String
+    val imgUri: Uri, val gps: String, val time: String
 )

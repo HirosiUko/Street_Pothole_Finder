@@ -56,7 +56,7 @@ class kakaomap : AppCompatActivity() {
                 // 권한 거절
                 val builder = AlertDialog.Builder(this)
                 builder.setMessage("현재 위치를 확인하시려면 위치 권한을 허용해주세요.")
-                builder.setPositiveButton("확인") { dialog, which ->
+                builder.setPositiveButton("확인") { _, _ ->
                     ActivityCompat.requestPermissions(this,
                         arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), ACCESS_FINE_LOCATION)
                 }
@@ -73,7 +73,7 @@ class kakaomap : AppCompatActivity() {
                 } else {
                     val builder = AlertDialog.Builder(this)
                     builder.setMessage("현재 위치를 확인하시려면 설정에서 위치 권한을 허용해주세요.")
-                    builder.setPositiveButton("설정으로 이동") { dialog, which ->
+                    builder.setPositiveButton("설정으로 이동") { _, _ ->
                         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName"))
                         startActivity(intent)
                     }

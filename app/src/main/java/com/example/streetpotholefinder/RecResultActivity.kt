@@ -49,7 +49,7 @@ class RecResultActivity : AppCompatActivity() {
     private lateinit var prevActivityInfo: String
     private lateinit var userid: String
     private lateinit var auth: FirebaseAuth
-    private lateinit var fbRef : String
+    private var fbRef : String = ""
 
     val db = Firebase.database
     val myRef = db.getReference("currentEvent")
@@ -62,60 +62,60 @@ class RecResultActivity : AppCompatActivity() {
         binding = ActivityRecResultBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
-        /** Download Button Click Listener */
-        binding.apply {
-            textView20.setOnClickListener {
-                textView20.isClickable = false
-                textView20.text = "다운로드중"
-                downloadLayout.visibility = View.VISIBLE
-
-                var progress = 0
-                Thread(Runnable {
-                    while (progress < 100) {
-                        progress += 1
-
-                        /** Update UI */
-                        runOnUiThread {
-                            progressDownload.progress = progress
-                            textViewDownload.text = progress.toString()
-                        }
-                        Thread.sleep(50)
-                    }
-
-                    /** Done Download */
-                    textView20.isClickable = true
-
-                    downloadLayout.visibility = View.INVISIBLE
-                }).start()
-            }
-        }
-
-        /** Upload Button Click Listener */
-        binding.apply {
-            textView20.setOnClickListener {
-                textView20.isClickable = false
-                uploadLayout.visibility = View.VISIBLE
-
-                var progress = 0
-                Thread(Runnable {
-                    while (progress < 100) {
-                        progress += 1
-
-                        /** Update UI */
-                        runOnUiThread {
-                            progressUpload.progress = progress
-                            textViewUpload.text = progress.toString()
-                        }
-                        Thread.sleep(50)
-                    }
-
-                    /** Done Uploading */
-                    textView20.isClickable = true
-
-                    uploadLayout.visibility = View.INVISIBLE
-                }).start()
-            }
-        }
+//        /** Download Button Click Listener */
+//        binding.apply {
+//            textView20.setOnClickListener {
+//                textView20.isClickable = false
+//                textView20.text = "다운로드중"
+//                downloadLayout.visibility = View.VISIBLE
+//
+//                var progress = 0
+//                Thread(Runnable {
+//                    while (progress < 100) {
+//                        progress += 1
+//
+//                        /** Update UI */
+//                        runOnUiThread {
+//                            progressDownload.progress = progress
+//                            textViewDownload.text = progress.toString()
+//                        }
+//                        Thread.sleep(50)
+//                    }
+//
+//                    /** Done Download */
+//                    textView20.isClickable = true
+//
+//                    downloadLayout.visibility = View.INVISIBLE
+//                }).start()
+//            }
+//        }
+//
+//        /** Upload Button Click Listener */
+//        binding.apply {
+//            textView20.setOnClickListener {
+//                textView20.isClickable = false
+//                uploadLayout.visibility = View.VISIBLE
+//
+//                var progress = 0
+//                Thread(Runnable {
+//                    while (progress < 100) {
+//                        progress += 1
+//
+//                        /** Update UI */
+//                        runOnUiThread {
+//                            progressUpload.progress = progress
+//                            textViewUpload.text = progress.toString()
+//                        }
+//                        Thread.sleep(50)
+//                    }
+//
+//                    /** Done Uploading */
+//                    textView20.isClickable = true
+//
+//                    uploadLayout.visibility = View.INVISIBLE
+//                }).start()
+//            }
+//        }
         tvResultDate = findViewById(R.id.ResultDate)
         tvResultTime = findViewById(R.id.ResultTime)
         tvResultLength = findViewById(R.id.ResultLength)
@@ -136,6 +136,7 @@ class RecResultActivity : AppCompatActivity() {
             intent.putExtra("previousActivityInfo",prevActivityInfo)
             intent.putExtra("dataRef", fbRef)
             startActivity(intent)
+            Log.d("RecResultActivity", "onCreate: pothole $prevActivityInfo")
         }
 
         val crackBtn = findViewById<LinearLayout>(R.id.linearLayoutCrack)
