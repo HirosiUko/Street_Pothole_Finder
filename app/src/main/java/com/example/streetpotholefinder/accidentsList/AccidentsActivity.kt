@@ -1,11 +1,15 @@
 package com.example.streetpotholefinder.accidentsList
 
+import android.R.attr.bitmap
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +20,10 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
 
 
 class AccidentsActivity : AppCompatActivity() {
@@ -65,26 +72,44 @@ class AccidentsActivity : AppCompatActivity() {
         Log.d("AccidentsActivity", "displayFromCarmera: $dataArray")
         if (dataArray != null) {
             for (data in dataArray) {
-                contentList.add(
-                    accidentVO(
-                        getImageUri(data.image)!!,
-                        "${data.gpsInfo.latitude},${data.gpsInfo.longitude}",
-                        data.issueTime.toString()
+                getImageUri(data.image)?.let {
+                    contentList.add(
+                        accidentVO(
+                            it,
+                            "${data.gpsInfo.latitude},${data.gpsInfo.longitude}",
+                            data.issueTime.toString()
+                        )
                     )
-                )
+                }
             }
         }
     }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
     private fun getImageUri(inImage: Bitmap): Uri? {
-        val bytes = ByteArrayOutputStream()
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-        val path = MediaStore.Images.Media.insertImage(
-            baseContext.getContentResolver(),
-            inImage,
-            "Title",
-            null
-        )
-        return Uri.parse(path)
+
+        val tempFile = File(cacheDir, System.currentTimeMillis().toString() + ".png")
+        try {
+            // 자동으로 빈 파일을 생성합니다.
+            tempFile.createNewFile()
+
+            // 파일을 쓸 수 있는 스트림을 준비합니다.
+            val out = FileOutputStream(tempFile)
+
+            // compress 함수를 사용해 스트림에 비트맵을 저장합니다.
+            inImage.compress(Bitmap.CompressFormat.PNG, 100, out)
+
+            // 스트림 사용후 닫아줍니다.
+            out.close()
+
+        } catch (e: FileNotFoundException) {
+            Log.e("AccidentsActivity", "FileNotFoundException : " + e.message)
+        } catch (e: IOException) {
+            Log.e("AccidentsActivity", "IOException : " + e.message)
+        }
+
+
+        return tempFile.toUri()
     }
 
     fun displayFromDataList(fbRef: String, categ: String) {
@@ -103,8 +128,8 @@ class AccidentsActivity : AppCompatActivity() {
                         storageReference.downloadUrl.addOnSuccessListener { uri ->
                             Log.d("AccidentsActivity", "displayFromDataList: $uri")
                             insertItem(uri,
-                                "사고위치: "+event["gpsInfo"] as String,
-                                "발견시간: "+event["issueTime"] as String)
+                                event["gpsInfo"] as String,
+                                event["issueTime"] as String)
 
                         }
                         Log.d("AccidentsActivity", "displayFromDataList: $event ${contentList.size}")
