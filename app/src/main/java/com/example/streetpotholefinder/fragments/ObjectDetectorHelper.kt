@@ -86,7 +86,7 @@ class ObjectDetectorHelper(
             when (currentModel) {
 //                MODEL_POTHOLE -> "best-fp16.tflite"
 //                MODEL_POTHOLE -> "pothole_detection_weight_220415_v1-fp16.tflite"
-                MODEL_MOBILENETV1 -> "mobilenetv1.tflite"
+                MODEL_MOBILENETV1 -> "model_fp16.tflite"
                 MODEL_EFFICIENTDETV0 -> "efficientdet-lite0.tflite"
                 MODEL_EFFICIENTDETV1 -> "efficientdet-lite1.tflite"
                 MODEL_EFFICIENTDETV2 -> "efficientdet-lite2.tflite"

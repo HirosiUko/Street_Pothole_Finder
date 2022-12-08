@@ -10,11 +10,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.streetpotholefinder.R
+import com.squareup.picasso.Picasso
 
 class AccidentsAdapter(val dataList: MutableList<accidentVO>) :
     RecyclerView.Adapter<AccidentsAdapter.CustomViewHolder>() {
     private lateinit var context: Context
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
         context = parent.context
@@ -31,9 +31,9 @@ class AccidentsAdapter(val dataList: MutableList<accidentVO>) :
         }
     }
 
-
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
-        holder.imgpot.setImageBitmap(dataList.get(position).potimg)
+        Picasso.get().load(dataList.get(position).imgUri).into(holder.imgpot)
+//        holder.imgpot.setImageBitmap()
         holder.tvGps.text = dataList.get(position).gps
         holder.tvtime.text = dataList.get(position).time
     }
@@ -46,8 +46,5 @@ class AccidentsAdapter(val dataList: MutableList<accidentVO>) :
         val imgpot = itemView.findViewById<ImageView>(R.id.imgpot)
         val tvGps = itemView.findViewById<TextView>(R.id.tvGps)
         val tvtime = itemView.findViewById<TextView>(R.id.tvTime)
-
-
     }
-
 }

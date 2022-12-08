@@ -52,7 +52,7 @@ import java.util.concurrent.Executors
 class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
     private val TAG = "ObjectDetection"
-    private val OBJECT_POTHOLE = "bed"
+    private val OBJECT_POTHOLE = "pothole"
     private val OBJECT_CRACK = "mouse"
 
     private var _fragmentCameraBinding: FragmentCameraBinding? = null
@@ -382,10 +382,11 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
             // Pass necessary information to OverlayView for drawing on the canvas
             try {
-                if ((fragmentCameraBinding != null) && (
-                            (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_CRACK) ||
-                                    (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_POTHOLE))
-                ) {
+//                if ((fragmentCameraBinding != null) && (
+//                            (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_CRACK) ||
+//                                    (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_POTHOLE))
+//                ) {
+                if ((fragmentCameraBinding != null) && (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_POTHOLE)){
 
                     fragmentCameraBinding.overlay.setResults(
                         results ?: LinkedList<Detection>(),
@@ -421,27 +422,32 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
                         requireActivity().findViewById<TextView>(R.id.cntPothole).text =
                             cntPothole.toString()
 
-                        var issue = Issues(screenshot, current_location, Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
+                        var issue = Issues(
+                            screenshot,
+                            current_location,
+                            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+                        )
                         var result = issueEvent.accident?.potholes?.add(issue)
 
                         Log.d(
                             TAG,
                             "onResults porthole size: ${issueEvent.accident?.potholes?.size}, ${result}"
                         )
-
-                    } else if (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_CRACK) {
-                        cntCrack += 1
-                        requireActivity().findViewById<TextView>(R.id.cntCrack).text =
-                            cntCrack.toString()
-
-                        var issue = Issues(screenshot, current_location, Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
-                        var result = issueEvent.accident?.cracks?.add(issue)
-
-                        Log.d(
-                            TAG,
-                            "onResults crack size: ${issueEvent.accident?.cracks?.size}, ${result}"
-                        )
                     }
+
+//                    } else if (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_CRACK) {
+//                        cntCrack += 1
+//                        requireActivity().findViewById<TextView>(R.id.cntCrack).text =
+//                            cntCrack.toString()
+//
+//                        var issue = Issues(screenshot, current_location, Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()))
+//                        var result = issueEvent.accident?.cracks?.add(issue)
+//
+//                        Log.d(
+//                            TAG,
+//                            "onResults crack size: ${issueEvent.accident?.cracks?.size}, ${result}"
+//                        )
+//                    }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, " error: " + e.message)

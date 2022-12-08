@@ -29,8 +29,8 @@ open class Issues() {
 
 @kotlinx.serialization.Serializable
 class SerializedAccident(){
-    var potholes: ArrayList<SerializedIssues> = ArrayList<SerializedIssues>()
-    var cracks: ArrayList<SerializedIssues> = ArrayList<SerializedIssues>()
+    var potholes: ArrayList<SerializedIssues> = ArrayList()
+    var cracks: ArrayList<SerializedIssues> = ArrayList()
     var recStartTime: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
     var recEndTime: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
