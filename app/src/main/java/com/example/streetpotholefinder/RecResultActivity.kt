@@ -11,10 +11,12 @@ import android.os.Vibrator
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
+import com.dinuscxj.progressbar.CircleProgressBar
 import com.example.streetpotholefinder.accident.FirebaseAccident
 import com.example.streetpotholefinder.accident.SerializedAccident
 import com.example.streetpotholefinder.accident.SerializedIssues
@@ -190,6 +192,18 @@ class RecResultActivity : AppCompatActivity() {
                 }
             }
         }
+
+
+        //프로그래스바
+        val progressStreet = findViewById<CircleProgressBar>(R.id.progressStreet)
+
+        progressStreet.max=100
+        progressStreet.progress = 50    //현재 프로그레스 값
+        progressStreet.setProgressFormatter { progress, max ->
+            val DEFAULT_PATTERN = "%d"
+            String.format(DEFAULT_PATTERN, (progress.toFloat() / max.toFloat() * 100).toInt())
+        }
+
     }
 
     fun uploadResult() {

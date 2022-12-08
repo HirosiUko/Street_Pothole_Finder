@@ -54,13 +54,13 @@
         app:layout_constraintStart_toStartOf="parent" />
     <!--//위도경도영역끝-->
 
-    <com.airbnb.lottie.LottieAnimationView
+<!--    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:lottie_url="https://assets4.lottiefiles.com/packages/lf20_lh8mfcj1.json"
         app:lottie_autoPlay="true"
-        app:lottie_loop="false" />
+        app:lottie_loop="false" />-->
 
     <!--하단영역-->
     <LinearLayout

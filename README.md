@@ -34,7 +34,21 @@
 
 #### :iphone: 화면구성 및 주요기능
 
-<이미지 & 기능설명>
+<img src="docs/MainActivity.png" width="300px"/>
+<img src="docs/RecodingActivity.png" width="300px"/>
+<img src="docs/RecResultActivity.png" width="300px"/> <br>
+
+- **메인화면** : 실시간 노면 촬영을 위한 버튼, 등록 데이터 확인과 내정보 확인을 위한 버튼
+- **촬영화면** : 실시간 노면 포트홀, 크랙 감지 및 촬영제어, 위도와 경도 표시
+- **촬영결과** : 촬영 날짜와 시간, 촬영영상의 길이, 감지된 노면 포트홀과 크랙 표시 및 확인, 재촬영,촬영종료
+
+<img src="docs/datalist_crack.png" width="300px">
+<img src="docs/datalist_pothole.png" width="300px">
+<img src="docs/datalist_delete.png" width="300px">
+
+- **도로균열** : 촬영중 감지된 모든 크랙을 리스트로 표시
+- **도로파임** : 촬영중 감지된 모든 포트홀을 리스트로 표시
+- **등록데이터** : 촬영 후 등록된 모든 데이터를 리스트로 표시. 요소 스와이프시 삭제가능
 
 ---
 

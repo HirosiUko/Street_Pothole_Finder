@@ -54,7 +54,7 @@ class CameraView : AppCompatActivity() {
             _event.accident.recEndTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
             Log.d(
                 TAG,
-                "onCreate: ${_event.accident.recStartTime}, ${_event.accident.portholes.size}"
+                "onCreate: ${_event.accident.recStartTime}, ${_event.accident.potholes.size}"
             )
             val intent = Intent(this, RecResultActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -63,16 +63,17 @@ class CameraView : AppCompatActivity() {
             finish()
         }
 
-        aniView = findViewById<LottieAnimationView>(R.id.animationView)
-        aniView.addAnimatorListener(object : AnimatorListener {
-            override fun onAnimationStart(p0: Animator) {}
-            override fun onAnimationEnd(p0: Animator) {
-                aniView.visibility = View.GONE
-            }
+        //카운트 다운 애니메이션 없앰
+//        aniView = findViewById<LottieAnimationView>(R.id.animationView)
+//        aniView.addAnimatorListener(object : AnimatorListener {
+//            override fun onAnimationStart(p0: Animator) {}
+//            override fun onAnimationEnd(p0: Animator) {
+//                aniView.visibility = View.GONE
+//            }
 
-            override fun onAnimationCancel(p0: Animator) {}
-            override fun onAnimationRepeat(p0: Animator) {}
-        })
+//            override fun onAnimationCancel(p0: Animator) {}
+//            override fun onAnimationRepeat(p0: Animator) {}
+//        })
     }
 
 

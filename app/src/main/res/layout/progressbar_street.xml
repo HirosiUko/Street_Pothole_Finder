@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#80000000">
+
+    <!--app:style => line / solid / solid_line -->
+    <!--https://ienlab.tistory.com/entry/%EC%9B%90%ED%98%95-%EC%A7%84%ED%96%89-%EB%B0%94-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC-dinuscxj%EB%8B%98%EC%9D%98-CircleProgressBar-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0-->
+    <com.dinuscxj.progressbar.CircleProgressBar
+        android:id="@+id/progressStreet"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        app:progress_end_color="#23A6C1"
+        app:progress_start_color="#3BD194"
+        app:progress_stroke_width="20dp"
+        app:progress_text_color="@color/white"
+        app:progress_text_size="20sp"
+        app:style="solid_line" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
