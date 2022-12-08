@@ -15,6 +15,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.get
 import com.dinuscxj.progressbar.CircleProgressBar
 import com.example.streetpotholefinder.accident.FirebaseAccident
@@ -158,7 +159,8 @@ class RecResultActivity : AppCompatActivity() {
         }
 
         btnRecResultUpload.setOnClickListener {
-            progressStreet.visibility = View.VISIBLE
+//            progressStreet.visibility = View.VISIBLE
+            findViewById<ConstraintLayout>(R.id.clayoutProgress).visibility = View.VISIBLE
             uploadResult()
             gotoMain()
         }
@@ -200,7 +202,8 @@ class RecResultActivity : AppCompatActivity() {
 
         //프로그래스바
         progressStreet = findViewById<CircleProgressBar>(R.id.progressStreet)
-        progressStreet.visibility = View.INVISIBLE
+//        progressStreet.visibility = View.INVISIBLE
+        findViewById<ConstraintLayout>(R.id.clayoutProgress).visibility = View.GONE
 
         progressStreet.setProgressFormatter { progress, max ->
             val DEFAULT_PATTERN = "%d"
