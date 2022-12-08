@@ -3,6 +3,8 @@ package com.example.streetpotholefinder.dataList
 import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -12,17 +14,19 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.dinuscxj.progressbar.CircleProgressBar
 import com.example.streetpotholefinder.R
 import com.example.streetpotholefinder.R.id.data_list_view
 import com.example.streetpotholefinder.RecResultActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
 import kotlinx.datetime.LocalDateTime
 import java.io.Serializable
 import java.lang.Float.min
@@ -30,7 +34,11 @@ import java.lang.Float.min
 class DataListActivity : AppCompatActivity() {
     private val TAG = this.javaClass.simpleName
     lateinit var adapter: DataListAdapter
-    var ContentList = mutableListOf<DataListVO>()
+    var contentList = mutableListOf<DataListVO>()
+    private lateinit var progressStreet : CircleProgressBar
+    private lateinit var clayoutProgress : androidx.constraintlayout.widget.ConstraintLayout
+    private lateinit var auth : FirebaseAuth
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -38,30 +46,47 @@ class DataListActivity : AppCompatActivity() {
 
         val rv = findViewById<RecyclerView>(data_list_view)
 
-        var auth = FirebaseAuth.getInstance()
+
+        // clayoutProgress
+        clayoutProgress = findViewById(R.id.clayoutProgress)
+//        clayoutProgress.setBackgroundColor(Color.parseColor("#80000000"))
+
+        // Progress bar
+        progressStreet = findViewById(R.id.progressStreet)
+        // Progress bar initialization
+        progressStreet.max=100
+        progressStreet.progress = 0    //현재 프로그레스 값
+        progressStreet.setProgressFormatter { progress, max ->
+            val DEFAULT_PATTERN = "%d"
+            String.format(DEFAULT_PATTERN, (progress.toFloat() / max.toFloat() * 100).toInt())
+        }
+        progressStreet.visibility = View.VISIBLE
+
+        auth = FirebaseAuth.getInstance()
         var fireStore = Firebase.firestore.collection(auth.currentUser?.displayName ?: "devmode")
         fireStore.get()
             .addOnSuccessListener { document ->
                 if (document != null) {
-                    for (tmp_doc in document.documents) {
-//                        fireStore.document(tmp_doc.id).collection("porthole").get().addOnSuccessListener {
-//                            Log.d(TAG, "document: " + it.documents.size)
-//                        }
-                        Log.d(TAG, "onCreate: " + tmp_doc.data)
 
-                        var _date : String = ""
-                        var _time : String = ""
-                        var _durate : String = ""
-                        var _cntPothole : Long = 0
-                        var _cntCrack : Long = 0
+                    progressStreet.progress = 50
+//                    Log.d(TAG, "FB " + document.documents)
 
-                        tmp_doc.data!!.forEach{ (key, value) ->
-                            when(key){
+                    for ( tmp_doc in document.documents) {
+                        Log.d(TAG, "received data from FB " + tmp_doc.data)
+
+                        var _date: String = ""
+                        var _time: String = ""
+                        var _durate: String = ""
+                        var _cntPothole: Long = 0
+                        var _cntCrack: Long = 0
+
+                        tmp_doc.data!!.forEach { (key, value) ->
+                            when (key) {
                                 "recStartTime" -> {
                                     _date = LocalDateTime.parse(value as String).date.toString()
-                                    _time = LocalDateTime.parse(value).hour.toString()+"시"+
-                                            LocalDateTime.parse(value).minute.toString()+"분"+
-                                            LocalDateTime.parse(value).second.toString()+"초"
+                                    _time = LocalDateTime.parse(value).hour.toString() + "시" +
+                                            LocalDateTime.parse(value).minute.toString() + "분" +
+                                            LocalDateTime.parse(value).second.toString() + "초"
                                 }
                                 "cntCrack" -> {
                                     _cntCrack = value as Long
@@ -71,25 +96,36 @@ class DataListActivity : AppCompatActivity() {
                                 }
                             }
                         }
-                        ContentList.add(DataListVO(_date,_time,"0",_cntPothole.toString(),_cntCrack.toString(),
-                            tmp_doc.id,))
-                        Log.d(TAG, "onCreate: "+_date+_time+"0"+_cntPothole.toString()+_cntCrack.toString())
-                        adapter.notifyDataSetChanged()
+                        contentList.add(
+                            DataListVO(
+                                _date, _time, "0", _cntPothole.toString(), _cntCrack.toString(),
+                                tmp_doc.id,
+                            )
+                        )
                     }
+                    adapter.notifyDataSetChanged()
                 } else {
                     Log.d(TAG, "No such document")
+                    Toast.makeText(this, "There is no stored data.", Toast.LENGTH_LONG).show()
                 }
+                clayoutProgress.visibility = View.GONE
             }
             .addOnFailureListener { exception ->
                 Log.d(TAG, "get failed with ", exception)
+                Toast.makeText(
+                    this,
+                    "Firebase is not able to access : $exception",
+                    Toast.LENGTH_LONG
+                ).show()
+                clayoutProgress.visibility = View.GONE
             }
 
-        adapter = DataListAdapter(ContentList)
+        adapter = DataListAdapter(contentList)
 
         rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rv.setHasFixedSize(true)
 
-        adapter = DataListAdapter(ContentList)
+        adapter = DataListAdapter(contentList)
 
         rv.addItemDecoration(
             DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
@@ -108,14 +144,6 @@ class DataListActivity : AppCompatActivity() {
 
     }
 
-    //데이터목록 각 리스트 클릭 시 이벤트
-//        rv.onItemClickListener = AdapterView.OnItemClickListener{
-//                parent, view, position, id->
-//            val selection = parent.getItemAtPosition(position) as DataListVO
-//            //토스트로 작동하는지 확인
-//            Toast.makeText(this,"${selection.StreetDate}", Toast.LENGTH_SHORT).show()
-//        }
-
 }
 
 class DataListAdapter(val dataList: MutableList<DataListVO>) :
@@ -127,7 +155,7 @@ class DataListAdapter(val dataList: MutableList<DataListVO>) :
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.data_list_one_lyt, parent, false)
         return CustomViewHolder(view).apply {
-            llyt_swipe_view.setOnClickListener {
+            llytSwipeView.setOnClickListener {
 
                 var curpos: Int = adapterPosition
                 var intent = Intent(context, RecResultActivity::class.java)
@@ -141,11 +169,11 @@ class DataListAdapter(val dataList: MutableList<DataListVO>) :
     }
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
-        holder.RecordLength.text = dataList.get(position).RecordLength
-        holder.StreetDate.text = dataList.get(position).StreetDate
-        holder.StreetTime.text = dataList.get(position).StreetTime
-        holder.PotholeCnt.text = dataList.get(position).PotholeCnt
-        holder.CrackCnt.text = dataList.get(position).CrackCnt
+        holder.tvRecordLength.text = dataList.get(position).strRecordLength
+        holder.tvStreetDate.text = dataList.get(position).strStreetDate
+        holder.tvStreetTime.text = dataList.get(position).strStreetTime
+        holder.tvPotholeCnt.text = dataList.get(position).strPotholeCnt
+        holder.tvCrackCnt.text = dataList.get(position).strCrackCnt
 
         holder.onDeleteClick = {
             removeItem(it)
@@ -154,6 +182,26 @@ class DataListAdapter(val dataList: MutableList<DataListVO>) :
 
     fun removeItem(viewHolder: RecyclerView.ViewHolder) {
         var position = viewHolder.adapterPosition
+
+
+        var auth = FirebaseAuth.getInstance()
+        Log.d("DataListAdapter", "removeItem: "+dataList.get(position).eventRef)
+
+        Firebase.firestore.collection(auth.currentUser?.displayName ?: "devmode")
+            .document(dataList.get(position).eventRef).collection("pothole").document().delete()
+            .addOnSuccessListener { Log.d("DataListAdapter", "DocumentSnapshot successfully deleted!") }
+            .addOnFailureListener { e -> Log.w("DataListAdapter", "Error deleting document", e) }
+
+        Firebase.firestore.collection(auth.currentUser?.displayName ?: "crack")
+            .document(dataList.get(position).eventRef).collection("pothole").document().delete()
+            .addOnSuccessListener { Log.d("DataListAdapter", "DocumentSnapshot successfully deleted!") }
+            .addOnFailureListener { e -> Log.w("DataListAdapter", "Error deleting document", e) }
+
+        Firebase.firestore.collection(auth.currentUser?.displayName ?: "devmode")
+            .document(dataList.get(position).eventRef).delete()
+            .addOnSuccessListener { Log.d("DataListAdapter", "DocumentSnapshot successfully deleted!") }
+            .addOnFailureListener { e -> Log.w("DataListAdapter", "Error deleting document", e) }
+
         dataList.removeAt(position)
         notifyItemRemoved(position)
     }
@@ -163,18 +211,18 @@ class DataListAdapter(val dataList: MutableList<DataListVO>) :
     }
 
     class CustomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val StreetDate = itemView.findViewById<TextView>(R.id.StreetDate)
-        val StreetTime = itemView.findViewById<TextView>(R.id.StreetTime)
-        val RecordLength = itemView.findViewById<TextView>(R.id.RecordLength)
-        val PotholeCnt = itemView.findViewById<TextView>(R.id.PotholeCnt)
-        val CrackCnt = itemView.findViewById<TextView>(R.id.CrackCnt)
-        val btndel = itemView.findViewById<ImageView>(R.id.btndel)
-        val llyt_swipe_view = itemView.findViewById<LinearLayout>(R.id.llyt_swipe_view)
+        val tvStreetDate: TextView = itemView.findViewById<TextView>(R.id.StreetDate)
+        val tvStreetTime: TextView = itemView.findViewById<TextView>(R.id.StreetTime)
+        val tvRecordLength: TextView = itemView.findViewById<TextView>(R.id.RecordLength)
+        val tvPotholeCnt: TextView = itemView.findViewById<TextView>(R.id.PotholeCnt)
+        val tvCrackCnt: TextView = itemView.findViewById<TextView>(R.id.CrackCnt)
+        val btnDel: ImageView = itemView.findViewById<ImageView>(R.id.btndel)
+        val llytSwipeView: LinearLayout = itemView.findViewById<LinearLayout>(R.id.llyt_swipe_view)
 
         var onDeleteClick: ((RecyclerView.ViewHolder) -> Unit)? = null
 
         init {
-            btndel.setOnClickListener {
+            btnDel.setOnClickListener {
                 onDeleteClick?.let { onDeleteClick ->
                     onDeleteClick(this)
                 }
@@ -183,13 +231,13 @@ class DataListAdapter(val dataList: MutableList<DataListVO>) :
     }
 }
 
-class DataListVO (
-    val StreetDate: String,
-    val StreetTime: String,
-    val RecordLength: String,
-    val PotholeCnt: String,
-    val CrackCnt: String,
-    val eventRef : String,
+class DataListVO(
+    val strStreetDate: String,
+    val strStreetTime: String,
+    val strRecordLength: String,
+    val strPotholeCnt: String,
+    val strCrackCnt: String,
+    val eventRef: String,
 ) : Serializable
 
 class SwipeHelperCallback : ItemTouchHelper.Callback() {
@@ -318,8 +366,6 @@ class SwipeHelperCallback : ItemTouchHelper.Callback() {
             previousPosition = null
         }
     }
-
-
 }
 
 

@@ -203,7 +203,6 @@ class RecResultActivity : AppCompatActivity() {
             val DEFAULT_PATTERN = "%d"
             String.format(DEFAULT_PATTERN, (progress.toFloat() / max.toFloat() * 100).toInt())
         }
-
     }
 
     fun uploadResult() {
@@ -308,11 +307,11 @@ class RecResultActivity : AppCompatActivity() {
     private fun displayFromDataList() {
         val eventRef = intent.getSerializableExtra("ref") as DataListVO
 
-        tvResultDate.text = eventRef.StreetDate
-        tvResultTime.text = eventRef.StreetTime
-        tvResultLength.text = eventRef.RecordLength
-        tvResultPotholeCnt.text = eventRef.PotholeCnt
-        tvResultCrackCnt.text = eventRef.CrackCnt
+        tvResultDate.text = eventRef.strStreetDate
+        tvResultTime.text = eventRef.strStreetTime
+        tvResultLength.text = eventRef.strRecordLength
+        tvResultPotholeCnt.text = eventRef.strPotholeCnt
+        tvResultCrackCnt.text = eventRef.strCrackCnt
         fbRef = eventRef.eventRef
     }
 

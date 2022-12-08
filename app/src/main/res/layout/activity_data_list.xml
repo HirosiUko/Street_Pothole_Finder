@@ -59,4 +59,5 @@
             android:divider="#fff"
             android:dividerHeight="0px"/>
     </LinearLayout>
+    <include layout="@layout/progressbar_street"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
