@@ -158,6 +158,7 @@ class RecResultActivity : AppCompatActivity() {
         }
 
         btnRecResultUpload.setOnClickListener {
+            progressStreet.visibility = View.VISIBLE
             uploadResult()
             gotoMain()
         }
@@ -199,6 +200,7 @@ class RecResultActivity : AppCompatActivity() {
 
         //프로그래스바
         progressStreet = findViewById<CircleProgressBar>(R.id.progressStreet)
+        progressStreet.visibility = View.INVISIBLE
 
         progressStreet.setProgressFormatter { progress, max ->
             val DEFAULT_PATTERN = "%d"
