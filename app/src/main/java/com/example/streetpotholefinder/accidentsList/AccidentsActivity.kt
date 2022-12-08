@@ -1,13 +1,9 @@
 package com.example.streetpotholefinder.accidentsList
 
-import android.R.attr.bitmap
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -27,7 +23,7 @@ import java.io.IOException
 
 
 class AccidentsActivity : AppCompatActivity() {
-    private lateinit var rvv : RecyclerView
+    private lateinit var rvv: RecyclerView
     private var contentList = mutableListOf<accidentVO>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +38,7 @@ class AccidentsActivity : AppCompatActivity() {
         var prevActivityInfo = intent.getStringExtra("previousActivityInfo").toString()
         when (prevActivityInfo) {
             "CameraView" -> displayFromCarmera()
-            "DataListAdapter" -> displayFromDataList( fbRef, categ)
+            "DataListAdapter" -> displayFromDataList(fbRef, categ)
         }
 
         rvv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -69,9 +65,9 @@ class AccidentsActivity : AppCompatActivity() {
             }
         }
 
-        Log.d("AccidentsActivity", "displayFromCarmera: $dataArray")
+//        Log.d("AccidentsActivity", "displayFromCarmera: $dataArray")
         if (dataArray != null) {
-            for (data in dataArray) {
+            for ( (key, data) in dataArray.withIndex()) {
                 getImageUri(data.image)?.let {
                     contentList.add(
                         accidentVO(
@@ -85,21 +81,12 @@ class AccidentsActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     private fun getImageUri(inImage: Bitmap): Uri? {
-
-        val tempFile = File(cacheDir, System.currentTimeMillis().toString() + ".png")
+        val tempFile = File(externalCacheDir, System.currentTimeMillis().toString() + ".png")
         try {
-            // 자동으로 빈 파일을 생성합니다.
             tempFile.createNewFile()
-
-            // 파일을 쓸 수 있는 스트림을 준비합니다.
             val out = FileOutputStream(tempFile)
-
-            // compress 함수를 사용해 스트림에 비트맵을 저장합니다.
             inImage.compress(Bitmap.CompressFormat.PNG, 100, out)
-
-            // 스트림 사용후 닫아줍니다.
             out.close()
 
         } catch (e: FileNotFoundException) {
@@ -107,7 +94,6 @@ class AccidentsActivity : AppCompatActivity() {
         } catch (e: IOException) {
             Log.e("AccidentsActivity", "IOException : " + e.message)
         }
-
 
         return tempFile.toUri()
     }
@@ -118,32 +104,32 @@ class AccidentsActivity : AppCompatActivity() {
         var fireStore = Firebase.firestore.collection(auth.currentUser?.displayName ?: "devmode")
             .document(fbRef)
         fireStore.collection(categ).get().addOnSuccessListener { document ->
-                document.documents.forEach { issue ->
-                    issue.data?.values?.forEach { e ->
-                        val event = e as Map<String, String>
+            document.documents.forEach { issue ->
+                issue.data?.values?.forEach { e ->
+                    val event = e as Map<String, String>
 
-                        val storageReference: StorageReference =
-                            FirebaseStorage.getInstance().getReference(event["imgUri"] as String)
+                    val storageReference: StorageReference =
+                        FirebaseStorage.getInstance().getReference(event["imgUri"] as String)
 
-                        storageReference.downloadUrl.addOnSuccessListener { uri ->
-                            Log.d("AccidentsActivity", "displayFromDataList: $uri")
-                            insertItem(uri,
-                                event["gpsInfo"] as String,
-                                event["issueTime"] as String)
+                    storageReference.downloadUrl.addOnSuccessListener { uri ->
+                        Log.d("AccidentsActivity", "displayFromDataList: $uri")
+                        insertItem(
+                            uri,
+                            event["gpsInfo"] as String,
+                            event["issueTime"] as String
+                        )
 
-                        }
-                        Log.d("AccidentsActivity", "displayFromDataList: $event ${contentList.size}")
                     }
+                    Log.d("AccidentsActivity", "displayFromDataList: $event ${contentList.size}")
                 }
             }
+        }
 
     }
 
-    fun insertItem(uri: Uri, gpsInfo: String, issueTime: String)
-    {
+    fun insertItem(uri: Uri, gpsInfo: String, issueTime: String) {
         contentList.add(
             accidentVO(
-//                Picasso.get().load(uri).get(),
                 uri,
                 gpsInfo,
                 issueTime

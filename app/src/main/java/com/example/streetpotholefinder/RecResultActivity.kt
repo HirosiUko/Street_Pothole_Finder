@@ -268,6 +268,7 @@ class RecResultActivity : AppCompatActivity() {
         fbRef = eventRef.eventRef
     }
 
+    /** Main으로 돌아가는 함수 */
     private fun gotoMain() {
         // Vibrate for 500 milliseconds
         var v: Vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
