@@ -274,6 +274,7 @@ class RecResultActivity : AppCompatActivity() {
                     .set(hashMapOf("$name$idx" to event))
 
                 Log.d("RecResultActivity", "uploadResult: issue : ${event}")
+                progressStreet.progress++
 
             }.addOnFailureListener {
                 Log.d("RecResultActivity", "uploadResult: failure : ${it}")
