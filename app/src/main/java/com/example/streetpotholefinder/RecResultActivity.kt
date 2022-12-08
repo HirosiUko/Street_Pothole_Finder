@@ -64,6 +64,8 @@ class RecResultActivity : AppCompatActivity() {
     private lateinit var firebaseStorage: FirebaseStorage
     private lateinit var binding: ActivityRecResultBinding
 
+    private lateinit var progressStreet: CircleProgressBar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRecResultBinding.inflate(layoutInflater)
@@ -157,6 +159,7 @@ class RecResultActivity : AppCompatActivity() {
 
         btnRecResultUpload.setOnClickListener {
             uploadResult()
+            gotoMain()
         }
 
         // firebase setting
@@ -195,10 +198,8 @@ class RecResultActivity : AppCompatActivity() {
 
 
         //프로그래스바
-        val progressStreet = findViewById<CircleProgressBar>(R.id.progressStreet)
+        progressStreet = findViewById<CircleProgressBar>(R.id.progressStreet)
 
-        progressStreet.max=100
-        progressStreet.progress = 50    //현재 프로그레스 값
         progressStreet.setProgressFormatter { progress, max ->
             val DEFAULT_PATTERN = "%d"
             String.format(DEFAULT_PATTERN, (progress.toFloat() / max.toFloat() * 100).toInt())
@@ -213,6 +214,10 @@ class RecResultActivity : AppCompatActivity() {
 
         var fireStore = Firebase.firestore.collection(userid)
         var issueDocument = fireStore.document("Issue_${userid}_${serializedAccident.recEndTime}")
+
+
+        progressStreet.max = serializedAccident.potholes.size + serializedAccident.cracks.size
+        progressStreet.progress = 0
 
         // porthole
         issueDocument.collection("pothole")
@@ -246,6 +251,7 @@ class RecResultActivity : AppCompatActivity() {
         fbCollection: DocumentReference
     ) {
         for ((idx, issue) in dataList.withIndex()) {
+
 
             var image = issue.image
             var image_name = "$userid/images/${issue.issueTime}.jpg"
