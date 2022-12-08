@@ -27,4 +27,13 @@ class Event private constructor() {
         recStartTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
         recEndTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
     )
+
+    public fun resetData(){
+        accident = Accident(
+            potholes = ArrayList<Issues>(),
+            cracks = ArrayList<Issues>(),
+            recStartTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
+            recEndTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        )
+    }
 }
