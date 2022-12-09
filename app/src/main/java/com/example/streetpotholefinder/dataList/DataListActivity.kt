@@ -1,12 +1,16 @@
 package com.example.streetpotholefinder.dataList
 
+import android.app.ActionBar
 import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Vibrator
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +19,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -24,6 +29,7 @@ import com.dinuscxj.progressbar.CircleProgressBar
 import com.example.streetpotholefinder.R
 import com.example.streetpotholefinder.R.id.data_list_view
 import com.example.streetpotholefinder.RecResultActivity
+import com.example.streetpotholefinder.databinding.AccidentlistBinding.inflate
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -175,6 +181,7 @@ class DataListAdapter(val dataList: MutableList<DataListVO>) :
         holder.tvCrackCnt.text = dataList.get(position).strCrackCnt
 
         holder.onDeleteClick = {
+            Toast.makeText(context, "삭제되었습니다", Toast.LENGTH_SHORT).show()
             removeItem(it)
         }
     }
@@ -227,6 +234,7 @@ class DataListAdapter(val dataList: MutableList<DataListVO>) :
                 }
             }
         }
+
     }
 }
 
@@ -365,7 +373,12 @@ class SwipeHelperCallback : ItemTouchHelper.Callback() {
             previousPosition = null
         }
     }
+
+
+
 }
+
+
 
 
 
