@@ -49,7 +49,6 @@ class DataListActivity : AppCompatActivity() {
 
         // clayoutProgress
         clayoutProgress = findViewById(R.id.clayoutProgress)
-//        clayoutProgress.setBackgroundColor(Color.parseColor("#80000000"))
 
         // Progress bar
         progressStreet = findViewById(R.id.progressStreet)

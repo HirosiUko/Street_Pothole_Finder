@@ -162,7 +162,7 @@ class RecResultActivity : AppCompatActivity() {
 //            progressStreet.visibility = View.VISIBLE
             findViewById<ConstraintLayout>(R.id.clayoutProgress).visibility = View.VISIBLE
             uploadResult()
-            gotoMain()
+//            gotoMain()
         }
 
         // firebase setting
@@ -203,7 +203,6 @@ class RecResultActivity : AppCompatActivity() {
 
         //프로그래스바
         progressStreet = findViewById<CircleProgressBar>(R.id.progressStreet)
-//        progressStreet.visibility = View.INVISIBLE
         findViewById<ConstraintLayout>(R.id.clayoutProgress).visibility = View.GONE
 
         progressStreet.setProgressFormatter { progress, max ->
@@ -258,7 +257,6 @@ class RecResultActivity : AppCompatActivity() {
     ) {
         for ((idx, issue) in dataList.withIndex()) {
 
-
             var image = issue.image
             var image_name = "$userid/images/${issue.issueTime}.jpg"
             val storageMetadata = StorageMetadata.Builder()
@@ -281,6 +279,11 @@ class RecResultActivity : AppCompatActivity() {
 
                 Log.d("RecResultActivity", "uploadResult: issue : ${event}")
                 progressStreet.progress++
+
+                if(progressStreet.progress == progressStreet.max)
+                {
+                    gotoMain()
+                }
 
             }.addOnFailureListener {
                 Log.d("RecResultActivity", "uploadResult: failure : ${it}")
