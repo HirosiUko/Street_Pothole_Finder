@@ -51,7 +51,6 @@ class RecResultActivity : AppCompatActivity() {
 
     ///////////////////////
 
-    private lateinit var database: DatabaseReference
     lateinit var data: String
     private lateinit var prevActivityInfo: String
     private lateinit var userid: String
@@ -59,7 +58,6 @@ class RecResultActivity : AppCompatActivity() {
     private var fbRef : String = ""
 
     val db = Firebase.database
-    val myRef = db.getReference("currentEvent")
 
     private lateinit var firebaseStorage: FirebaseStorage
     private lateinit var binding: ActivityRecResultBinding
@@ -147,11 +145,6 @@ class RecResultActivity : AppCompatActivity() {
         //프로그래스바
         progressStreet = findViewById<CircleProgressBar>(R.id.progressStreet)
         findViewById<ConstraintLayout>(R.id.clayoutProgress).visibility = View.GONE
-
-        progressStreet.setProgressFormatter { progress, max ->
-            val DEFAULT_PATTERN = "%d"
-            String.format(DEFAULT_PATTERN, (progress.toFloat() / max.toFloat() * 100).toInt())
-        }
     }
 
     fun uploadResult() {
@@ -165,7 +158,6 @@ class RecResultActivity : AppCompatActivity() {
 
 
         progressStreet.max = serializedAccident.potholes.size + serializedAccident.cracks.size
-        progressStreet.progress = 0
 
         // porthole
         issueDocument.collection("pothole")
@@ -203,7 +195,7 @@ class RecResultActivity : AppCompatActivity() {
             var image = issue.image
             var image_name = "$userid/images/${issue.issueTime}.jpg"
             val storageMetadata = StorageMetadata.Builder()
-                .setContentType("image/WEBP")
+                .setContentType("image/jpeg")
                 .setCustomMetadata("GPS", issue.gpsInfo)
                 .setCustomMetadata("Time", issue.issueTime.toString())
                 .build()

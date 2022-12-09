@@ -92,7 +92,6 @@ class LoginActivity : AppCompatActivity() {
                 toMainActivity(auth.currentUser)
             } else {
                 Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
-                false
             }
         }
     }

@@ -193,15 +193,22 @@ class DataListAdapter(val dataList: MutableList<DataListVO>) :
         var auth = FirebaseAuth.getInstance()
         Log.d("DataListAdapter", "removeItem: "+dataList.get(position).eventRef)
 
-        Firebase.firestore.collection(auth.currentUser?.displayName ?: "devmode")
-            .document(dataList.get(position).eventRef).collection("pothole").document().delete()
-            .addOnSuccessListener { Log.d("DataListAdapter", "DocumentSnapshot successfully deleted!") }
-            .addOnFailureListener { e -> Log.w("DataListAdapter", "Error deleting document", e) }
+        var doc = Firebase.firestore.collection(auth.currentUser?.displayName ?: "devmode")
+            .document(dataList.get(position).eventRef).collection("pothole")
 
-        Firebase.firestore.collection(auth.currentUser?.displayName ?: "crack")
-            .document(dataList.get(position).eventRef).collection("pothole").document().delete()
-            .addOnSuccessListener { Log.d("DataListAdapter", "DocumentSnapshot successfully deleted!") }
-            .addOnFailureListener { e -> Log.w("DataListAdapter", "Error deleting document", e) }
+        doc.get().addOnSuccessListener {
+            it.documents.forEach{
+                doc.document(it.id).delete().addOnCanceledListener {
+                    Log.d("DataListAdapter", "DocumentSnapshot successfully deleted!")
+                }
+            }
+            doc.document().delete()
+        }
+//
+//        Firebase.firestore.collection(auth.currentUser?.displayName ?: "devmode")
+//            .document(dataList.get(position).eventRef).collection("crack").document().delete()
+//            .addOnSuccessListener { Log.d("DataListAdapter", "DocumentSnapshot successfully deleted!") }
+//            .addOnFailureListener { e -> Log.w("DataListAdapter", "Error deleting document", e) }
 
         Firebase.firestore.collection(auth.currentUser?.displayName ?: "devmode")
             .document(dataList.get(position).eventRef).delete()
