@@ -5,25 +5,21 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.get
 import com.airbnb.lottie.LottieAnimationView
 import com.dinuscxj.progressbar.CircleProgressBar
 import com.example.streetpotholefinder.accident.FirebaseAccident
 import com.example.streetpotholefinder.accident.SerializedAccident
 import com.example.streetpotholefinder.accident.SerializedIssues
 import com.example.streetpotholefinder.accidentsList.AccidentsActivity
-import com.example.streetpotholefinder.dataList.DataListActivity
 import com.example.streetpotholefinder.dataList.DataListVO
 import com.example.streetpotholefinder.databinding.ActivityRecResultBinding
 import com.example.streetpotholefinder.issue.Event
@@ -85,8 +81,8 @@ class RecResultActivity : AppCompatActivity() {
 
         prevActivityInfo = intent.getStringExtra("previousActivityInfo").toString()
         when (prevActivityInfo) {
-            "CameraView" -> displayFromCarmera()
-            "DataListAdapter" -> displayFromDataList()
+            "CameraView" -> onCreateViewFromCarmera()
+            "DataListAdapter" -> onCreateViewFromDataList()
         }
 
         val potholeBtn = findViewById<LinearLayout>(R.id.linearLayoutPortHole)
@@ -97,8 +93,6 @@ class RecResultActivity : AppCompatActivity() {
             intent.putExtra("dataRef", fbRef)
             startActivity(intent)
             Log.d("RecResultActivity", "onCreate: pothole $prevActivityInfo")
-            findViewById<ConstraintLayout>(R.id.clayoutLoading).visibility = View.VISIBLE
-            findViewById<LottieAnimationView>(R.id.animationViewLoading).playAnimation()
         }
 
         val crackBtn = findViewById<LinearLayout>(R.id.linearLayoutCrack)
@@ -108,15 +102,11 @@ class RecResultActivity : AppCompatActivity() {
             intent.putExtra("previousActivityInfo",prevActivityInfo)
             intent.putExtra("dataRef", fbRef)
             startActivity(intent)
-            findViewById<ConstraintLayout>(R.id.clayoutLoading).visibility = View.VISIBLE
-            findViewById<LottieAnimationView>(R.id.animationViewLoading).playAnimation()
         }
 
         btnRecResultUpload.setOnClickListener {
-//            progressStreet.visibility = View.VISIBLE
             findViewById<ConstraintLayout>(R.id.clayoutProgress).visibility = View.VISIBLE
             uploadResult()
-//            gotoMain()
         }
 
         // firebase setting
@@ -154,7 +144,6 @@ class RecResultActivity : AppCompatActivity() {
             }
         }
 
-
         //프로그래스바
         progressStreet = findViewById<CircleProgressBar>(R.id.progressStreet)
         findViewById<ConstraintLayout>(R.id.clayoutProgress).visibility = View.GONE
@@ -163,11 +152,6 @@ class RecResultActivity : AppCompatActivity() {
             val DEFAULT_PATTERN = "%d"
             String.format(DEFAULT_PATTERN, (progress.toFloat() / max.toFloat() * 100).toInt())
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        findViewById<ConstraintLayout>(R.id.clayoutLoading).visibility = View.INVISIBLE
     }
 
     fun uploadResult() {
@@ -258,7 +242,7 @@ class RecResultActivity : AppCompatActivity() {
         }
     }
 
-    private fun displayFromCarmera() {
+    private fun onCreateViewFromCarmera() {
         var currentEvent: Event = Event.getInstance()
         var recStartTime: LocalDateTime? = currentEvent.accident.recStartTime
         var recEndTime: LocalDateTime? = currentEvent.accident.recEndTime
@@ -271,15 +255,9 @@ class RecResultActivity : AppCompatActivity() {
         tvResultLength.text = recTime.toString()
         tvResultPotholeCnt.text = currentEvent.accident.potholes.size.toString()
         tvResultCrackCnt.text = currentEvent.accident.cracks.size.toString()
-//        Toast.makeText(this, currentEvent.accident.portholes.toString(), Toast.LENGTH_SHORT)
-//            .show()
-//        Log.d(
-//            "RecResultActivity",
-//            "onCreate: CameraView cntofporthole:" + currentEvent.accident.portholes.size.toString()
-//        )
     }
 
-    private fun displayFromDataList() {
+    private fun onCreateViewFromDataList() {
         btnRecResultUpload.visibility = View.INVISIBLE
         btnRecResultBack.visibility = View.INVISIBLE
 

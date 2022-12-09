@@ -40,9 +40,6 @@ class CameraView : AppCompatActivity() {
     private lateinit var activityCameraView: ActivityCameraViewBinding
     private lateinit var aniView: LottieAnimationView
 
-    //kakao map view.
-//    private lateinit var mapView: MapView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityCameraView = ActivityCameraViewBinding.inflate(layoutInflater)
