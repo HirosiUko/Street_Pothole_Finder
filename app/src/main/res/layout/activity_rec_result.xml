@@ -20,8 +20,6 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/img_rec_result_bg_ver2" />
 
-
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -341,6 +339,29 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <include layout="@layout/progressbar_street"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clayoutLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#80000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/animationViewLoading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_url="https://assets9.lottiefiles.com/packages/lf20_b88nh30c.json"
+            tools:layout_editor_absoluteX="82dp"
+            tools:layout_editor_absoluteY="122dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--UPLOAD Layout-->
 <!--    <LinearLayout-->

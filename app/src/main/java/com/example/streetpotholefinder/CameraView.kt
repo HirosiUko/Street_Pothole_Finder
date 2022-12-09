@@ -114,7 +114,9 @@ class CameraView : AppCompatActivity() {
         }
 
         cuDialogLyt.findViewById<TextView>(R.id.dialog_title).text="촬영이 취소됩니다. 진행하시겠습니까?"
+        cuDialogLyt.findViewById<TextView>(R.id.dialog_title).setPadding(40,0,20,0)
         cuDialogLyt.findViewById<TextView>(R.id.dialog_sub).text="촬영이 취소됩니다. 데이터가 저장되지 않습니다"
+
         cuDialogLyt.findViewById<TextView>(R.id.dialog_btn_y).apply {
             text = "예"
             setOnClickListener{
