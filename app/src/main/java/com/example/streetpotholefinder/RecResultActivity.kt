@@ -17,6 +17,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.get
+import com.airbnb.lottie.LottieAnimationView
 import com.dinuscxj.progressbar.CircleProgressBar
 import com.example.streetpotholefinder.accident.FirebaseAccident
 import com.example.streetpotholefinder.accident.SerializedAccident
@@ -50,6 +51,8 @@ class RecResultActivity : AppCompatActivity() {
     private lateinit var tvResultPotholeCnt: TextView
     private lateinit var tvResultCrackCnt: TextView
     private lateinit var btnRecResultUpload: LinearLayout
+    private lateinit var btnRecResultBack: LinearLayout
+
     ///////////////////////
 
     private lateinit var database: DatabaseReference
@@ -72,66 +75,13 @@ class RecResultActivity : AppCompatActivity() {
         binding = ActivityRecResultBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
-//        /** Download Button Click Listener */
-//        binding.apply {
-//            textView20.setOnClickListener {
-//                textView20.isClickable = false
-//                textView20.text = "다운로드중"
-//                downloadLayout.visibility = View.VISIBLE
-//
-//                var progress = 0
-//                Thread(Runnable {
-//                    while (progress < 100) {
-//                        progress += 1
-//
-//                        /** Update UI */
-//                        runOnUiThread {
-//                            progressDownload.progress = progress
-//                            textViewDownload.text = progress.toString()
-//                        }
-//                        Thread.sleep(50)
-//                    }
-//
-//                    /** Done Download */
-//                    textView20.isClickable = true
-//
-//                    downloadLayout.visibility = View.INVISIBLE
-//                }).start()
-//            }
-//        }
-//
-//        /** Upload Button Click Listener */
-//        binding.apply {
-//            textView20.setOnClickListener {
-//                textView20.isClickable = false
-//                uploadLayout.visibility = View.VISIBLE
-//
-//                var progress = 0
-//                Thread(Runnable {
-//                    while (progress < 100) {
-//                        progress += 1
-//
-//                        /** Update UI */
-//                        runOnUiThread {
-//                            progressUpload.progress = progress
-//                            textViewUpload.text = progress.toString()
-//                        }
-//                        Thread.sleep(50)
-//                    }
-//
-//                    /** Done Uploading */
-//                    textView20.isClickable = true
-//
-//                    uploadLayout.visibility = View.INVISIBLE
-//                }).start()
-//            }
-//        }
         tvResultDate = findViewById(R.id.ResultDate)
         tvResultTime = findViewById(R.id.ResultTime)
         tvResultLength = findViewById(R.id.ResultLength)
         tvResultPotholeCnt = findViewById(R.id.ResultPotholeCnt)
         tvResultCrackCnt = findViewById(R.id.ResultCrackCnt)
         btnRecResultUpload = findViewById(R.id.btnRecResultUpload)
+        btnRecResultBack = findViewById(R.id.btnRecResultBack)
 
         prevActivityInfo = intent.getStringExtra("previousActivityInfo").toString()
         when (prevActivityInfo) {
@@ -147,6 +97,8 @@ class RecResultActivity : AppCompatActivity() {
             intent.putExtra("dataRef", fbRef)
             startActivity(intent)
             Log.d("RecResultActivity", "onCreate: pothole $prevActivityInfo")
+            findViewById<ConstraintLayout>(R.id.clayoutLoading).visibility = View.VISIBLE
+            findViewById<LottieAnimationView>(R.id.animationViewLoading).playAnimation()
         }
 
         val crackBtn = findViewById<LinearLayout>(R.id.linearLayoutCrack)
@@ -156,6 +108,8 @@ class RecResultActivity : AppCompatActivity() {
             intent.putExtra("previousActivityInfo",prevActivityInfo)
             intent.putExtra("dataRef", fbRef)
             startActivity(intent)
+            findViewById<ConstraintLayout>(R.id.clayoutLoading).visibility = View.VISIBLE
+            findViewById<LottieAnimationView>(R.id.animationViewLoading).playAnimation()
         }
 
         btnRecResultUpload.setOnClickListener {
@@ -209,6 +163,11 @@ class RecResultActivity : AppCompatActivity() {
             val DEFAULT_PATTERN = "%d"
             String.format(DEFAULT_PATTERN, (progress.toFloat() / max.toFloat() * 100).toInt())
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        findViewById<ConstraintLayout>(R.id.clayoutLoading).visibility = View.INVISIBLE
     }
 
     fun uploadResult() {
@@ -321,6 +280,9 @@ class RecResultActivity : AppCompatActivity() {
     }
 
     private fun displayFromDataList() {
+        btnRecResultUpload.visibility = View.INVISIBLE
+        btnRecResultBack.visibility = View.INVISIBLE
+
         val eventRef = intent.getSerializableExtra("ref") as DataListVO
 
         tvResultDate.text = eventRef.strStreetDate
