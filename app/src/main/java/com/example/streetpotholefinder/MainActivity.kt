@@ -91,6 +91,13 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        //앱 정보 버튼(메인로고)
+        val logoToInfo = findViewById<ImageView>(R.id.icoLogo)
+        logoToInfo.setOnClickListener{
+            val intent = Intent(this, EndingCredit::class.java)
+            startActivity(intent)
+        }
+
 
         //상단 '환영합니다'에 띄울 유저 이름 가져오기
         val txtGoogleName = findViewById<TextView>(R.id.txt_main_googlename)

@@ -2,10 +2,12 @@ package com.example.streetpotholefinder
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -60,6 +62,16 @@ class LoginActivity : AppCompatActivity() {
                 Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK//액티비티 스택제거
             startActivity(intent)
         }
+
+        //개인정보처리방침버튼
+        val privacybtn = findViewById<TextView>(R.id.tvBtnSecurity)
+        privacybtn.setOnClickListener {
+            val uri = Uri.parse("https://github.com/HirosiUko/Street_Pothole_Finder/blob/master/docs/privacy.md")
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+
+            startActivity(intent)
+        }
+
     }
 
     private fun signInGoogle() {
@@ -108,4 +120,7 @@ class LoginActivity : AppCompatActivity() {
             finish()
         }
     } // toMainActivity End
+
+
+
 }
