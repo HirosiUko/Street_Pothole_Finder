@@ -74,6 +74,7 @@ class RecResultActivity : AppCompatActivity() {
         tvResultLength = findViewById(R.id.ResultLength)
         tvResultPotholeCnt = findViewById(R.id.ResultPotholeCnt)
         tvResultCrackCnt = findViewById(R.id.ResultCrackCnt)
+
         btnRecResultUpload = findViewById(R.id.btnRecResultUpload)
         btnRecResultBack = findViewById(R.id.btnRecResultBack)
 
