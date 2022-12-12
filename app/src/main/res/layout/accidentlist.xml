@@ -14,7 +14,7 @@
             android:background="@drawable/color_bg_orange_round"
             android:clipToOutline="true"
             android:scaleType="centerCrop"
-            app:srcCompat="@drawable/cute_pepe" />
+            app:srcCompat="@drawable/box_lyt_roundbottom_white" />
 
     <!--하단텍스트영역-->
         <LinearLayout
