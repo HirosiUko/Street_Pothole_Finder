@@ -107,6 +107,14 @@
                 android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
+        <TextView
+            android:id="@+id/tvBtnSecurity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="개인정보처리방침"
+            android:textColor="@color/street_blue_txt"
+            android:textSize="13sp"
+            android:layout_marginTop="15dp"/>
 
     </LinearLayout>
 
