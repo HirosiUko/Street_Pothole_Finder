@@ -1,34 +1,119 @@
 {
   "project_info": {
-    "project_number": "994073790481",
-    "firebase_url": "https://streetpotholefinder-default-rtdb.firebaseio.com",
-    "project_id": "streetpotholefinder",
-    "storage_bucket": "streetpotholefinder.appspot.com"
+    "project_number": "562189703514",
+    "firebase_url": "https://streetpotholefinder-5bb19-default-rtdb.firebaseio.com",
+    "project_id": "streetpotholefinder-5bb19",
+    "storage_bucket": "streetpotholefinder-5bb19.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:994073790481:android:afc35a850a76c950f809b0",
+        "mobilesdk_app_id": "1:562189703514:android:268ff5a54b383913b1bb63",
         "android_client_info": {
           "package_name": "com.example.streetpotholefinder"
         }
       },
       "oauth_client": [
         {
-          "client_id": "994073790481-ce1i6psh3l1aqnlp09kkc3mk7skqkci8.apps.googleusercontent.com",
+          "client_id": "562189703514-4c5s607i1baudnhufdo5iig2ph1qmrv1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.streetpotholefinder",
+            "certificate_hash": "fed5175646295765d09a3687c5fa0098f35a3223"
+          }
+        },
+        {
+          "client_id": "562189703514-dbpm8bn1roro36tuhqmhrsgbk88hs2vd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.streetpotholefinder",
+            "certificate_hash": "702eae143c3e1c8b53074e373404a718912d12da"
+          }
+        },
+        {
+          "client_id": "562189703514-dc6snkuas1l8riuda1tbhf7es8ikqudf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.streetpotholefinder",
+            "certificate_hash": "e733d58fbe1245146ac6e105f6103378e11e07bd"
+          }
+        },
+        {
+          "client_id": "562189703514-imftdoh1l8oqd9pregfrpmdl9kk23j2e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.streetpotholefinder",
+            "certificate_hash": "a9f78ebc65b9e463db107763256321f99dd69437"
+          }
+        },
+        {
+          "client_id": "562189703514-sd8dg5ies11vc0k6du5c6o9025t2vbqp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.streetpotholefinder",
+            "certificate_hash": "782784187411613fb0bffe1dfb8f6185c56fc8d0"
+          }
+        },
+        {
+          "client_id": "562189703514-tn3ni2debgn4kfpiadf92h57s22j0vhm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.streetpotholefinder",
+            "certificate_hash": "08bbd101f83c186e61a20e1a2c26eb27449312b6"
+          }
+        },
+        {
+          "client_id": "562189703514-pequegpv0633ecjbqu7vpr9ns1j4n9vc.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCzrz_pvtMkxz7bKa5NbmASGHuegA_CLwA"
+          "current_key": "AIzaSyCulDLvkbYg9ZhbG6yCvE-FlDiEZjXRtpc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "994073790481-ce1i6psh3l1aqnlp09kkc3mk7skqkci8.apps.googleusercontent.com",
+              "client_id": "562189703514-pequegpv0633ecjbqu7vpr9ns1j4n9vc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:562189703514:android:654d1ad9ff527aeeb1bb63",
+        "android_client_info": {
+          "package_name": "com.street.potholefinder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "562189703514-nebto55mbldkjrkgk5t19ka4e1ivpv5e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.street.potholefinder",
+            "certificate_hash": "e733d58fbe1245146ac6e105f6103378e11e07bd"
+          }
+        },
+        {
+          "client_id": "562189703514-pequegpv0633ecjbqu7vpr9ns1j4n9vc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCulDLvkbYg9ZhbG6yCvE-FlDiEZjXRtpc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "562189703514-pequegpv0633ecjbqu7vpr9ns1j4n9vc.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

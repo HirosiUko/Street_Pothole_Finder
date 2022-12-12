@@ -3,6 +3,7 @@ package com.example.streetpotholefinder
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -71,6 +72,10 @@ class LoginActivity : AppCompatActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
                 handleResults(task)
+            }else
+            {
+                Toast.makeText(this, result.resultCode.toString(), Toast.LENGTH_SHORT).show()
+                Log.d("LoginActivity", "launcher: $result")
             }
         }
 
