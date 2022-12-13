@@ -119,6 +119,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         var v : Vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         v.vibrate(500)

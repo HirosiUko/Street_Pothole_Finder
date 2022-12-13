@@ -35,7 +35,7 @@ import com.google.firebase.storage.StorageReference
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
-import kotlin.time.Duration
+//import kotlin.time.Duration
 
 
 class RecResultActivity : AppCompatActivity() {
@@ -239,10 +239,7 @@ class RecResultActivity : AppCompatActivity() {
         var currentEvent: Event = Event.getInstance()
         var recStartTime: LocalDateTime? = currentEvent.accident.recStartTime
         var recEndTime: LocalDateTime? = currentEvent.accident.recEndTime
-        var recTime: Duration =
-            recEndTime!!.toInstant(TimeZone.currentSystemDefault()) - recStartTime!!.toInstant(
-                TimeZone.currentSystemDefault()
-            )
+        var recTime = ""
         tvResultDate.text = recEndTime.toString()
         tvResultTime.text = recEndTime.toString()
         tvResultLength.text = recTime.toString()

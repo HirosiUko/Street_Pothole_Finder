@@ -100,7 +100,7 @@ class TestGPS : AppCompatActivity() {
             Log.d(TAG, "onLocationResult()")
             // 시스템에서 받은 location 정보를 onLocationChanged()에 전달
             locationResult.lastLocation
-            onLocationChanged(locationResult.lastLocation)
+            locationResult.lastLocation?.let { onLocationChanged(it) }
         }
     }
 

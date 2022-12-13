@@ -74,6 +74,7 @@ class CameraView : AppCompatActivity() {
     }
 
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         // Vibrate for 500 milliseconds
         var v: Vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator

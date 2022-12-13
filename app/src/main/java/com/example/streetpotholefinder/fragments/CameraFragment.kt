@@ -153,7 +153,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
             }
 
         locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
+            override fun onLocationResult(locationResult: LocationResult) {
                 locationResult ?: return
                 for (location in locationResult.locations) {
                     // Update UI with location data
@@ -177,11 +177,13 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 
-        fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.getMainLooper()
-        )
+        locationRequest?.let {
+            fusedLocationClient.requestLocationUpdates(
+                it,
+                locationCallback,
+                Looper.getMainLooper()
+            )
+        }
     }
 
     private fun stopLocationUpdates() {

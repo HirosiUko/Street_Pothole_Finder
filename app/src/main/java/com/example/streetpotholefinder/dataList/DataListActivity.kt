@@ -29,7 +29,7 @@ import com.dinuscxj.progressbar.CircleProgressBar
 import com.example.streetpotholefinder.R
 import com.example.streetpotholefinder.R.id.data_list_view
 import com.example.streetpotholefinder.RecResultActivity
-import com.example.streetpotholefinder.databinding.AccidentlistBinding.inflate
+//import com.example.streetpotholefinder.databinding.AccidentlistBinding.inflate
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
