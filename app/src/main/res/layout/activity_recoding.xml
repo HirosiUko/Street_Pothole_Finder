@@ -221,6 +221,16 @@
         <!--//카운트영역 랩 끝-->
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvDemoMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <!--//하단영역 끝-->
 
     <!--User님 안녕하세요!-->

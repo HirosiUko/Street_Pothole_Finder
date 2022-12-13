@@ -19,6 +19,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.os.SystemClock
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
 import org.tensorflow.lite.gpu.CompatibilityList
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
@@ -28,9 +29,9 @@ import org.tensorflow.lite.task.vision.detector.Detection
 import org.tensorflow.lite.task.vision.detector.ObjectDetector
 
 class ObjectDetectorHelper(
-    var threshold: Float = 0.5f,
+    var threshold: Float = 0.7f,
     var numThreads: Int = 4,
-    var maxResults: Int = 3,
+    var maxResults: Int = 2,
     var currentDelegate: Int = 0,
     var currentModel: Int = 0,
     val context: Context,
@@ -82,16 +83,19 @@ class ObjectDetectorHelper(
 
         optionsBuilder.setBaseOptions(baseOptionsBuilder.build())
 
-        val modelName =
+        var modelName =
             when (currentModel) {
 //                MODEL_POTHOLE -> "best-fp16.tflite"
 //                MODEL_POTHOLE -> "pothole_detection_weight_220415_v1-fp16.tflite"
                 MODEL_MOBILENETV1 -> "model_fp16.tflite"
-                MODEL_EFFICIENTDETV0 -> "efficientdet-lite0.tflite"
-                MODEL_EFFICIENTDETV1 -> "efficientdet-lite1.tflite"
-                MODEL_EFFICIENTDETV2 -> "efficientdet-lite2.tflite"
                 else -> "mobilenetv1.tflite"
             }
+
+        val auth = FirebaseAuth.getInstance()
+        if (auth.currentUser?.displayName == null)
+        {
+            modelName = "mobilenetv1.tflite"
+        }
 
         try {
             objectDetector =

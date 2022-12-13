@@ -41,6 +41,7 @@ import com.example.streetpotholefinder.accident.Issues
 import com.example.streetpotholefinder.databinding.FragmentCameraBinding
 import com.example.streetpotholefinder.issue.Event
 import com.google.android.gms.location.*
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -67,6 +68,8 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     private var imageAnalyzer: ImageAnalysis? = null
     private var camera: Camera? = null
     private var cameraProvider: ProcessCameraProvider? = null
+
+    private lateinit var auth: FirebaseAuth
 
     /** Blocking camera operations are performed using this executor */
     private lateinit var cameraExecutor: ExecutorService
@@ -111,6 +114,12 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         savedInstanceState: Bundle?
     ): View {
         _fragmentCameraBinding = FragmentCameraBinding.inflate(inflater, container, false)
+
+        auth = FirebaseAuth.getInstance()
+        if(auth.currentUser?.displayName == null)
+        {
+            requireActivity().findViewById<TextView>(R.id.tvDemoMode).text = "DEMO Mode"
+        }
 
         return fragmentCameraBinding.root
     }
@@ -300,8 +309,14 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
             cameraProvider ?: throw IllegalStateException("Camera initialization failed.")
 
         // CameraSelector - makes assumption that we're only using the back camera
-        val cameraSelector =
+        var cameraSelector =
             CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
+
+        if(auth.currentUser?.displayName == null)
+        {
+            cameraSelector =
+                CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_FRONT).build()
+        }
 
         // Preview. Only using the 4:3 ratio because this is the closest to our models
         preview =
@@ -386,7 +401,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 //                            (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_CRACK) ||
 //                                    (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_POTHOLE))
 //                ) {
-                if ((fragmentCameraBinding != null) && (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_POTHOLE)){
+                if (fragmentCameraBinding != null){
 
                     fragmentCameraBinding.overlay.setResults(
                         results ?: LinkedList<Detection>(),
