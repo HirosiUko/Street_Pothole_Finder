@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         // 회원 정보 Info
         auth = FirebaseAuth.getInstance()
-        val name = auth.currentUser?.displayName
+        val name = auth.currentUser?.displayName ?: "데모모드"
 
         // 촬영 버튼
         val btnStartRecord = findViewById<LinearLayout>(R.id.btnStartRecord)

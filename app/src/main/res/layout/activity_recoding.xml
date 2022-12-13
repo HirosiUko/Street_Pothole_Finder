@@ -155,11 +155,11 @@
                     android:id="@+id/cntPothole"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="6"
                     android:layout_marginLeft="10dp"
+                    android:layout_weight="6"
                     android:text="000"
                     android:textColor="@color/white"
-                    android:textSize="42sp"
+                    android:textSize="34sp"
                     tools:ignore="MissingConstraints"
                     tools:layout_editor_absoluteX="113dp"
                     tools:layout_editor_absoluteY="576dp" />
@@ -212,7 +212,7 @@
                     android:layout_marginLeft="20dp"
                     android:text="000"
                     android:textColor="@color/white"
-                    android:textSize="42sp"
+                    android:textSize="34sp"
                     tools:ignore="MissingConstraints"
                     tools:layout_editor_absoluteX="258dp"
                     tools:layout_editor_absoluteY="576dp" />

@@ -49,6 +49,7 @@ import org.tensorflow.lite.task.vision.detector.Detection
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.math.max
 
 class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
@@ -63,7 +64,6 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
     private lateinit var objectDetectorHelper: ObjectDetectorHelper
     private lateinit var bitmapBuffer: Bitmap
-    private lateinit var bitmapCaptured: Bitmap
     private var preview: Preview? = null
     private var imageAnalyzer: ImageAnalysis? = null
     private var camera: Camera? = null
@@ -85,9 +85,6 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 
     //    private lateinit var accident : Accident
     private lateinit var current_location: Location
-
-    private var imageCapture: ImageCapture? = null
-
 
     override fun onResume() {
         super.onResume()
@@ -401,54 +398,53 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 //                            (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_CRACK) ||
 //                                    (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_POTHOLE))
 //                ) {
-                if (fragmentCameraBinding != null){
 
-                    fragmentCameraBinding.overlay.setResults(
-                        results ?: LinkedList<Detection>(),
-                        imageHeight,
-                        imageWidth
+                fragmentCameraBinding.overlay.setResults(
+                    results ?: LinkedList<Detection>(),
+                    imageHeight,
+                    imageWidth
+                )
+
+                // Force a redraw
+                fragmentCameraBinding.overlay.invalidate()
+
+                // Camera capture image.
+                var rotateMatrix = Matrix()
+                rotateMatrix.postRotate(90.0f)
+                var screenshot1 = Bitmap.createBitmap(
+                    bitmapBuffer, 0, 0,
+                    bitmapBuffer.width, bitmapBuffer.height, rotateMatrix, true
+                )
+
+                // boundary box capture image
+                val screenshot2 =
+                    Bitmap.createScaledBitmap(
+                        viewToBitmap(fragmentCameraBinding.overlay),
+                        (screenshot1.width),
+                        (screenshot1.height),
+                        true
                     )
 
-                    // Force a redraw
-                    fragmentCameraBinding.overlay.invalidate()
+                // Mix image
+                val screenshot = mixBitmap(screenshot1, screenshot2)
 
-                    // Camera capture image.
-                    var rotateMatrix = Matrix()
-                    rotateMatrix.postRotate(90.0f)
-                    var screenshot1 = Bitmap.createBitmap(
-                        bitmapBuffer, 0, 0,
-                        bitmapBuffer.getWidth(), bitmapBuffer.getHeight(), rotateMatrix, true
+                if (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_POTHOLE) {
+                    cntPothole += 1
+                    requireActivity().findViewById<TextView>(R.id.cntPothole).text =
+                        cntPothole.toString()
+
+                    var issue = Issues(
+                        screenshot,
+                        current_location,
+                        Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
                     )
+                    var result = issueEvent.accident?.potholes?.add(issue)
 
-                    // boundary box capture image
-                    val screenshot2 =
-                        Bitmap.createScaledBitmap(
-                            viewToBitmap(fragmentCameraBinding.overlay),
-                            screenshot1.getWidth(),
-                            screenshot1.getHeight(),
-                            true
-                        )
-
-                    // Mix image
-                    val screenshot = mixBitmap(screenshot1, screenshot2)
-
-                    if (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_POTHOLE) {
-                        cntPothole += 1
-                        requireActivity().findViewById<TextView>(R.id.cntPothole).text =
-                            cntPothole.toString()
-
-                        var issue = Issues(
-                            screenshot,
-                            current_location,
-                            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-                        )
-                        var result = issueEvent.accident?.potholes?.add(issue)
-
-                        Log.d(
-                            TAG,
-                            "onResults porthole size: ${issueEvent.accident?.potholes?.size}, ${result}"
-                        )
-                    }
+                    Log.d(
+                        TAG,
+                        "onResults porthole size: ${issueEvent.accident?.potholes?.size}, ${result}"
+                    )
+                }
 
 //                    } else if (results?.get(0)?.categories?.get(0)?.label!! == OBJECT_CRACK) {
 //                        cntCrack += 1
@@ -463,7 +459,6 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
 //                            "onResults crack size: ${issueEvent.accident?.cracks?.size}, ${result}"
 //                        )
 //                    }
-                }
             } catch (e: Exception) {
                 Log.e(TAG, " error: " + e.message)
             }
@@ -477,7 +472,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
     }
 
     // 뷰를 비트맵으로 변환
-    fun viewToBitmap(view: View): Bitmap {
+    private fun viewToBitmap(view: View): Bitmap {
         val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         view.draw(canvas)
@@ -485,18 +480,18 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         return bitmap
     }
 
-    fun mixBitmap(bitmap1: Bitmap, bitmap2: Bitmap): Bitmap {
+    private fun mixBitmap(bitmap1: Bitmap, bitmap2: Bitmap): Bitmap {
 
         //결과값 저장을 위한 Bitmap
         val resultOverlayBmp = Bitmap.createBitmap(
-            bitmap1.getWidth(),
-            bitmap1.getHeight(),
-            bitmap1.getConfig()
+            bitmap1.width,
+            bitmap1.height,
+            bitmap1.config
         )
 
         //상단 비트맵에 알파값을 적용하기 위한 Paint
         val alphaPaint = Paint()
-        alphaPaint.setAlpha(125)
+        alphaPaint.alpha = 125
 
         //캔버스를 통해 비트맵을 겹치기한다.
         val canvas = Canvas(resultOverlayBmp)
