@@ -29,9 +29,9 @@ import org.tensorflow.lite.task.vision.detector.Detection
 import org.tensorflow.lite.task.vision.detector.ObjectDetector
 
 class ObjectDetectorHelper(
-    var threshold: Float = 0.7f,
+    var threshold: Float = 0.66f,
     var numThreads: Int = 4,
-    var maxResults: Int = 2,
+    var maxResults: Int = 3,
     var currentDelegate: Int = 0,
     var currentModel: Int = 0,
     val context: Context,

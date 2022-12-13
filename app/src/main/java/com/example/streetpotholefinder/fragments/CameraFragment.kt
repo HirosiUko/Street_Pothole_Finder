@@ -118,7 +118,7 @@ class CameraFragment : Fragment(), ObjectDetectorHelper.DetectorListener {
         auth = FirebaseAuth.getInstance()
         if(auth.currentUser?.displayName == null)
         {
-            requireActivity().findViewById<TextView>(R.id.tvDemoMode).text = "DEMO Mode"
+            requireActivity().findViewById<TextView>(R.id.tvDemoMode).text = "DEMO Mode\n 데모모드에서는 저장이 되지 않습니다."
         }
 
         return fragmentCameraBinding.root
